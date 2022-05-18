@@ -1,81 +1,68 @@
-//GNU GPL 3.0 lisence
+ï»¿//GNU GPL 3.0 lisence
 /* 
- * Á¤º¸ ¼öÇàÆò°¡ °ÔÀÓ
- * Copyright (C) 2022 ¹ÚÂù¿õ, ±èÁø¼­, ¹ÚÁöÈ¯
+ * ì •ë³´ ìˆ˜í–‰í‰ê°€ ê²Œìž„
+ * Copyright (C) 2022 ë°•ì°¬ì›…, ê¹€ì§„ì„œ, ë°•ì§€í™˜
  *
- * ÀÌ ÇÁ·Î±×·¥Àº ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾îÀÔ´Ï´Ù. ¼ÒÇÁÆ®¿þ¾îÀÇ ÇÇ¾çµµÀÚ´Â ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾î
- * Àç´ÜÀÌ °øÇ¥ÇÑ GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­ 3ÆÇ È¤Àº ±× ÀÌÈÄ ÆÇÀ» ÀÓÀÇ·Î ¼±ÅÃÇÏ¿©
- * ±× ±ÔÁ¤¿¡ µû¶ó ÇÁ·Î±×·¥À» °³ÀÛÇÏ°Å³ª Àç¹èÆ÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´ìž…ë‹ˆë‹¤. ì†Œí”„íŠ¸ì›¨ì–´ì˜ í”¼ì–‘ë„ìžëŠ” ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´
+ * ìž¬ë‹¨ì´ ê³µí‘œí•œ GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œ 3íŒ í˜¹ì€ ê·¸ ì´í›„ íŒì„ ìž„ì˜ë¡œ ì„ íƒí•˜ì—¬
+ * ê·¸ ê·œì •ì— ë”°ë¼ í”„ë¡œê·¸ëž¨ì„ ê°œìž‘í•˜ê±°ë‚˜ ìž¬ë°°í¬í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
  *
- * ÀÌ ÇÁ·Î±×·¥Àº À¯¿ëÇÏ°Ô »ç¿ëµÉ ¼ö ÀÖÀ¸¸®¶ó´Â Èñ¸Á¿¡¼­ ¹èÆ÷µÇ°í ÀÖÁö¸¸, Æ¯Á¤ÇÑ
- * ¸ñÀû¿¡ ¸Â´Â ÀûÇÕ¼º ¿©ºÎ³ª ÆÇ¸Å¿ëÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖÀ¸¸®¶ó´Â ¹¬½ÃÀûÀÎ º¸ÁõÀ» Æ÷ÇÔÇÑ
- * ¾î¶°ÇÑ ÇüÅÂÀÇ º¸Áõµµ Á¦°øÇÏÁö ¾Ê½À´Ï´Ù. º¸´Ù ÀÚ¼¼ÇÑ »çÇ×¿¡ ´ëÇØ¼­´Â
- * GNU ÀÏ¹Ý °øÁß Çã°¡¼­¸¦ Âü°íÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìœ ìš©í•˜ê²Œ ì‚¬ìš©ë  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” í¬ë§ì—ì„œ ë°°í¬ë˜ê³  ìžˆì§€ë§Œ, íŠ¹ì •í•œ
+ * ëª©ì ì— ë§žëŠ” ì í•©ì„± ì—¬ë¶€ë‚˜ íŒë§¤ìš©ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” ë¬µì‹œì ì¸ ë³´ì¦ì„ í¬í•¨í•œ
+ * ì–´ë– í•œ í˜•íƒœì˜ ë³´ì¦ë„ ì œê³µí•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë³´ë‹¤ ìžì„¸í•œ ì‚¬í•­ì— ëŒ€í•´ì„œëŠ”
+ * GNU ì¼ë°˜ ê³µì¤‘ í—ˆê°€ì„œë¥¼ ì°¸ê³ í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  * 
- * GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­´Â ÀÌ ÇÁ·Î±×·¥°ú ÇÔ²² Á¦°øµË´Ï´Ù. ¸¸¾à ¹®¼­°¡ ´©¶ôµÇ¾îÀÖ´Ù¸é
- * <http://www.gnu.org/licenses/>À» ÂüÁ¶ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œëŠ” ì´ í”„ë¡œê·¸ëž¨ê³¼ í•¨ê»˜ ì œê³µë©ë‹ˆë‹¤. ë§Œì•½ ë¬¸ì„œê°€ ëˆ„ë½ë˜ì–´ìžˆë‹¤ë©´
+ * <http://www.gnu.org/licenses/>ì„ ì°¸ì¡°í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  */
 
-//ÄÚµå°¡ ¹ÌÄ£µíÀÌ º¹ÀâÇÏ±â ¶§¹®¿¡ °úÇÏ´Ù ½ÍÀ» Á¤µµ·Î ¸¹Àº ÁÖ¼®À» ´Þ¾Æ³õ¾ÒÀ¸¸ç, 
-//VisualStudioÀÇ ¹®¼­È­ ÁÖ¼® ±â´ÉÀ» Àû±Ø ÀÌ¿ëÇß½À´Ï´Ù. GoodLuck
+//ì½”ë“œê°€ ë¯¸ì¹œë“¯ì´ ë³µìž¡í•˜ê¸° ë•Œë¬¸ì— ê³¼í•˜ë‹¤ ì‹¶ì„ ì •ë„ë¡œ ë§Žì€ ì£¼ì„ì„ ë‹¬ì•„ë†“ì•˜ìœ¼ë©°, 
+//VisualStudioì˜ ë¬¸ì„œí™” ì£¼ì„ ê¸°ëŠ¥ì„ ì ê·¹ ì´ìš©í–ˆìŠµë‹ˆë‹¤. GoodLuck
 
-//¸ÞÀÎ ÇÔ¼ö°¡ ÀÖ´Â ¸ÞÀÎ ÆÄÀÏÀÔ´Ï´Ù. ¸ÚÁö³×¿ä.
+//ë©”ì¸ í•¨ìˆ˜ê°€ ìžˆëŠ” ë©”ì¸ íŒŒì¼ìž…ë‹ˆë‹¤. ë©‹ì§€ë„¤ìš”.
 #include <windows.h>
-#include <stdlib.h>
+#include <iostream>
+#include <ctime>
+#include <random>
 #include "Window.h"
 #include "Chars.h"
 #include "Graphic.h"
 
-//ÇÑ ÇÁ·¹ÀÓ ´ç ¸ÞÀÎ ÇÑ »çÀÌÅ¬À» °ÅÄ¡°Ô µË´Ï´Ù.
+//í•œ í”„ë ˆìž„ ë‹¹ ë©”ì¸ í•œ ì‚¬ì´í´ì„ ê±°ì¹˜ê²Œ ë©ë‹ˆë‹¤.
 int main()
 {
-	//ÃÊ±â¼³Á¤
+	//ì´ˆê¸°ì„¤ì •
 	initWchar();
-	//ÄÜ¼ÖÀÇ ºü¸¥ ÀÔ·Â ¸ðµå (Å¬¸¯)À» ºñÈ°¼ºÈ­
+	//ì½˜ì†”ì˜ ë¹ ë¥¸ ìž…ë ¥ ëª¨ë“œ (í´ë¦­)ì„ ë¹„í™œì„±í™”
 	DWORD prev_mode;
 	HANDLE std;
 	std = GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(std, &prev_mode);
 	SetConsoleMode(std, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
-
-	bool flag = true;
+	SetConsoleMode(std, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dis(0, 200);
 
 	Buffer buf;
-	buf = getBuffer(20, 10);
+	buf = getBuffer(80, 40);
+
+	double frame = 0;
 
 	for (;;) {
+		clock_t start = clock();
 
-	for (int i = 0; i < 10; i++)
-		for (int j = 0; j < 10; j++)
-		{
-			if (flag)
-			{
-				buf.textBuf[i][j] = L')';
-				buf.colorBuf[i][j] = 3;
-			}
-			else
-			{
-				buf.textBuf[i][j] = L'(';
-				buf.colorBuf[i][j] = 4;
-			}
-		}
-	for (int i = 10; i < 20; i++)
-		for (int j = 0; j < 10; j++)
-		{
-			if (flag)
-			{
-				buf.textBuf[i][j] = L'-';
-				buf.colorBuf[i][j] = 4;
-			}
-			else
-			{
-				buf.textBuf[i][j] = L'|';
-				buf.colorBuf[i][j] = 3;
-			}
-		}
-		renderBuffer(buf, 20, 10);
+		resetBuffer(buf, 80, 40);
+
+		wchar frametext[50];
+		swprintf_s(frametext, sizeof(frametext), L"%.1lf", frame);
+		drawText(buf, frametext, 76, 39, 4, 15);
+
+		renderBuffer(buf, 80, 40, 2);
+		setWindow(buf,80,40);
 		swapBuffer(buf);
-		Sleep(10);
-		flag = !flag;
+
+		clock_t end = clock();
+		frame =1/((double)(end - start) / CLOCKS_PER_SEC);
 	}
 }

@@ -16,5 +16,36 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
+//윈도우 창과 관련된 함수를 모아놓은 파일입니다.
 #include <Windows.h>
 #include "Graphic.h"
+
+/// <summary>
+/// 스크린 버퍼를 특정크기에 맞춥니다.
+/// </summary>
+/// <param name="buf">크기를 조정할 스크린 버퍼</param>
+/// <param name="x">x방향 크기</param>
+/// <param name="y">y방향 크기</param>
+/// <returns>정상적으로 조절되었다면 0이 리턴됩니다.</returns>
+int setWindow(Buffer buf,int x, int y)
+{
+	CONSOLE_CURSOR_INFO cci;
+	cci.dwSize = 1;
+	cci.bVisible = FALSE;
+
+	CONSOLE_SCREEN_BUFFER_INFO bufinfo;
+	GetConsoleScreenBufferInfo(buf.screen, & bufinfo);
+	SMALL_RECT windowSize = { 0,0,x-1,y-1};
+	COORD bufSize = { x,y };
+	SetConsoleScreenBufferSize(buf.screen,bufSize);
+
+	//SetConsoleWIndowInfo는 콘솔창을 줄일수는 있지만 늘릴수는 없습니다.
+	//만약 콘솔창이 목표 크기보다 작다면 SetWindowPos를 이용해 강제로 늘립니다.
+	if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize) == 0)
+	{
+		SetWindowPos(GetConsoleWindow(), 0, 0, 0, 10000, 10000, SWP_NOMOVE | SWP_SHOWWINDOW);
+		SetConsoleWindowInfo(buf.screen, TRUE, &windowSize); //<재시도
+	}
+	SetConsoleCursorInfo(buf.screen, &cci);
+	return 0;
+}

@@ -18,3 +18,5 @@
 
 #pragma once
 
+#include "Graphic.h"
+extern int setWindow(Buffer,int,int);

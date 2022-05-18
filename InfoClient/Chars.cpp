@@ -17,7 +17,6 @@
  */
 
 //콘솔에서 한글을 포함한 유니코드를 이용하기 위한 함수를 모아놓은 파일입니다.
-#include <wchar.h>
 #include <iostream>
 #include "Chars.h"
 

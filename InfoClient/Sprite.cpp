@@ -16,19 +16,12 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
-#pragma once
-#include "Chars.h"
+//스프라이트와 관련된 함수를 모은 파일입니다.
 
-struct Buffer
+#include "Sprite.h"
+
+void genearateSprite(char* path)
 {
-	HANDLE screen;
-	wchar** textBuf;
-	int** colorBuf;
-};
+	Sprite sp;
+}
 
-extern int renderBuffer(Buffer,int,int,int);
-extern int swapBuffer(Buffer);
-extern Buffer getBuffer(int, int);
-extern int freeBuffer(Buffer, int, int);
-extern int drawText(Buffer, const wchar*, int, int, int, int);
-extern int resetBuffer(Buffer, int, int);
