@@ -19,4 +19,4 @@
 #pragma once
 
 #include "Graphic.h"
-extern int setWindow(Buffer,int,int);
+extern int setWindow(Buffer,bool);

@@ -21,13 +21,14 @@
 #include "Graphic.h"
 
 /// <summary>
-/// 스크린 버퍼를 특정크기에 맞춥니다.
+/// 스크린 버퍼를 버퍼크기에 맞춥니다.
 /// </summary>
 /// <param name="buf">크기를 조정할 스크린 버퍼</param>
 /// <param name="x">x방향 크기</param>
 /// <param name="y">y방향 크기</param>
+/// <param name="noSpace">여백없는 출력여부 (릴리스에서 문제가 발생하였음)</param>
 /// <returns>정상적으로 조절되었다면 0이 리턴됩니다.</returns>
-int setWindow(Buffer buf,int x, int y)
+int setWindow(Buffer buf, bool noSpace)
 {
 	CONSOLE_CURSOR_INFO cci;
 	cci.dwSize = 1;
@@ -35,8 +36,24 @@ int setWindow(Buffer buf,int x, int y)
 
 	CONSOLE_SCREEN_BUFFER_INFO bufinfo;
 	GetConsoleScreenBufferInfo(buf.screen, & bufinfo);
-	SMALL_RECT windowSize = { 0,0,x-1,y-1};
-	COORD bufSize = { x,y };
+	SMALL_RECT windowSize;
+
+	if (noSpace)
+	{
+		windowSize.Left = 0;
+		windowSize.Top = 0;
+		windowSize.Right = buf.size.x - 1;
+		windowSize.Bottom = buf.size.y - 1;
+	}
+	else
+	{
+		windowSize.Left = 0;
+		windowSize.Top = 0;
+		windowSize.Right = buf.size.x;
+		windowSize.Bottom = buf.size.y;
+	}
+
+	COORD bufSize = { buf.size.x,buf.size.y};
 	SetConsoleScreenBufferSize(buf.screen,bufSize);
 
 	//SetConsoleWIndowInfo는 콘솔창을 줄일수는 있지만 늘릴수는 없습니다.

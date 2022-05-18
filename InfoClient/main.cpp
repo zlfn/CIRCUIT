@@ -49,17 +49,18 @@ int main()
 
 	double frame = 0;
 
+	//랜더링 사이클
 	for (;;) {
 		clock_t start = clock();
 
-		resetBuffer(buf, 80, 40);
+		resetBuffer(buf);
 
 		wchar frametext[50];
-		swprintf_s(frametext, sizeof(frametext), L"%.1lf", frame);
-		drawText(buf, frametext, 76, 39, 4, 15);
+		swprintf_s(frametext, sizeof(frametext), L"%.2lf", frame);
+		drawText(buf, frametext, 76, 39, 5, 15);
 
-		renderBuffer(buf, 80, 40, 2);
-		setWindow(buf,80,40);
+		renderBuffer(buf, 1);
+		setWindow(buf,FALSE);
 		swapBuffer(buf);
 
 		clock_t end = clock();

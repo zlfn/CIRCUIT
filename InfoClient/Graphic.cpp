@@ -60,17 +60,16 @@ int swapBuffer(Buffer bbuf)
 /// 멀티스레딩을 이용할경우 10% 내외의 성능 향상이 있습니다.
 /// </summary>
 /// <param name="buf">렌더링할 버퍼</param>
-/// <param name="x">버퍼의 x크기</param>
 /// <param name="y_start">렌더링을 시작할 y좌표</param>
 /// <param name="y_end">렌더링을 끝낼 y좌표</param>
-void renderTH(Buffer buf,int x, int y_start, int y_end)
+void renderTH(Buffer buf, int y_start, int y_end)
 {
 	COORD cur;
 	for (int i = y_start; i < y_end; i++)
 	{
 		cur.X = 0;
 		cur.Y = i;
-		for (int j = 0; j < x; j++)
+		for (int j = 0; j < buf.size.x; j++)
 		{
 			CHAR_INFO letter;
 			letter.Char.UnicodeChar = buf.textBuf[j][i]; //< X,Y 방향을 맞추기 위해 i,j를 뒤집습니다.
@@ -81,7 +80,7 @@ void renderTH(Buffer buf,int x, int y_start, int y_end)
 
 			if (isWide(buf.textBuf[j][i])) {
 				j++; cur.X += 2;
-			} //<한글은 끔찍하게도 콘솔창 두칸을 차지합니다. (한글이 나오면 다음 Textbuf는 무시
+			} //<한글은 끔찍하게도 콘솔창 두칸을 차지합니다. (한글이 나오면 다음 Textbuf는 무시)
 			else cur.X += 1; //<영문과 아스키코드는 콘솔창 한칸을 차지합니다.
 		}
 	}
@@ -93,14 +92,12 @@ void renderTH(Buffer buf,int x, int y_start, int y_end)
 /// 이때 멀티스레딩을 이용합니다.
 /// </summary>
 /// <param name="buf">렌더링할 버퍼</param>
-/// <param name="x">스크린버퍼의 x 사이즈</param>
-/// <param name="y">스크린버퍼의 y 사이즈</param>
 /// <param name="threadSize">사용할 스레드 수. 반드시 y값의 약수여야 합니다.</param>
 /// <returns>성공적으로 렌더링 되었다면 0이 리턴됩니다.</returns>
-int renderBuffer(Buffer buf,int x, int y, int threadSize)
+int renderBuffer(Buffer buf, int threadSize)
 {
 	//전체 y줄수를 스레드 개수만큼 나눠서 각각의 스레드에 분배합니다.
-	if (y % threadSize != 0)
+	if (buf.size.y % threadSize != 0)
 	{
 		//안 나눠지면 뻗음
 		cout << "렌더링 스레드 개수가 부적절합니다.";
@@ -108,7 +105,7 @@ int renderBuffer(Buffer buf,int x, int y, int threadSize)
 	}
 	vector<thread> threads;
 	for (int i = 0; i < threadSize; i++)
-		threads.push_back(thread(renderTH,buf, x, (y / threadSize) * i, (y / threadSize) * (i + 1)));
+		threads.push_back(thread(renderTH,buf, (buf.size.y / threadSize) * i, (buf.size.y / threadSize) * (i + 1)));
 
 	//스레드의 작업이 끝나는 것을 기다..려야 하는데 안기다립니다. 좀 이상함
 	for (int i = 0; i < threadSize; i++)
@@ -133,6 +130,8 @@ Buffer getBuffer(int x, int y)
 	COORD bufsize = { x,y };
 
 	Buffer buf;
+	buf.size.x = x;
+	buf.size.y = y;
 	try
 	{
 		//그래픽 데이터 2차원 배열을 동적할당합니다.
@@ -166,16 +165,14 @@ Buffer getBuffer(int x, int y)
 }
 
 /// <summary>
-/// 버퍼링을 위한 Buffer변수를 해제합니다.
+/// 버퍼링을 위한 Buffer 변수의 동적할당을 해제합니다.
 /// </summary>
-/// <param name="buf">해제할 Buffer변수</param>
-/// <param name="x">스크린 버퍼의 x방향 사이즈</param>
-/// <param name="y">스크린 버퍼의 y방향 사이즈</param>
-/// <returns>성공적으로 해제되었다면 0이 리턴됩니다.</returns>
-int freeBuffer(Buffer buf,int x, int y)
+/// <param name="buf">해제할 Buffer 변수</param>
+/// <returns>성공적으로 해제되었다면 0이 반환됩니다.</returns>
+int freeBuffer(Buffer buf)
 {
 	//동적할당 한 변수들을 모두 반환합니다.
-	for (int i = 0; i < x; i++)
+	for (int i = 0; i < buf.size.x; i++)
 	{
 		delete buf.textBuf[i];
 		delete buf.colorBuf[i];
@@ -197,7 +194,8 @@ int freeBuffer(Buffer buf,int x, int y)
 /// <param name="y">출력을 시작할 y좌표</param>
 /// <param name="width">텍스트의 너비</param>
 /// <param name="color">텍스트의 색깔</param>
-/// <returns>성공적으로 빌드했다면 0이 반환됩니다.</returns>
+/// <returns>성공적으로 빌드했다면 0이 반환됩니다.
+/// 텍스트가 범위를 넘어갔다면 1이 반환됩니다.</returns>
 int drawText(Buffer buf, const wchar* text, int x, int y, int width, int color)
 {
 	int c = 0;
@@ -207,6 +205,10 @@ int drawText(Buffer buf, const wchar* text, int x, int y, int width, int color)
 	{
 		for (int i = 0; i < width; i++)
 		{
+			//스크린 버퍼의 범위를 넘어갔다면 비정상종료합니다.
+			if (cx >= buf.size.x || cy >= buf.size.y)
+				return 1;
+
 			buf.textBuf[cx][cy] = text[c];
 			buf.colorBuf[cx][cy] = color;
 			c++;
@@ -231,13 +233,11 @@ int drawText(Buffer buf, const wchar* text, int x, int y, int width, int color)
 /// 스크린 버퍼는 리셋하지 않습니다.
 /// </summary>
 /// <param name="buf">리셋할 버퍼</param>
-/// <param name="x">버퍼의 x방향 사이즈</param>
-/// <param name="y">버퍼의 y방향 사이즈</param>
-/// <returns>정상적으로 리셋되면 0이 출력됩니다. </returns>
-int resetBuffer(Buffer buf, int x, int y)
+/// <returns>정상적으로 리셋되면 0이 반환됩니다. </returns>
+int resetBuffer(Buffer buf)
 {
-	for(int i = 0; i<x; i++)
-		for (int j = 0; j < y; j++)
+	for(int i = 0; i<buf.size.x; i++)
+		for (int j = 0; j < buf.size.y; j++)
 		{
 			buf.textBuf[i][j] = ' ';
 			buf.colorBuf[i][j] = 15;
