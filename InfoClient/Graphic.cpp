@@ -37,7 +37,9 @@
 #include <iostream>
 #include <thread>
 #include "Graphic.h"
+#include "Window.h"
 using namespace std;
+
 
 /// <summary>
 /// 버퍼를 화면에 표시합니다.
@@ -55,13 +57,6 @@ int swapBuffer(Buffer bbuf)
 	}
 }
 
-/// <summary>
-/// 버퍼 데이터를 이용하여 스크린 버퍼를 렌더링하는 함수입니다.
-/// 멀티스레딩을 이용할경우 10% 내외의 성능 향상이 있습니다.
-/// </summary>
-/// <param name="buf">렌더링할 버퍼</param>
-/// <param name="y_start">렌더링을 시작할 y좌표</param>
-/// <param name="y_end">렌더링을 끝낼 y좌표</param>
 void renderTH(Buffer buf, int y_start, int y_end)
 {
 	COORD cur;
@@ -77,23 +72,46 @@ void renderTH(Buffer buf, int y_start, int y_end)
 			SetConsoleCursorPosition(buf.screen, cur);
 			DWORD ws;
 			WriteConsole(buf.screen, &letter, 1, &ws, NULL);
-
 			if (isWide(buf.textBuf[j][i])) {
 				j++; cur.X += 2;
 			} //<한글은 끔찍하게도 콘솔창 두칸을 차지합니다. (한글이 나오면 다음 Textbuf는 무시)
 			else cur.X += 1; //<영문과 아스키코드는 콘솔창 한칸을 차지합니다.
 		}
 	}
+
+	Sleep(0);
 	return;
 }
 
-/// <summary>
-/// 버퍼의 정보를 이용하여 스크린버퍼를 렌더링합니다.
-/// 이때 멀티스레딩을 이용합니다.
-/// </summary>
-/// <param name="buf">렌더링할 버퍼</param>
-/// <param name="threadSize">사용할 스레드 수. 반드시 y값의 약수여야 합니다.</param>
-/// <returns>성공적으로 렌더링 되었다면 0이 리턴됩니다.</returns>
+void renderTH_OP(Buffer buf, Buffer bbuf, int y_start, int y_end)
+{
+	COORD cur;
+	for (int i = y_start; i < y_end; i++)
+	{
+		cur.X = 0;
+		cur.Y = i;
+		for (int j = 0; j < buf.size.x; j++)
+		{
+			if (buf.textBuf[j][i] != bbuf.textBuf[j][i] || buf.colorBuf[j][i] != bbuf.colorBuf[j][i])
+			{
+				CHAR_INFO letter;
+				letter.Char.UnicodeChar = buf.textBuf[j][i]; //< X,Y 방향을 맞추기 위해 i,j를 뒤집습니다.
+				SetConsoleTextAttribute(buf.screen, buf.colorBuf[j][i]);
+				SetConsoleCursorPosition(buf.screen, cur);
+				DWORD ws;
+				WriteConsole(buf.screen, &letter, 1, &ws, NULL);
+			}
+			if (isWide(buf.textBuf[j][i])) {
+				j++; cur.X += 2;
+			} //<한글은 끔찍하게도 콘솔창 두칸을 차지합니다. (한글이 나오면 다음 Textbuf는 무시)
+			else cur.X += 1; //<영문과 아스키코드는 콘솔창 한칸을 차지합니다.
+		}
+	}
+
+	Sleep(0);
+	return;
+}
+
 int renderBuffer(Buffer buf, int threadSize)
 {
 	//전체 y줄수를 스레드 개수만큼 나눠서 각각의 스레드에 분배합니다.
@@ -105,7 +123,7 @@ int renderBuffer(Buffer buf, int threadSize)
 	}
 	vector<thread> threads;
 	for (int i = 0; i < threadSize; i++)
-		threads.push_back(thread(renderTH,buf, (buf.size.y / threadSize) * i, (buf.size.y / threadSize) * (i + 1)));
+		threads.push_back(thread(renderTH, buf, (buf.size.y / threadSize) * i, (buf.size.y / threadSize) * (i + 1)));
 
 	//스레드의 작업이 끝나는 것을 기다..려야 하는데 안기다립니다. 좀 이상함
 	for (int i = 0; i < threadSize; i++)
@@ -113,13 +131,25 @@ int renderBuffer(Buffer buf, int threadSize)
 	return 0;
 }
 
+int renderBuffer(Buffer buf, Buffer bbuf, int threadSize)
+{
+	//전체 y줄수를 스레드 개수만큼 나눠서 각각의 스레드에 분배합니다.
+	if (buf.size.y % threadSize != 0)
+	{
+		//안 나눠지면 뻗음
+		cout << "렌더링 스레드 개수가 부적절합니다.";
+		throw;
+	}
+	vector<thread> threads;
+	for (int i = 0; i < threadSize; i++)
+		threads.push_back(thread(renderTH_OP, buf, bbuf, (buf.size.y / threadSize) * i, (buf.size.y / threadSize) * (i + 1)));
 
-/// <summary>
-/// 버퍼링을 위한 Buffer변수를 동적할당하여 가져옵니다.
-/// </summary>
-/// <param name="x">스크린 버퍼의 x 사이즈</param>
-/// <param name="y">스크린 버퍼의 y 사이즈</param>
-/// <returns>할당된 Buffer변수가 반환됩니다.</returns>
+	//스레드의 작업이 끝나는 것을 기다..려야 하는데 안기다립니다. 좀 이상함
+	for (int i = 0; i < threadSize; i++)
+		threads[i].join();
+	return 0;
+}
+
 Buffer getBuffer(int x, int y)
 {
 	//커서를 보이지 않게 합니다.
@@ -135,15 +165,15 @@ Buffer getBuffer(int x, int y)
 	try
 	{
 		//그래픽 데이터 2차원 배열을 동적할당합니다.
-		buf.textBuf = new wchar*[x];
-		for (int i = 0; i < x; i++)
-		buf.textBuf[i] = new wchar[y];
-		buf.colorBuf = new int*[x];
-		for (int i = 0; i < x; i++)
-		buf.colorBuf[i] = new int[y];
+		buf.textBuf = new wchar * [x];
+		for (int j = 0; j < x; j++)
+			buf.textBuf[j] = new wchar[y];
+		buf.colorBuf = new int* [x];
+		for (int j = 0; j < x; j++)
+			buf.colorBuf[j] = new int[y];
 
 		//검은색 빈칸으로 초기화합니다.
-		for(int i = 0; i<x; i++)
+		for(int i = 0; i < x; i++)
 			for (int j = 0; j < y; j++)
 			{
 				buf.textBuf[i][j] = ' ';
@@ -155,6 +185,11 @@ Buffer getBuffer(int x, int y)
 		SetConsoleCursorInfo(buf.screen, &cci);
 		SetConsoleScreenBufferSize(buf.screen, bufsize);
 
+		DWORD prev_mode;
+		GetConsoleMode(buf.screen, &prev_mode);
+		SetConsoleMode(buf.screen, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
+		SetConsoleMode(buf.screen, ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
+
 		return buf;
 	}
 	catch (std::bad_alloc) {
@@ -164,11 +199,6 @@ Buffer getBuffer(int x, int y)
 	}
 }
 
-/// <summary>
-/// 버퍼링을 위한 Buffer 변수의 동적할당을 해제합니다.
-/// </summary>
-/// <param name="buf">해제할 Buffer 변수</param>
-/// <returns>성공적으로 해제되었다면 0이 반환됩니다.</returns>
 int freeBuffer(Buffer buf)
 {
 	//동적할당 한 변수들을 모두 반환합니다.
@@ -185,55 +215,42 @@ int freeBuffer(Buffer buf)
 	return 0;
 }
 
-/// <summary>
-/// 버퍼에 특정 너비의 글을 빌드합니다.
-/// </summary>
-/// <param name="buf">글을 출력할 버퍼</param>
-/// <param name="text">출력할 텍스트, 한글에 간격을 적용하지 않습니다.</param>
-/// <param name="x">출력을 시작할 x좌표</param>
-/// <param name="y">출력을 시작할 y좌표</param>
-/// <param name="width">텍스트의 너비</param>
-/// <param name="color">텍스트의 색깔</param>
-/// <returns>성공적으로 빌드했다면 0이 반환됩니다.
-/// 텍스트가 범위를 넘어갔다면 1이 반환됩니다.</returns>
-int drawText(Buffer buf, const wchar* text, int x, int y, int width, int color)
+int drawText(Buffer buf, const wchar* text,int x, int y, int width, int color)
 {
 	int c = 0;
 	int cx = x;
 	int cy = y;
+	int flag = 0;
 	while (text[c] != '\0')
 	{
 		for (int i = 0; i < width; i++)
 		{
-			//스크린 버퍼의 범위를 넘어갔다면 비정상종료합니다.
+			//스크린 버퍼의 범위를 넘어갔다면 플래그 전환후 건너뛰기합니다.
 			if (cx >= buf.size.x || cy >= buf.size.y)
-				return 1;
-
-			buf.textBuf[cx][cy] = text[c];
-			buf.colorBuf[cx][cy] = color;
-			c++;
-			cx++;
-
-			if (isWide(text[c]))
 			{
-				cx++; i++;
+				flag = 1;
+			}
+			else
+			{
+				buf.textBuf[cx][cy] = text[c];
+				buf.colorBuf[cx][cy] = color;
+				if (isWide(text[c]))
+				{
+					cx++; i++;
+				}
 			}
 
+			c++;
+			cx++;
 			if (text[c] == '\0') break;
 		}
 		cx = x;
 		cy++;
 	}
 
-	return 0;
+	return flag;
 }
 
-/// <summary>
-/// 버퍼의 데이터를 리셋합니다.
-/// 스크린 버퍼는 리셋하지 않습니다.
-/// </summary>
-/// <param name="buf">리셋할 버퍼</param>
-/// <returns>정상적으로 리셋되면 0이 반환됩니다. </returns>
 int resetBuffer(Buffer buf)
 {
 	for(int i = 0; i<buf.size.x; i++)
@@ -242,5 +259,33 @@ int resetBuffer(Buffer buf)
 			buf.textBuf[i][j] = ' ';
 			buf.colorBuf[i][j] = 15;
 		}
+	return 0;
+}
+
+int syncroBuffer(Buffer buf, Buffer fbuf)
+{
+	if (buf.size.x != buf.size.x || buf.size.y!= fbuf.size.y)
+	{
+		cout << "두 버퍼 크기가 동일하지 않아 버퍼를 동기화 할 수 없습니다.";
+		throw;
+	}
+	SMALL_RECT rr = { 0,0,buf.size.x - 1,buf.size.y -1 };
+	COORD sz = { buf.size.x, buf.size.y };
+	COORD xy = { 0,0 };
+
+	CHAR_INFO* temp;
+	temp = new CHAR_INFO[buf.size.x * buf.size.y];
+
+	ReadConsoleOutput(fbuf.screen, temp, sz, xy, &rr);
+	WriteConsoleOutput(buf.screen, temp, sz, xy, &rr);
+
+	for(int i = 0; i<buf.size.x; i++)
+		for (int j = 0; j < buf.size.y; j++)
+		{
+			buf.textBuf[i][j] = fbuf.textBuf[i][j];
+			buf.colorBuf[i][j] = fbuf.colorBuf[i][j];
+		}
+	delete temp;
+
 	return 0;
 }

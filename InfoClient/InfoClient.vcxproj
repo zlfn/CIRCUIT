@@ -121,6 +121,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,14 +133,17 @@
   <ItemGroup>
     <ClCompile Include="Chars.cpp" />
     <ClCompile Include="Graphic.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="MainScreen.cpp" />
+    <ClCompile Include="MainScreenBuilder.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chars.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphic.h" />
-    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

@@ -20,5 +20,15 @@
 #include <wchar.h> 
 typedef wchar_t wchar;
 
+/// <summary>
+/// 콘솔에서 한글을 사용하기 위한 기본 설정을 수행합니다.
+/// </summary>
+/// <returns>정상적으로 수행되었다면 0을 반환합니다.</returns>
 extern int initWchar(void);
-extern bool isWide(wchar);
+
+/// <summary>
+/// 입력된 wchar가 한글인지 판단합니다.
+/// </summary>
+/// <param name="s">판별할 wchar</param>
+/// <returns>wchar가 한글이면 TRUE, 아닐경우 FALSE가 반환됩니다.</returns>
+extern bool isWide(wchar letter);

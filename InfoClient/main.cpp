@@ -16,17 +16,21 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
-//코드가 미친듯이 복잡하기 때문에 과하다 싶을 정도로 많은 주석을 달아놓았으며, 
+//코드가 미친듯이 복잡하기 때문에 많은 주석을 달아놓았으며, 
 //VisualStudio의 문서화 주석 기능을 적극 이용했습니다. GoodLuck
 
 //메인 함수가 있는 메인 파일입니다. 멋지네요.
 #include <windows.h>
 #include <iostream>
+#include <thread>
 #include <ctime>
 #include <random>
 #include "Window.h"
+#include "Input.h"
 #include "Chars.h"
 #include "Graphic.h"
+
+using namespace std;
 
 //한 프레임 당 메인 한 사이클을 거치게 됩니다.
 int main()
@@ -39,31 +43,60 @@ int main()
 	std = GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(std, &prev_mode);
 	SetConsoleMode(std, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
-	SetConsoleMode(std, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
+	SetConsoleMode(std, ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
+
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> dis(0, 200);
 
-	Buffer buf;
-	buf = getBuffer(80, 40);
+	Buffer buf[2];
+	bool bufCount = false;
+
+	buf[0] = getBuffer(80, 40);
+	buf[1] = getBuffer(80, 40);
 
 	double frame = 0;
+
+	startGetClick();
 
 	//랜더링 사이클
 	for (;;) {
 		clock_t start = clock();
 
-		resetBuffer(buf);
+		setWindow(buf[0], TRUE);
+		setWindow(buf[1], TRUE);
+		//resetBuffer(buf[bufCount]);
+
+		MouseClick c = getClick();
+		if(c.type==Left)drawText(buf[bufCount], L"█", c.pos.X, c.pos.Y, 1, 15);
+		if(c.type==Right)drawText(buf[bufCount], L" ", c.pos.X, c.pos.Y, 1, 15);
+
+
+
+		/*for (int i = 0; i < 5; i++)
+		{
+			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = 31 + dis(gen) % 96;
+			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 16;
+		}*/
+
+
 
 		wchar frametext[50];
 		swprintf_s(frametext, sizeof(frametext), L"%.2lf", frame);
-		drawText(buf, frametext, 76, 39, 5, 15);
+		drawText(buf[bufCount], frametext, 0, 39, 5, 15);
 
-		renderBuffer(buf, 1);
-		setWindow(buf,FALSE);
-		swapBuffer(buf);
+
+		renderBuffer(buf[bufCount],buf[!bufCount], 2);
+
+		swapBuffer(buf[bufCount]);
+
+		bufCount = !bufCount;
+		syncroBuffer(buf[bufCount], buf[!bufCount]);
 
 		clock_t end = clock();
 		frame =1/((double)(end - start) / CLOCKS_PER_SEC);
+
+		//안정화
+		Sleep(0);
 	}
 }
