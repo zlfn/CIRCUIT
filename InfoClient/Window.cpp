@@ -48,13 +48,17 @@ int setWindow(Buffer buf, bool noSpace)
 	COORD bufSize = { buf.size.x,buf.size.y};
 	SetConsoleScreenBufferSize(buf.screen,bufSize);
 
+
 	//SetConsoleWIndowInfo는 콘솔창을 줄일수는 있지만 늘릴수는 없습니다.
 	//만약 콘솔창이 목표 크기보다 작다면 SetWindowPos를 이용해 강제로 늘립니다.
-	if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize) == 0)
+	if (bufinfo.dwSize.X != buf.size.x-1 || bufinfo.dwSize.Y != buf.size.y-1)
 	{
-		SetWindowPos(GetConsoleWindow(), 0, 0, 0, 10000, 10000, SWP_NOMOVE | SWP_SHOWWINDOW);
-		SetConsoleWindowInfo(buf.screen, TRUE, &windowSize); //<재시도
+		if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize) == 0)
+		{
+			SetWindowPos(GetConsoleWindow(), 0, 0, 0, 10000, 10000,  SWP_NOMOVE | SWP_SHOWWINDOW);
+			SetConsoleWindowInfo(buf.screen, TRUE, &windowSize); //<재시도
+		}
+		SetConsoleCursorInfo(buf.screen, &cci);
 	}
-	SetConsoleCursorInfo(buf.screen, &cci);
 	return 0;
 }

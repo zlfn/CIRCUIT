@@ -20,6 +20,12 @@
 #include <Windows.h>
 #include "Graphic.h"
 
+/// <summary>
+/// 마우스 클릭의 종류를 핸들하는 열거형입니다.
+/// <para>None: 클릭이 없음</para>
+/// <para>Left: 왼쪽 클릭</para>
+/// <para>Right: 오른쪽 클릭</para>
+/// </summary>
 enum MouseClickType
 {
 	None,
@@ -27,6 +33,11 @@ enum MouseClickType
 	Right
 };
 
+/// <summary>
+/// 마우스 클릭입력을 보관하는 구조체입니다.
+/// <para>pos: 마우스 클릭 좌표</para>
+/// <para>MouseClickType: 마우스 클릭의 종류</para>
+/// </summary>
 struct MouseClick
 {
 	COORD pos;

@@ -29,6 +29,6 @@ extern int initWchar(void);
 /// <summary>
 /// 입력된 wchar가 한글인지 판단합니다.
 /// </summary>
-/// <param name="s">판별할 wchar</param>
+/// <param name="letter">판별할 wchar</param>
 /// <returns>wchar가 한글이면 TRUE, 아닐경우 FALSE가 반환됩니다.</returns>
 extern bool isWide(wchar letter);

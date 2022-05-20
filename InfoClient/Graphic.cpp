@@ -30,12 +30,11 @@
 * 상기의 과정을 통해 다루기 쉬우면서도 깜박임 현상이 없는 콘솔 그래픽을 표시할 수 있습니다.
 */
 
-#include "Chars.h"
-#include <conio.h>
 #include <vector>
-#include <windows.h>
 #include <iostream>
+#include <windows.h>
 #include <thread>
+#include "Chars.h"
 #include "Graphic.h"
 #include "Window.h"
 using namespace std;
@@ -259,6 +258,13 @@ int resetBuffer(Buffer buf)
 			buf.textBuf[i][j] = ' ';
 			buf.colorBuf[i][j] = 15;
 		}
+	return 0;
+}
+
+int resetScreen(Buffer buf)
+{
+	unsigned long dw;
+	FillConsoleOutputCharacter(buf.screen, ' ', buf.size.x * buf.size.y, { 0,0 }, &dw);
 	return 0;
 }
 

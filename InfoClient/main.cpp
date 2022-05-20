@@ -21,8 +21,6 @@
 
 //메인 함수가 있는 메인 파일입니다. 멋지네요.
 #include <windows.h>
-#include <iostream>
-#include <thread>
 #include <ctime>
 #include <random>
 #include "Window.h"
@@ -45,54 +43,67 @@ int main()
 	SetConsoleMode(std, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
 	SetConsoleMode(std, ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
 
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> dis(0, 200);
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 200);
 
 	Buffer buf[2];
 	bool bufCount = false;
-
 	buf[0] = getBuffer(80, 40);
 	buf[1] = getBuffer(80, 40);
 
+	//fps측정 변수
 	double frame = 0;
+	
+	//잔상제거체크 변수
+	int resetCheck = 0;
 
 	startGetClick();
+
 
 	//랜더링 사이클
 	for (;;) {
 		clock_t start = clock();
+		
+		//화면 크기 조정
+		setWindow(buf[0], FALSE);
+		setWindow(buf[1], FALSE);
 
-		setWindow(buf[0], TRUE);
-		setWindow(buf[1], TRUE);
-		//resetBuffer(buf[bufCount]);
+		//잔상제거 (1000프레임당 1회)
+		if (resetCheck % 1000 == 0)
+		{
+			renderBuffer(buf[bufCount], 1);
+			resetCheck = 0;
+		}
+		resetCheck++;
 
+		//그림판 렌더링
 		MouseClick c = getClick();
-		if(c.type==Left)drawText(buf[bufCount], L"█", c.pos.X, c.pos.Y, 1, 15);
-		if(c.type==Right)drawText(buf[bufCount], L" ", c.pos.X, c.pos.Y, 1, 15);
+		if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, 15);
+		if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, 15);
 
-
-
-		/*for (int i = 0; i < 5; i++)
+		//랜덤 글자 렌더링
+		/*for (int i = 0; i < 1000; i++)
 		{
 			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = 31 + dis(gen) % 96;
 			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 16;
 		}*/
 
 
-
+		//FPS 표시
 		wchar frametext[50];
 		swprintf_s(frametext, sizeof(frametext), L"%.2lf", frame);
 		drawText(buf[bufCount], frametext, 0, 39, 5, 15);
 
-
+		//버퍼 렌더링, 표시
 		renderBuffer(buf[bufCount],buf[!bufCount], 2);
-
 		swapBuffer(buf[bufCount]);
 
+		//버퍼 스왑, 동기화
 		bufCount = !bufCount;
 		syncroBuffer(buf[bufCount], buf[!bufCount]);
 
+		//FPS 측정
 		clock_t end = clock();
 		frame =1/((double)(end - start) / CLOCKS_PER_SEC);
 

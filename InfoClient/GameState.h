@@ -6,7 +6,6 @@
 enum Scenes
 {
 	Main,
-
 };
 
 /// <summary>
