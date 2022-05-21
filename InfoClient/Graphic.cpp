@@ -111,13 +111,13 @@ void renderTH_OP(Buffer buf, Buffer bbuf, int y_start, int y_end)
 	return;
 }
 
-int renderBuffer(Buffer buf, int threadSize)
+int refreshBuffer(Buffer buf, int threadSize)
 {
 	//전체 y줄수를 스레드 개수만큼 나눠서 각각의 스레드에 분배합니다.
 	if (buf.size.y % threadSize != 0)
 	{
 		//안 나눠지면 뻗음
-		cout << "렌더링 스레드 개수가 부적절합니다.";
+		cout << "ERR: 렌더링 스레드 개수가 부적절합니다.";
 		throw;
 	}
 	vector<thread> threads;
@@ -136,7 +136,7 @@ int renderBuffer(Buffer buf, Buffer bbuf, int threadSize)
 	if (buf.size.y % threadSize != 0)
 	{
 		//안 나눠지면 뻗음
-		cout << "렌더링 스레드 개수가 부적절합니다.";
+		cout << "ERR: 렌더링 스레드 개수가 부적절합니다.";
 		throw;
 	}
 	vector<thread> threads;
@@ -193,7 +193,7 @@ Buffer getBuffer(int x, int y)
 	}
 	catch (std::bad_alloc) {
 		//new의 실행이 실패하였을때 catch 합니다.
-		cout << "버퍼 할당에 실패하였습니다.";
+		cout << "ERR: 버퍼 할당에 실패하였습니다.";
 		throw;
 	}
 }

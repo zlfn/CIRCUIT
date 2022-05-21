@@ -20,6 +20,26 @@
 #include <wchar.h> 
 typedef wchar_t wchar;
 
+namespace Color
+{
+	const int Black = 0;
+	const int Blue = 1;
+	const int Green = 2;
+	const int Aqua = 3;
+	const int Red = 4;
+	const int Purple = 5;
+	const int Yello = 6;
+	const int LightGray = 7;
+	const int Gray = 8;
+	const int LightBlue = 9;
+	const int LightGreen = 10;
+	const int LightAqua = 11;
+	const int LightRed = 12;
+	const int LightPurple = 13;
+	const int LightYellow = 14;
+	const int White = 15;
+}
+
 /// <summary>
 /// 콘솔에서 한글을 사용하기 위한 기본 설정을 수행합니다.
 /// </summary>

@@ -23,6 +23,8 @@
 #include <windows.h>
 #include <ctime>
 #include <random>
+#include <iostream>
+#include <thread>
 #include "Window.h"
 #include "Input.h"
 #include "Chars.h"
@@ -49,8 +51,8 @@ int main()
 
 	Buffer buf[2];
 	bool bufCount = false;
-	buf[0] = getBuffer(80, 40);
-	buf[1] = getBuffer(80, 40);
+	buf[0] = getBuffer(150, 40);
+	buf[1] = getBuffer(150, 40);
 
 	//fps측정 변수
 	double frame = 0;
@@ -66,28 +68,33 @@ int main()
 		clock_t start = clock();
 		
 		//화면 크기 조정
-		setWindow(buf[0], FALSE);
-		setWindow(buf[1], FALSE);
+		setWindow(buf[0], TRUE);
+		setWindow(buf[1], TRUE);
 
-		//잔상제거 (1000프레임당 1회)
-		if (resetCheck % 1000 == 0)
+		//병렬 리프레시 (1000프레임당 1회 호출)
+		if (resetCheck % 200 == 0)
 		{
-			renderBuffer(buf[bufCount], 1);
+			thread refresh(refreshBuffer,buf[bufCount],1);
+			refresh.detach();
 			resetCheck = 0;
 		}
 		resetCheck++;
 
+		//랜덤 글자 렌더링
+		for (int i = 0; i < 1; i++)
+		{
+			buf[bufCount].textBuf[dis(gen) % 150][dis(gen) % 40] = 31 + dis(gen) % 96;
+			buf[bufCount].colorBuf[dis(gen) % 150][dis(gen) % 40] = dis(gen) % 15;
+		}
 		//그림판 렌더링
 		MouseClick c = getClick();
-		if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, 15);
-		if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, 15);
+		if(c.type==None)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::White);
+		if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::Aqua);
+		if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, Color::White);
 
-		//랜덤 글자 렌더링
-		/*for (int i = 0; i < 1000; i++)
-		{
-			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = 31 + dis(gen) % 96;
-			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 16;
-		}*/
+
+		drawText(buf[bufCount], L"집에 가고 싶다.", 0, 0, 14, Color::White);
+		drawText(buf[bufCount], L"배고파", 0, 1, 6, Color::LightAqua);
 
 
 		//FPS 표시
@@ -96,7 +103,7 @@ int main()
 		drawText(buf[bufCount], frametext, 0, 39, 5, 15);
 
 		//버퍼 렌더링, 표시
-		renderBuffer(buf[bufCount],buf[!bufCount], 2);
+		renderBuffer(buf[bufCount],buf[!bufCount], 4);
 		swapBuffer(buf[bufCount]);
 
 		//버퍼 스왑, 동기화

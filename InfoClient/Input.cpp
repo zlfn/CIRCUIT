@@ -50,6 +50,12 @@ void getClickTH(MouseClick* c)
 				result.pos.Y = rec.Event.MouseEvent.dwMousePosition.Y;
 				result.type = Right;
 			}
+			else
+			{
+				result.pos.X = rec.Event.MouseEvent.dwMousePosition.X;
+				result.pos.Y = rec.Event.MouseEvent.dwMousePosition.Y;
+				result.type = None;
+			}
 		}
 		*c = result;
 	}
@@ -66,6 +72,5 @@ int startGetClick()
 MouseClick getClick()
 {
 	MouseClick temp = *c;
-	c->type = None;
 	return temp;
 }

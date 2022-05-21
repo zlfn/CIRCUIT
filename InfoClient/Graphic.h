@@ -75,7 +75,7 @@ extern void renderTH_OP(Buffer bbuf, Buffer fbuf, int y_start, int y_end);
 /// <param name="buf">렌더링할 버퍼</param>
 /// <param name="threads">사용할 스레드 수. 반드시 y값의 약수여야 합니다.</param>
 /// <returns>성공적으로 렌더링 되었다면 0이 리턴됩니다.</returns>
-extern int renderBuffer(Buffer bbuf, int threads);
+extern int refreshBuffer(Buffer bbuf, int threads);
 
 
 /// <summary>
