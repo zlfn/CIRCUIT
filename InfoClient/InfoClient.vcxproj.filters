@@ -30,9 +30,6 @@
     <ClCompile Include="Chars.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="MainScreenBuilder.cpp">
-      <Filter>소스 파일\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="MainScreen.cpp">
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
@@ -41,6 +38,12 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingScreen.cpp">
+      <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

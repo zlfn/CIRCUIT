@@ -37,4 +37,3 @@ bool isWide(wchar s)
 	if (s == '□') return true;
 	return false;
 }
-

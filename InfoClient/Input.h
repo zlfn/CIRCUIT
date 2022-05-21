@@ -16,6 +16,14 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
+//사용자 입력과 관련된 내용을 담은 헤더파일입니다.
+/* 다들 콘솔에서 메뉴선택을 방향키나 뭐 그런걸 가지고 입력하는데, 
+* 제 키보드 (해피해킹)에는 방향키가 없습니다. 그래서 싫어요.
+* 그래서 WindowsAPI를 이용해서 마우스 클릭을 받기로 했습니다.
+* 근데 분명 입력버퍼 방식으로 받는 거면 대충 메인 루프 안에 넣어도 연속적인 마우스 입력이 가능해야 할거 같은데,
+* 요상하게도 그러지 않더라고요. 그래서 마우스 입력만 무한정 받는 스레드를 만들어서 detach() 하는 방식으로 마우스 클릭을 받습니다.
+*/
+
 #pragma once
 #include <Windows.h>
 #include "Graphic.h"
@@ -48,8 +56,8 @@ struct MouseClick
 /// <para>입력정보를 가져와서 포인터에 등록하는 것을 무한 반복합니다.</para>
 /// <para>스레드에 넣기 위한 함수입니다.</para>
 /// </summary>
-/// <param name="c">입력을 집어넣을 MouseClick 포인터</param>
-void getClickTH(MouseClick* msPointer);
+/// <param name="msPointer">입력을 집어넣을 MouseClick 포인터</param>
+static void getClickTH(MouseClick* msPointer);
 
 /// <summary>
 /// <para>마우스 입력을 받는 스레드를 생성합니다.</para>
@@ -57,11 +65,11 @@ void getClickTH(MouseClick* msPointer);
 /// <para>한 프로그램에서 두번 이상 이 함수가 실행되면 에러가 발생할 수 있습니다.</para>
 /// </summary>
 /// <returns>정상적으로 수행되었다면 0이 반환됩니다.</returns>
-int startGetClick();
+extern int startGetClick();
 
 /// <summary>
 /// 마우스 입력 값을 받아옵니다.
 /// <para>startGetClick()이 반드시 선행되어야합니다.</para>
 /// </summary>
 /// <returns>마우스 입력 값</returns>
-MouseClick getClick();
+extern MouseClick getClick();

@@ -16,6 +16,35 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
+//그래픽 관련 함수를 모아놓은 헤더입니다.
+/*이 게임은 cout, printf를 비롯한 표준 입출력을 사용하지 않습니다.
+대신,WindowsAPI를 적극 활용하여 TUI 그래픽을 더블버퍼링 기법으로 출력합니다.
+사용되는 렌더링 기법에 대한 설명이 아래에 있습니다.*/
+
+//게임의 렌더링 순서
+/* 게임에는 데이터 버퍼 2개와 스크린 버퍼 2개가 있습니다. D1, D2, S1, S2로 부릅시다.
+* 데이터 버퍼는 화면에 표시될 텍스트와 색을 임시로 담은 정수 배열이고, 스크린 버퍼는 실제로 출력될 수 있는 WindowsAPI HANDLE입니다.
+*
+* 1. 가장 처음에는, D1, D2, S1, S2가 getBuffer()에 의해 초기화되어 모두 검은화면입니다.
+* 2. D1에 화면에 표시될 텍스트를 빌드합니다. 프로그램 내부 정수배열에 접근하는 것이므로 빠른 속도로 수행할 수 있습니다.
+* 3. D2와 D1을 비교하여 다른 부분만을 S1에 그립니다. 비교과정은 신속하지만, 그리는 과정은 콘솔에 한칸한칸 찍으므로 상당히 느립니다.
+* 4. S1을 화면에 출력합니다. 이미 모두 그려져 있으므로 티어링이나 깜박임이 발생하지 않습니다.
+* 5. D1을 D2에 복사, S1을 S2에 복사합니다.
+* 6. D1과 D2, S1과 S2를 바꿔 2-5를 시행합니다. 이후 무한반복.
+*
+* 이 과정이 게임내에서 1프레임입니다. 변경부분이 적을때는 초당 1000프레임 이상, 
+* 클 때에는 초당 10프레임 내외로 렌더링됩니다.
+* 
+* 이때 문제가 생깁니다. 멀티스레딩 버그와 창 크기 조절에 의한 글자 깨짐에 의해,
+* 게임 진행 중 D1과 D2의 내용과 S1과 S2의 내용이 다른 일명 '잔상'이 생깁니다.
+* 잔상이 생기면 D1과 D2의 데이터는 서로 같기 때문에 렌더링을 하더라도 S1과 S2에는 변화가 없습니다.
+* 따라서 주기적으로 데이터 버퍼의 내용을 서로 비교하지 않고 스크린 버퍼에 그리는 '리프레시'가 필요합니다.
+* 리프레시는 약 0.1초가 소요되며, 이를 메인 함수에서 실행하게 되면 리프레시할때마다 프레임드랍이 발생하므로,
+* 실행시 스레드를 detach() 할 수 있습니다. 리프레시가 느려지지만 프레임드랍이 꽤 많이 줄어듭니다.
+* 
+* 상기의 과정을 통해 빠르면서도 깜박임 현상이 없는 콘솔 그래픽을 표시할 수 있습니다.
+*/
+
 #pragma once
 #include "Chars.h"
 #include <windows.h>
@@ -54,7 +83,7 @@ struct Buffer
 /// <param name="buf">렌더링할 버퍼</param>
 /// <param name="y_start">렌더링을 시작할 y좌표</param>
 /// <param name="y_end">렌더링을 끝낼 y좌표</param>
-extern void renderTH(Buffer bbuf, int y_start, int y_end);
+static void renderTH(Buffer bbuf, int y_start, int y_end);
 
 /// <summary>
 /// 버퍼 데이터를 이용하여 스크린 버퍼를 렌더링하는 함수입니다.
@@ -65,14 +94,13 @@ extern void renderTH(Buffer bbuf, int y_start, int y_end);
 /// <param name="fbuf">비교할 버퍼</param>
 /// <param name="y_start">렌더링을 시작할 y좌표</param>
 /// <param name="y_end">렌더링을 끝낼 y좌표</param>
-extern void renderTH_OP(Buffer bbuf, Buffer fbuf, int y_start, int y_end);
+static void renderTH_OP(Buffer bbuf, Buffer fbuf, int y_start, int y_end);
 
 /// <summary>
-/// 버퍼의 정보를 이용하여 스크린버퍼를 렌더링합니다.
+/// 버퍼의 정보를 이용하여 스크린버퍼를 리프레시합니다.
 /// <para>지정한 개수만큼 멀티스레딩을 이용하며, 2개 이상의 스레드 사용시 10% 내외의 성능 향상이 생깁니다.</para>
-/// <para>프론트버퍼 없는 백버퍼 렌더링은 잔상제거의 효과 또한 가집니다.</para>
 /// </summary>
-/// <param name="buf">렌더링할 버퍼</param>
+/// <param name="bbuf">렌더링할 버퍼</param>
 /// <param name="threads">사용할 스레드 수. 반드시 y값의 약수여야 합니다.</param>
 /// <returns>성공적으로 렌더링 되었다면 0이 리턴됩니다.</returns>
 extern int refreshBuffer(Buffer bbuf, int threads);
@@ -83,7 +111,7 @@ extern int refreshBuffer(Buffer bbuf, int threads);
 /// <para>백버퍼와 프론트버퍼를 비교하여 최적화하며, 화면의 변경 부분이 작다면 매우 큰 성능상의 이점이 존재합니다.</para>
 /// <para>지정한 개수만큼 멀티스레딩을 이용하며, 2개 이상의 스레드 이용시 10%내외의 성능 향상이 있습니다.</para>
 /// </summary>
-/// <param name="buf">렌더링할 버퍼(백 버퍼)</param>
+/// <param name="bbuf">렌더링할 버퍼(백 버퍼)</param>
 /// <param name="fbuf">비교할 버퍼(프론트 버퍼)</param>
 /// <param name="threads">사용할 스레드 수. 반드시 y값의 약수여야 합니다.</param>
 /// <returns>성공적으로 렌더링 되었다면 0이 리턴됩니다.</returns>

@@ -16,19 +16,6 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
-//그래픽 관련 함수를 모아놓은 파일입니다.
-/*이 게임은 cout, printf를 비롯한 표준 입출력을 사용하지 않습니다.
-대신,WindowsAPI를 적극 활용하여 TUI 그래픽을 더블버퍼링 기법으로 출력합니다.
-사용되는 렌더링 기법에 대한 설명이 아래에 있습니다.*/
-
-//게임의 렌더링 순서
-/* 1. 매 프레임마다 게임 진행 코드로부터 렌더링 되어야 할 스프라이트를 입력받습니다.
-*  2. 각각의 스프라이트의 그래픽 데이터를 바탕으로 버퍼에 그래픽 데이터를 빌드합니다.
-*  3. 버퍼의 그래픽 데이터를 바탕으로 스크린 버퍼를 렌더링합니다.
-*  4. 렌더링된 스크린 버퍼를 현재 버퍼와 바꿉니다.
-* 
-* 상기의 과정을 통해 다루기 쉬우면서도 깜박임 현상이 없는 콘솔 그래픽을 표시할 수 있습니다.
-*/
 
 #include <vector>
 #include <iostream>
@@ -40,11 +27,6 @@
 using namespace std;
 
 
-/// <summary>
-/// 버퍼를 화면에 표시합니다.
-/// </summary>
-/// <param name="bbuf">표시할 버퍼</param>
-/// <returns>성공적으로 표시되었다면 0이 리턴됩니다.</returns>
 int swapBuffer(Buffer bbuf)
 {
 	//SetConsoleActiveScreenBuffer함수는 정상적으로 실행되지 않았을 때 0을 리턴합니다. 이를 감지하여 예외처리합니다.
@@ -82,6 +64,7 @@ void renderTH(Buffer buf, int y_start, int y_end)
 	return;
 }
 
+//함수 파라미터 오버로딩하고 싶었는데 스레드에 넣을때 에러가 나서 어쩔 수 없이 분리했습니다.
 void renderTH_OP(Buffer buf, Buffer bbuf, int y_start, int y_end)
 {
 	COORD cur;
@@ -231,8 +214,12 @@ int drawText(Buffer buf, const wchar* text,int x, int y, int width, int color)
 			}
 			else
 			{
-				buf.textBuf[cx][cy] = text[c];
-				buf.colorBuf[cx][cy] = color;
+				//Color::Black은 알파채널의 기능을 합니다.
+				if (buf.colorBuf[cx][cy] != Color::Black)
+				{
+					buf.textBuf[cx][cy] = text[c];
+					buf.colorBuf[cx][cy] = color;
+				}
 				if (isWide(text[c]))
 				{
 					cx++; i++;
@@ -270,9 +257,9 @@ int resetScreen(Buffer buf)
 
 int syncroBuffer(Buffer buf, Buffer fbuf)
 {
-	if (buf.size.x != buf.size.x || buf.size.y!= fbuf.size.y)
+	if (buf.size.x != fbuf.size.x || buf.size.y!= fbuf.size.y)
 	{
-		cout << "두 버퍼 크기가 동일하지 않아 버퍼를 동기화 할 수 없습니다.";
+		cout << "ERR: 두 버퍼 크기가 동일하지 않아 버퍼를 동기화 할 수 없습니다.";
 		throw;
 	}
 	SMALL_RECT rr = { 0,0,buf.size.x - 1,buf.size.y -1 };

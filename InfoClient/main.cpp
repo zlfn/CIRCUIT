@@ -17,26 +17,35 @@
  */
 
 //코드가 미친듯이 복잡하기 때문에 많은 주석을 달아놓았으며, 
-//VisualStudio의 문서화 주석 기능을 적극 이용했습니다. GoodLuck
+//특히 헤더파일에는 게임의 작동 원리와 함수에 대한 상세한 설명을 적어놓았습니다.
 
-//메인 함수가 있는 메인 파일입니다. 멋지네요.
+//주석작성에 VisualStudio의 문서화 주석 기능을 적극 이용했습니다.
+//따라서 코드 확인 시 VisualStudio 이용을 적극 권장합니다.
+//(에초에 VisualStudio말고는 컴파일이 되기는 하는지 모르겠네요.)
+
+//사용한 VisualStudio버전은 VisualStudio Professional 2022 입니다.
+//WindowsAPI를 아주 아주 많-이 사용하기 때문에 Windows 10, 11 네이티브 환경을 
+//제외한 환경에서의 정상작동을 보증하지 않습니다.
+
+//가상머신, Windows 8.1 이하, Wine, MacOS Parallels Desktop 에서는 문제생겨도 안 고쳐줄거에요
+
+
+//이 파일은 메인 함수가 있는 메인 파일입니다. 멋지네요.
 #include <windows.h>
 #include <ctime>
 #include <random>
-#include <iostream>
 #include <thread>
 #include "Window.h"
 #include "Input.h"
 #include "Chars.h"
 #include "Graphic.h"
+#include "GameState.h"
 
 using namespace std;
 
 //한 프레임 당 메인 한 사이클을 거치게 됩니다.
 int main()
 {
-	//초기설정
-	initWchar();
 	//콘솔의 빠른 입력 모드 (클릭)을 비활성화
 	DWORD prev_mode;
 	HANDLE std;
@@ -45,65 +54,82 @@ int main()
 	SetConsoleMode(std, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
 	SetConsoleMode(std, ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
 
+	//랜덤 디바이스로 시드 초기화
 	random_device rd;
 	mt19937 gen(rd());
 	uniform_int_distribution<int> dis(0, 200);
 
+	//버퍼 두개 할당받음
 	Buffer buf[2];
 	bool bufCount = false;
-	buf[0] = getBuffer(150, 40);
-	buf[1] = getBuffer(150, 40);
+	buf[0] = getBuffer(80, 40);
+	buf[1] = getBuffer(80, 40);
 
 	//fps측정 변수
 	double frame = 0;
 	
 	//잔상제거체크 변수
-	int resetCheck = 0;
+	double refreshCheck = 0;
 
+	//초기 설정
+	initWchar();
 	startGetClick();
-
+	resetGameState();
 
 	//랜더링 사이클
 	for (;;) {
 		clock_t start = clock();
+
+		Settings set = getGameState().setting;
+
+		//resetBuffer(buf[bufCount]);
 		
 		//화면 크기 조정
-		setWindow(buf[0], TRUE);
-		setWindow(buf[1], TRUE);
+		setWindow(buf[0], set.noSpaceWindow);
+		setWindow(buf[1], set.noSpaceWindow);
 
-		//병렬 리프레시 (1000프레임당 1회 호출)
-		if (resetCheck % 200 == 0)
+		//병렬 리프레시
+		if (refreshCheck >= set.refreshInterval)
 		{
-			thread refresh(refreshBuffer,buf[bufCount],1);
-			refresh.detach();
-			resetCheck = 0;
+			thread refresh(refreshBuffer,buf[bufCount],set.refreshThreadsCount);
+			if (set.parallelRefresh)
+			{
+				refresh.detach();
+			}
+			else
+			{
+				refresh.join();
+			}
+			refreshCheck = 0;
 		}
-		resetCheck++;
 
 		//랜덤 글자 렌더링
-		for (int i = 0; i < 1; i++)
+		/*for (int i = 0; i < 1; i++)
 		{
-			buf[bufCount].textBuf[dis(gen) % 150][dis(gen) % 40] = 31 + dis(gen) % 96;
-			buf[bufCount].colorBuf[dis(gen) % 150][dis(gen) % 40] = dis(gen) % 15;
-		}
+			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = 31 + dis(gen) % 96;
+			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 15;
+		}*/
 		//그림판 렌더링
-		MouseClick c = getClick();
-		if(c.type==None)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::White);
-		if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::Aqua);
-		if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, Color::White);
 
 
 		drawText(buf[bufCount], L"집에 가고 싶다.", 0, 0, 14, Color::White);
 		drawText(buf[bufCount], L"배고파", 0, 1, 6, Color::LightAqua);
 
+		MouseClick c = getClick();
+		if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::Aqua);
+		if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, Color::White);
+
 
 		//FPS 표시
-		wchar frametext[50];
-		swprintf_s(frametext, sizeof(frametext), L"%.2lf", frame);
-		drawText(buf[bufCount], frametext, 0, 39, 5, 15);
+		if (set.showFPS)
+		{
+			wchar frametext[50];
+			swprintf_s(frametext, sizeof(frametext), L"%.2lf", frame);
+			drawText(buf[bufCount], frametext, 0, 39, 5, Color::White);
+		}
 
 		//버퍼 렌더링, 표시
-		renderBuffer(buf[bufCount],buf[!bufCount], 4);
+		renderBuffer(buf[bufCount],buf[!bufCount], set.renderThreadsCount);
 		swapBuffer(buf[bufCount]);
 
 		//버퍼 스왑, 동기화
@@ -112,7 +138,8 @@ int main()
 
 		//FPS 측정
 		clock_t end = clock();
-		frame =1/((double)(end - start) / CLOCKS_PER_SEC);
+		frame =	1 / ((double)(end - start) / CLOCKS_PER_SEC);
+		refreshCheck += (double)(end - start) / CLOCKS_PER_SEC;
 
 		//안정화
 		Sleep(0);
