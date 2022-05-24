@@ -64,8 +64,19 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="DebugPiano.txt">
+    <Text Include="GBSLAND_LOGO.gres">
       <Filter>리소스 파일</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TEST.gres">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="CardA1.gres">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="CardB1.gres">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

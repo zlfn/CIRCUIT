@@ -31,13 +31,21 @@ GameState getGameState()
 int resetGameState()
 {
 	GameState g;
+
+	//설정 초기화
 	g.scene = Main;
 	g.setting.noSpaceWindow = true;
+
+	g.setting.refresh = false;
 	g.setting.parallelRefresh = true;
 	g.setting.refreshInterval = 1;
 	g.setting.refreshThreadsCount = 1;
+
+	g.setting.frontBufferDithering = true;
+	g.setting.ditheringSize = 10;
+
 	g.setting.renderThreadsCount = 1;
-	g.setting.showFPS = true;
+	g.setting.showFPS = false;
 
 	globalGameState = g;
 	return 0;

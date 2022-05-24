@@ -46,6 +46,13 @@ struct Settings
 	int renderThreadsCount;
 
 	/// <summary>
+	/// 리프레시
+	/// <para>화면을 주기적으로 리프레싱하여 잔상을 제거합니다.</para>
+	/// <para>프론트 버퍼 디더링과는 병행하지 않는 것을 권장합니다.</para>
+	/// </summary>
+	bool refresh;
+
+	/// <summary>
 	/// 병렬 리프레시
 	/// <para>화면 리프레싱을 메인 스레드와 병렬로 수행할 것인지 여부입니다.</para>
 	/// <para>이용할 경우 화면이 불안정해지고 화면 리프레싱이 여러 단계에 걸쳐서 일어나지만,</para>
@@ -66,6 +73,21 @@ struct Settings
 	/// <para>리프레시 과정 자체가 상당히 불안정하므로, 병렬 리프세시 사용시 2개이상의 스레드 사용을 추천하지 않습니다.</para>
 	/// </summary>
 	int refreshThreadsCount;
+
+	/// <summary>
+	/// 프론트 버퍼 디더링
+	/// <para>렌더링 과정에 프론트버퍼에 랜덤한 노이즈를 추가합니다.</para>
+	/// <para>평균 프레임률이 낮아지지만 프레임 드랍이 전혀 없는 잔상제거가 가능합니다.</para>
+	/// <para>리프레시 설정과 병행하지 않는 것을 추천합니다.</para>
+	/// </summary>
+	bool frontBufferDithering;
+
+	/// <summary>
+	/// 디더링 사이즈
+	/// <para>디더링 과정에 첨가할 노이즈 수를 결정합니다.</para>
+	/// <para>값이 클 수록 잔상제거가 빨라지지만, 평균 프레임률이 낮아집니다.</para>
+	/// </summary>
+	int ditheringSize;
 
 	/// <summary>
 	/// 여백없는 창

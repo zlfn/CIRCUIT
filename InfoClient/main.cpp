@@ -76,49 +76,96 @@ int main()
 	startGetClick();
 	resetGameState();
 
+	int CardX;
+	int CardY;
+	int CardClicked;
+	bool CardColor;
+
 	//랜더링 사이클
 	for (;;) {
 		clock_t start = clock();
 
 		Settings set = getGameState().setting;
 
-		//resetBuffer(buf[bufCount]);
+		resetBuffer(buf[bufCount]);
 		
 		//화면 크기 조정
 		setWindow(buf[0], set.noSpaceWindow);
 		setWindow(buf[1], set.noSpaceWindow);
 
 		//병렬 리프레시
-		if (refreshCheck >= set.refreshInterval)
+		if (set.refresh)
 		{
-			thread refresh(refreshBuffer,buf[bufCount],set.refreshThreadsCount);
-			if (set.parallelRefresh)
+			if (refreshCheck >= set.refreshInterval)
 			{
-				refresh.detach();
+				thread refresh(refreshBuffer,buf[bufCount],set.refreshThreadsCount);
+				if (set.parallelRefresh)
+				{
+					refresh.detach();
+				}
+				else
+				{
+					refresh.join();
+				}
+				refreshCheck = 0;
 			}
-			else
+		}
+
+		//프론트 버퍼 디더링
+		if (set.frontBufferDithering)
+		{
+			for (int i = 0; i < set.ditheringSize; i++)
 			{
-				refresh.join();
+				buf[!bufCount].colorBuf[dis(gen) % buf->size.x][dis(gen) % buf->size.y] = 16;
 			}
-			refreshCheck = 0;
 		}
 
 		//랜덤 글자 렌더링
 		/*for (int i = 0; i < 1; i++)
 		{
 			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = 31 + dis(gen) % 96;
-			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 15;
+			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = ' ';
+			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = ' ';
+			//buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 15;
+			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = Color::Yellow;
+			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = Color::Gray;
 		}*/
+
 		//그림판 렌더링
-
-
-		drawText(buf[bufCount], L"집에 가고 싶다.", 0, 0, 14, Color::White);
-		drawText(buf[bufCount], L"배고파", 0, 1, 6, Color::LightAqua);
-
 		MouseClick c = getClick();
-		if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::Aqua);
-		if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, Color::White);
+		//if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::White);
+		//if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, Color::White);
 
+
+		if (c.type == Left) 
+		{
+			CardColor = true;
+			drawImage(buf[bufCount], L"CardA1.gres", c.pos.X - 4, c.pos.Y-3);
+			CardX = c.pos.X;
+			CardY = c.pos.Y;
+		}
+		if (c.type == Right) 
+		{
+			CardColor = false;
+			drawImage(buf[bufCount], L"CardB1.gres", c.pos.X -4, c.pos.Y-3);
+			CardX = c.pos.X;
+			CardY = c.pos.Y;
+		}
+
+		if (c.type == None)
+		{
+			if (CardColor)
+				drawImage(buf[bufCount], L"CardA1.gres", CardX - 4, CardY - 3);
+			else
+				drawImage(buf[bufCount], L"CardB1.gres", CardX - 4, CardY - 3);
+		}
+
+
+
+		drawImage(buf[bufCount], L"GBSLAND_LOGO.gres", 11, 4);
+		drawText(buf[bufCount], L"경기북과학고등학교 정보 수행평가", 37, 10, 100, Color::LightYellow);
+		drawText(buf[bufCount], L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Yellow);
+		drawText(buf[bufCount], L"This software distribute under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Yellow);
 
 		//FPS 표시
 		if (set.showFPS)

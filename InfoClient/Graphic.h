@@ -41,6 +41,10 @@
 * 따라서 주기적으로 데이터 버퍼의 내용을 서로 비교하지 않고 스크린 버퍼에 그리는 '리프레시'가 필요합니다.
 * 리프레시는 약 0.1초가 소요되며, 이를 메인 함수에서 실행하게 되면 리프레시할때마다 프레임드랍이 발생하므로,
 * 실행시 스레드를 detach() 할 수 있습니다. 리프레시가 느려지지만 프레임드랍이 꽤 많이 줄어듭니다.
+*
+* 추가로, 리프레시 대신 게임 개발 과정 중에 개발된 잔상 제거 기법인 프론트 버퍼 디더링을 이용할 수 있습니다.
+* 인위적으로 프론트버퍼에 랜덤한 노이즈를 만듬으로써 매 프레임마다 잔상제거가 이루어집니다.
+* 단, 평균 프레임이 낮을 때는 잔상제거가 상당히 느리게 이루어지며, 평균 프레임 또한 낮아집니다.
 * 
 * 상기의 과정을 통해 빠르면서도 깜박임 현상이 없는 콘솔 그래픽을 표시할 수 있습니다.
 */
@@ -161,7 +165,6 @@ extern int drawText(Buffer buf, const wchar* text, int x, int y, int width, int 
 /// <returns>정상적으로 리셋되면 0이 반환됩니다. </returns>
 extern int resetBuffer(Buffer bbuf);
 
-
 /// <summary>
 /// 두 버퍼를 동기화합니다. 더블 버퍼링 과정에 필수적입니다.
 /// </summary>
@@ -169,3 +172,18 @@ extern int resetBuffer(Buffer bbuf);
 /// <param name="server">복사할 버퍼</param>
 /// <returns>정상적으로 동기화되면 0이 반환됩니다.</returns>
 extern int syncroBuffer(Buffer client, Buffer server);
+
+//그래픽 리소스(gres)의 포멧은 아래와 같습니다.
+/* 첫줄에는 x방향 크기와 y방향 크기가 주어집니다.
+두번째 줄부터 1+y 줄만큼은 색깔 정보가 주어집니다. 16진수 0-E까지이며, 0은 투명을 뜻합니다.
+2+y줄부터 1+2y 줄 만큼은 텍스트 정보가 주어집니다. WISYWIG방식으로, 글자 크기와 관계없이 보이는 그대로 출력됩니다.*/
+
+/// <summary>
+/// gres 포멧으로 작성된 그래픽 리소스를 불러와서 화면에 출력합니다.
+/// </summary>
+/// <param name="buf">출력할 버퍼</param>
+/// <param name="path">그래픽 리소스 경로</param>
+/// <param name="x">출력할 시작할 x좌표</param>
+/// <param name="y">출력 시작할 y좌표</param>
+/// <returns></returns>
+extern int drawImage(Buffer buf, const wchar* path, int x, int y);

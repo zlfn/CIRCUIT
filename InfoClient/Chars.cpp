@@ -23,7 +23,7 @@
 
 int initWchar(void)
 {
-	setlocale(LC_ALL, "korean");
+	setlocale(LC_ALL, ".UTF-8");
 	return 0;
 }
 

@@ -149,7 +149,12 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="DebugPiano.txt" />
+    <Text Include="GBSLAND_LOGO.gres" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardA1.gres" />
+    <None Include="CardB1.gres" />
+    <None Include="TEST.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

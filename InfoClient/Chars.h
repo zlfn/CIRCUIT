@@ -17,7 +17,7 @@
  */
 
 //wchar를 비롯한 문자와 관련된 내용을 모아둔 헤더파일입니다.
-/* 터미널에서 한글 출력은 가능하지만, char 변수는 좁디 좁기 때문에 한글은 커녕 이모티콘도 표시하기 어렵습니다.
+/* 터미널에서 한글 출력은 가능하지만, char 변수는 좁디 좁기 때문에 한글은 커녕 텍스트 이모티콘도 표시하기 어렵습니다.
 * 하지만 이 게임의 렌더링 방식 특성상 (Graphics.h 참고) 반드시 한글을 변수로써 저장해야하죠.
 * 따라서 wchar을 이용합니다. 유니코드, wide character를 저장할 수 있죠.
 * 
@@ -41,7 +41,7 @@ namespace Color
 	const int Aqua = 3;
 	const int Red = 4;
 	const int Purple = 5;
-	const int Yello = 6;
+	const int Yellow = 6;
 	const int LightGray = 7;
 	const int Gray = 8;
 	const int LightBlue = 9;
