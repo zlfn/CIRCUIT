@@ -154,6 +154,9 @@ Buffer getBuffer(int x, int y)
 		buf.colorBuf = new int* [x];
 		for (int j = 0; j < x; j++)
 			buf.colorBuf[j] = new int[y];
+		buf.clickBuf = new int* [x];
+		for (int j = 0; j < x; j++)
+			buf.clickBuf[j] = new int[y];
 
 		//검은색 빈칸으로 초기화합니다.
 		for(int i = 0; i < x; i++)
@@ -161,6 +164,7 @@ Buffer getBuffer(int x, int y)
 			{
 				buf.textBuf[i][j] = ' ';
 				buf.colorBuf[i][j] = 15;
+				buf.clickBuf[i][j] = 0;
 			}
 
 		//스크린 버퍼 HANDLE을 발급받습니다.
@@ -224,6 +228,11 @@ int drawText(Buffer buf, const wchar* text,int x, int y, int width, int color)
 				if (isWide(text[c]))
 				{
 					cx++; i++;
+					if (cx < buf.size.x || cy < buf.size.y || 0 <= cx || 0 <= cy)
+					{
+						buf.textBuf[cx][cy] = ' ';
+						buf.colorBuf[cx][cy] = Color::Black;
+					}
 				}
 			}
 
@@ -289,8 +298,8 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 	int flag = 0;
 
 
-	FILE* fs;
-	_wfopen_s(&fs, path, L"r,ccs=UNICODE"); //<유니코드 읽기 모드로 열기
+	FILE* fs = NULL;
+	_wfopen_s(&fs, path, L"r,ccs=UTF-8"); //<유니코드 읽기 모드로 열기
 	if (fs == NULL)
 	{
 		wcout << "ERR: " << path << " 리소스 파일을 찾을 수 없습니다.";
@@ -315,7 +324,7 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 		for (int j = 0; j < sizeX; j++)
 		{
 			wchar k;
-			fwscanf_s(fs, L"%c", &k);
+			k = (wchar)fgetwc(fs);
 			if (j+x >= buf.size.x || i+y >= buf.size.y || 0 > j+x || 0 > i+y)
 			{
 				flag = 1;
@@ -347,15 +356,16 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 				else { alphaChecker[i][j] = true; }
 			}
 		}
-		fwscanf_s(fs, L"\n");
+		fgetwc(fs);
 	}
 
 	for (int i = 0; i < sizeY; i++)
 	{
 		for (int j = 0; j < sizeX; j++)
 		{
-			char k;
-			fwscanf_s(fs, L"%c", &k);
+			wchar k;
+			k = (wchar)fgetwc(fs);
+
 			if (j+x >= buf.size.x || i+y >= buf.size.y || 0 > j+x || 0 > i+y)
 			{
 				flag = 1;
@@ -365,35 +375,37 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 				int n;
 				switch (k)
 				{
-					case '0': n = 0; break;
-					case '1': n = 1; break;
-					case '2': n = 2; break;
-					case '3': n = 3; break;
-					case '4': n = 4; break;
-					case '5': n = 5; break;
-					case '6': n = 6; break;
-					case '7': n = 7; break;
-					case '8': n = 8; break;
-					case '9': n = 9; break;
-					case 'A': n = 10; break;
-					case 'B': n = 11; break;
-					case 'C': n = 12; break;
-					case 'D': n = 13; break;
-					case 'E': n = 14; break;
-					case 'F': n = 15; break;
+					case L'0': n = 0; break;
+					case L'1': n = 1; break;
+					case L'2': n = 2; break;
+					case L'3': n = 3; break;
+					case L'4': n = 4; break;
+					case L'5': n = 5; break;
+					case L'6': n = 6; break;
+					case L'7': n = 7; break;
+					case L'8': n = 8; break;
+					case L'9': n = 9; break;
+					case L'A': n = 10; break;
+					case L'B': n = 11; break;
+					case L'C': n = 12; break;
+					case L'D': n = 13; break;
+					case L'E': n = 14; break;
+					case L'F': n = 15; break;
 				}
 
 				if(!alphaChecker[i][j]) buf.colorBuf[j+x][i+y] += n*16;
 			}
 		}
-		fwscanf_s(fs, L"\n");
+		fgetwc(fs);
 	}
 
 	for (int i = 0; i < sizeY; i++)
 	{
 		for (int j = 0; j < sizeX; j++)
 		{
-			wchar c; fwscanf_s(fs, L"%c", &c);
+			wchar c; 
+			c = (wchar)fgetwc(fs);
+			
 			if (j+x >= buf.size.x || i+y >= buf.size.y || 0 > j+x || 0> i+y)
 			{
 				flag = 1;
@@ -405,10 +417,156 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 				if (isWide(c)) j++;
 			}
 		}
-		fwscanf_s(fs, L"\n");
+		fgetwc(fs);
 	}
 
 	fclose(fs);
+
 	delete alphaChecker;
 	return flag;
+}
+
+int drawImage(Buffer buf, const wchar* path, int x, int y, int click)
+{
+	int flag = 0;
+
+
+	FILE* fs = NULL;
+	_wfopen_s(&fs, path, L"r,ccs=UTF-8"); //<유니코드 읽기 모드로 열기
+	if (fs == NULL)
+	{
+		wcout << "ERR: " << path << " 리소스 파일을 찾을 수 없습니다.";
+		throw;
+	}
+
+	int sizeX, sizeY;
+	fwscanf_s(fs, L"%d %d\n", &sizeX, &sizeY);
+
+	//색깔이 투명인지 확인하는 임시 배열
+	bool** alphaChecker;
+	alphaChecker = new bool* [sizeY];
+	for (int i = 0; i < sizeY; i++)
+	{
+		alphaChecker[i] = new bool[sizeX];
+		for (int j = 0; j < sizeX; j++)
+			alphaChecker[i][j] = false;
+	}
+
+	for (int i = 0; i < sizeY; i++)
+	{
+		for (int j = 0; j < sizeX; j++)
+		{
+			wchar k;
+			k = (wchar)fgetwc(fs);
+			if (j+x >= buf.size.x || i+y >= buf.size.y || 0 > j+x || 0 > i+y)
+			{
+				flag = 1;
+			}
+			else
+			{
+				int n;
+				switch (k)
+				{
+					case L'0': n = 0; break;
+					case L'1': n = 1; break;
+					case L'2': n = 2; break;
+					case L'3': n = 3; break;
+					case L'4': n = 4; break;
+					case L'5': n = 5; break;
+					case L'6': n = 6; break;
+					case L'7': n = 7; break;
+					case L'8': n = 8; break;
+					case L'9': n = 9; break;
+					case L'A': n = 10; break;
+					case L'B': n = 11; break;
+					case L'C': n = 12; break;
+					case L'D': n = 13; break;
+					case L'E': n = 14; break;
+					case L'F': n = 15; break;
+				}
+
+				if (n != Color::Black) { buf.colorBuf[j+x][i+y] = n; }
+				else { alphaChecker[i][j] = true; }
+			}
+		}
+		fgetwc(fs);
+	}
+
+	for (int i = 0; i < sizeY; i++)
+	{
+		for (int j = 0; j < sizeX; j++)
+		{
+			wchar k;
+			k = (wchar)fgetwc(fs);
+
+			if (j+x >= buf.size.x || i+y >= buf.size.y || 0 > j+x || 0 > i+y)
+			{
+				flag = 1;
+			}
+			else
+			{
+				int n;
+				switch (k)
+				{
+					case L'0': n = 0; break;
+					case L'1': n = 1; break;
+					case L'2': n = 2; break;
+					case L'3': n = 3; break;
+					case L'4': n = 4; break;
+					case L'5': n = 5; break;
+					case L'6': n = 6; break;
+					case L'7': n = 7; break;
+					case L'8': n = 8; break;
+					case L'9': n = 9; break;
+					case L'A': n = 10; break;
+					case L'B': n = 11; break;
+					case L'C': n = 12; break;
+					case L'D': n = 13; break;
+					case L'E': n = 14; break;
+					case L'F': n = 15; break;
+				}
+
+				if (!alphaChecker[i][j]) 
+				{
+					buf.colorBuf[j + x][i + y] += n * 16;
+					buf.clickBuf[j + x][i + y] = click;
+				}
+			}
+		}
+		fgetwc(fs);
+	}
+
+	for (int i = 0; i < sizeY; i++)
+	{
+		for (int j = 0; j < sizeX; j++)
+		{
+			wchar c; 
+			c = (wchar)fgetwc(fs);
+			
+			if (j+x >= buf.size.x || i+y >= buf.size.y || 0 > j+x || 0> i+y)
+			{
+				flag = 1;
+			}
+			else
+			{
+				//검은색 (투명)은 렌더링하지 않습니다.
+				if (!alphaChecker[i][j]) buf.textBuf[j+x][i+y] = c;
+			}
+			if (isWide(c)) j++;
+		}
+		fgetwc(fs);
+	}
+
+	fclose(fs);
+
+	delete alphaChecker;
+	return flag;
+}
+
+int resetClickBuffer(Buffer buf)
+{
+	for (int i = 0; i < buf.size.x; i++)
+		for (int j = 0; j < buf.size.y; j++)
+			buf.clickBuf[i][j] = 0;
+	return 0;
 }

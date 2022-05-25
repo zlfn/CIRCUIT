@@ -35,9 +35,11 @@
 #include <ctime>
 #include <random>
 #include <thread>
+#include <iostream>
 #include "Window.h"
 #include "Input.h"
 #include "Chars.h"
+#include "Game.h"
 #include "Graphic.h"
 #include "GameState.h"
 
@@ -73,25 +75,32 @@ int main()
 
 	//초기 설정
 	initWchar();
-	startGetClick();
+	startGetInput();
 	resetGameState();
 
-	int CardX;
-	int CardY;
-	int CardClicked;
-	bool CardColor;
+	int Card1X = 39;
+	int Card1Y = 23;
+	int Card2X = 39;
+	int Card2Y = 23;
+	bool stack = false;
+	
+	setWindow(buf[0], false);
+	setWindow(buf[1], false);
 
 	//랜더링 사이클
+	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 클릭 체크 -> 렌더링 -> 스왑 -> 리셋
 	for (;;) {
-		clock_t start = clock();
-
-		Settings set = getGameState().setting;
-
 		resetBuffer(buf[bufCount]);
+		resetClickBuffer(buf[bufCount]);
+
+		clock_t start = clock();
+		Settings set = getGameState()->setting;
+
 		
 		//화면 크기 조정
 		setWindow(buf[0], set.noSpaceWindow);
 		setWindow(buf[1], set.noSpaceWindow);
+
 
 		//병렬 리프레시
 		if (set.refresh)
@@ -120,52 +129,10 @@ int main()
 			}
 		}
 
-		//랜덤 글자 렌더링
-		/*for (int i = 0; i < 1; i++)
-		{
-			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = 31 + dis(gen) % 96;
-			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = ' ';
-			buf[bufCount].textBuf[dis(gen) % 80][dis(gen) % 40] = ' ';
-			//buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = dis(gen) % 15;
-			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = Color::Yellow;
-			buf[bufCount].colorBuf[dis(gen) % 80][dis(gen) % 40] = Color::Gray;
-		}*/
 
-		//그림판 렌더링
-		MouseClick c = getClick();
-		//if(c.type==Left)drawText(buf[bufCount], L"██", c.pos.X, c.pos.Y, 2, Color::White);
-		//if(c.type==Right)drawText(buf[bufCount], L"        ", c.pos.X, c.pos.Y, 4, Color::White);
+		drawGame(buf[bufCount], *getGameState());
+		playGame(buf[bufCount], getGameState());
 
-
-		if (c.type == Left) 
-		{
-			CardColor = true;
-			drawImage(buf[bufCount], L"CardA1.gres", c.pos.X - 4, c.pos.Y-3);
-			CardX = c.pos.X;
-			CardY = c.pos.Y;
-		}
-		if (c.type == Right) 
-		{
-			CardColor = false;
-			drawImage(buf[bufCount], L"CardB1.gres", c.pos.X -4, c.pos.Y-3);
-			CardX = c.pos.X;
-			CardY = c.pos.Y;
-		}
-
-		if (c.type == None)
-		{
-			if (CardColor)
-				drawImage(buf[bufCount], L"CardA1.gres", CardX - 4, CardY - 3);
-			else
-				drawImage(buf[bufCount], L"CardB1.gres", CardX - 4, CardY - 3);
-		}
-
-
-
-		drawImage(buf[bufCount], L"GBSLAND_LOGO.gres", 11, 4);
-		drawText(buf[bufCount], L"경기북과학고등학교 정보 수행평가", 37, 10, 100, Color::LightYellow);
-		drawText(buf[bufCount], L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Yellow);
-		drawText(buf[bufCount], L"This software distribute under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Yellow);
 
 		//FPS 표시
 		if (set.showFPS)
@@ -187,6 +154,7 @@ int main()
 		clock_t end = clock();
 		frame =	1 / ((double)(end - start) / CLOCKS_PER_SEC);
 		refreshCheck += (double)(end - start) / CLOCKS_PER_SEC;
+
 
 		//안정화
 		Sleep(0);

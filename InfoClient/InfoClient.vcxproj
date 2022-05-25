@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{794c0ddc-f29a-4549-9bcc-431d15efae91}</ProjectGuid>
     <RootNamespace>InfoClient</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -38,6 +38,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -52,6 +53,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
+    <VCToolsVersion>14.32.31326</VCToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -143,18 +145,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chars.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Scenes.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="GBSLAND_LOGO.gres" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CardA1.gres" />
-    <None Include="CardB1.gres" />
-    <None Include="TEST.gres" />
+    <None Include="CardH1.gres" />
+    <None Include="CardS1.gres" />
+    <None Include="CardC1.gres" />
+    <None Include="SettingButton.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

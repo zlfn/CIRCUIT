@@ -29,6 +29,7 @@ int setWindow(Buffer buf, bool noSpace)
 	CONSOLE_SCREEN_BUFFER_INFO bufinfo;
 	GetConsoleScreenBufferInfo(buf.screen, & bufinfo);
 	SMALL_RECT windowSize;
+	COORD bufSize = {buf.size.x, buf.size.y};
 
 	if (noSpace)
 	{
@@ -36,6 +37,8 @@ int setWindow(Buffer buf, bool noSpace)
 		windowSize.Top = 0;
 		windowSize.Right = buf.size.x - 1;
 		windowSize.Bottom = buf.size.y - 1;
+		bufSize.X = buf.size.x;
+		bufSize.Y = buf.size.y;
 	}
 	else
 	{
@@ -43,22 +46,19 @@ int setWindow(Buffer buf, bool noSpace)
 		windowSize.Top = 0;
 		windowSize.Right = buf.size.x;
 		windowSize.Bottom = buf.size.y;
+		bufSize.X = buf.size.x+1;
+		bufSize.Y = buf.size.y+1;
 	}
 
-	COORD bufSize = { buf.size.x,buf.size.y};
-	SetConsoleScreenBufferSize(buf.screen,bufSize);
+	SetConsoleScreenBufferSize(buf.screen, bufSize);
 
-
-	//SetConsoleWIndowInfo는 콘솔창을 줄일수는 있지만 늘릴수는 없습니다.
-	//만약 콘솔창이 목표 크기보다 작다면 SetWindowPos를 이용해 강제로 늘립니다.
-	if (bufinfo.dwSize.X != buf.size.x-1 || bufinfo.dwSize.Y != buf.size.y-1)
+	if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize)==0)
 	{
-		if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize) == 0)
-		{
-			SetWindowPos(GetConsoleWindow(), 0, 0, 0, 10000, 10000,  SWP_NOMOVE | SWP_SHOWWINDOW);
-			SetConsoleWindowInfo(buf.screen, TRUE, &windowSize); //<재시도
-		}
-		SetConsoleCursorInfo(buf.screen, &cci);
+		//정적 dll사용시 버그 남, 제거 필요
+		SetWindowPos(GetConsoleWindow(), 0, 0, 0, 10000, 10000, SWP_NOMOVE | SWP_SHOWWINDOW);
+
+		SetConsoleWindowInfo(buf.screen, TRUE, &windowSize);
 	}
+	SetConsoleCursorInfo(buf.screen, &cci);
 	return 0;
 }

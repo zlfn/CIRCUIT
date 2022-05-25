@@ -24,6 +24,7 @@
 * 지금 게임의 상태는 어떤지 등등을 담고 있어 화면을 렌더링하는데 필요한 모든 정보를 제공합니다. */
 
 #pragma once
+#include "Chars.h"
 
 /// <summary>
 /// 게임의 장면 목록입니다.
@@ -112,13 +113,15 @@ struct GameState
 {
 	Scenes scene;
 	Settings setting;
+
+	const wchar* debug;
 };
 
 /// <summary>
 /// 게임 상태를 받아옵니다.
 /// </summary>
-/// <returns>전역 GameState가 반환됩니다.</returns>
-extern GameState getGameState();
+/// <returns>전역 GameState 주소가 반환됩니다.</returns>
+extern GameState* getGameState();
 
 /// <summary>
 /// 게임 상태를 초기화합니다.

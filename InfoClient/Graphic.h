@@ -35,8 +35,8 @@
 * 이 과정이 게임내에서 1프레임입니다. 변경부분이 적을때는 초당 1000프레임 이상, 
 * 클 때에는 초당 10프레임 내외로 렌더링됩니다.
 * 
-* 이때 문제가 생깁니다. 멀티스레딩 버그와 창 크기 조절에 의한 글자 깨짐에 의해,
-* 게임 진행 중 D1과 D2의 내용과 S1과 S2의 내용이 다른 일명 '잔상'이 생깁니다.
+* 이때 문제가 생깁니다. 멀티스레딩 버그와 창 크기 조절에 의한 글자 깨짐, 설계상의 실수 등으로 인해 
+* 간혹 게임 진행 중 D1과 D2의 내용과 S1과 S2의 내용이 다른 일명 '잔상'이 생깁니다.
 * 잔상이 생기면 D1과 D2의 데이터는 서로 같기 때문에 렌더링을 하더라도 S1과 S2에는 변화가 없습니다.
 * 따라서 주기적으로 데이터 버퍼의 내용을 서로 비교하지 않고 스크린 버퍼에 그리는 '리프레시'가 필요합니다.
 * 리프레시는 약 0.1초가 소요되며, 이를 메인 함수에서 실행하게 되면 리프레시할때마다 프레임드랍이 발생하므로,
@@ -77,6 +77,7 @@ struct Buffer
 	HANDLE screen;
 	wchar** textBuf;
 	int** colorBuf;
+	int** clickBuf;
 	Size size;
 };
 
@@ -173,6 +174,7 @@ extern int resetBuffer(Buffer bbuf);
 /// <returns>정상적으로 동기화되면 0이 반환됩니다.</returns>
 extern int syncroBuffer(Buffer client, Buffer server);
 
+
 //그래픽 리소스(gres)의 포멧은 아래와 같습니다.
 /* 첫줄에는 x방향 크기와 y방향 크기가 주어집니다.
 두번째 줄부터 1+y 줄만큼은 색깔 정보가 주어집니다. 16진수 0-E까지이며, 0은 투명을 뜻합니다.
@@ -183,7 +185,29 @@ extern int syncroBuffer(Buffer client, Buffer server);
 /// </summary>
 /// <param name="buf">출력할 버퍼</param>
 /// <param name="path">그래픽 리소스 경로</param>
-/// <param name="x">출력할 시작할 x좌표</param>
-/// <param name="y">출력 시작할 y좌표</param>
-/// <returns></returns>
+/// <param name="x">출력을 시작할 x좌표</param>
+/// <param name="y">출력을 시작할 y좌표</param>
+/// <returns>성공적으로 출력되었다면 0,
+/// <para>이미지가 화면을 넘어갔다면 1이 반환됩니다.</para></returns>
 extern int drawImage(Buffer buf, const wchar* path, int x, int y);
+
+/// <summary>
+/// gres 포멧으로 작성된 그래픽 리소스를 불러와서 화면에 출력합니다.
+/// <para>추가로, 주어진 아이디를 클릭버퍼에 등록합니다.</para>
+/// </summary>
+/// <param name="buf">출력할 버퍼</param>
+/// <param name="path">그래픽 리소스 경로</param>
+/// <param name="x">출력을 시작할 x좌표</param>
+/// <param name="y">출력을 시작할 y좌표</param>
+/// <param name="click">등록할 클릭 버퍼 id</param>
+/// <returns>성공적으로 출력되었다면 0,
+/// <para>이미지가 화면을 넘어갔다면 1이 반환됩니다.</para></returns>
+extern int drawImage(Buffer buf, const wchar* path, int x, int y, int click);
+
+/// <summary>
+/// 클릭버퍼의 내용을 초기값으로 되돌립니다.
+/// <para>클릭버퍼의 초기값은 0입니다.</para>
+/// </summary>
+/// <param name="buf">리셋할 버퍼</param>
+/// <returns>정상적으로 리셋되었다면 0이 반환됩니다.</returns>
+extern int resetClickBuffer(Buffer buf);

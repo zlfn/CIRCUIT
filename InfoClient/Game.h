@@ -1,5 +1,5 @@
 //GNU GPL 3.0 lisence
-/* 
+/*
  * 정보 수행평가 게임
  * Copyright (C) 2022 박찬웅, 김진서, 박지환
  *
@@ -11,44 +11,29 @@
  * 목적에 맞는 적합성 여부나 판매용으로 사용할 수 있으리라는 묵시적인 보증을 포함한
  * 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에 대해서는
  * GNU 일반 공중 허가서를 참고하시기 바랍니다.
- * 
+ *
  * GNU 일반 공중 사용 허가서는 이 프로그램과 함께 제공됩니다. 만약 문서가 누락되어있다면
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
+#pragma once
+#include "Graphic.h"
 #include "GameState.h"
 
 /// <summary>
-/// 게임 상태를 저장하는 전역변수입니다.
+/// 현재 상태에 맞게 게임을 그립니다.
+/// <para>게임의 핵심 렌더링 함수입니다.</para>
 /// </summary>
-static GameState globalGameState;
+/// <param name="buf">그릴 버퍼</param>
+/// <param name="state">게임 상태</param>
+/// <returns>정상적으로 그려졌다면 0이 반환됩니다.</returns>
+extern int drawGame(Buffer buf, GameState state);
 
-GameState* getGameState()
-{
-	return &globalGameState;
-}
+/// <summary>
+/// 입력, 통신 등 현재 상태를 감지해서 GameState를 변경합니다.
+/// <para>게임의 핵심 구동 함수입니다.</para>
+/// </summary>
+/// <param name="state">게임 상태</param>
+/// <returns>정상적으로 계산되었다면 0이 반환됩니다.</returns>
+extern int playGame(Buffer buf, GameState *state);
 
-int resetGameState()
-{
-	GameState g;
-
-	//설정 초기화
-	g.scene = Main;
-	g.setting.noSpaceWindow = true;
-
-	g.setting.refresh = false;
-	g.setting.parallelRefresh = true;
-	g.setting.refreshInterval = 1;
-	g.setting.refreshThreadsCount = 1;
-
-	g.setting.frontBufferDithering = true;
-	g.setting.ditheringSize = 10;
-
-	g.setting.renderThreadsCount = 1;
-	g.setting.showFPS = true;
-
-	g.debug = L"Test";
-
-	globalGameState = g;
-	return 0;
-}

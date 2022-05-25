@@ -29,6 +29,55 @@
 #include "Graphic.h"
 
 /// <summary>
+/// 윈도우 가상 키코드 상수입니다.
+/// </summary>
+namespace Key
+{
+	const int kEnter = 0x0D;
+	const int kShift = 0x10;
+	const int kCTRL = 0x11;
+	const int kALT = 0x12;
+
+	const int k0 = 0x30;
+	const int k1 = 0x31;
+	const int k2 = 0x32;
+	const int k3 = 0x33;
+	const int k4 = 0x34;
+	const int k5 = 0x35;
+	const int k6 = 0x36;
+	const int k7 = 0x37;
+	const int k8 = 0x38;
+	const int k9 = 0x39;
+
+	const int kA = 0x41;
+	const int kB = 0x42;
+	const int kC = 0x43;
+	const int kD = 0x44;
+	const int kE = 0x45;
+	const int kF = 0x46;
+	const int kG = 0x47;
+	const int kH = 0x48;
+	const int kI = 0x49;
+	const int kJ = 0x4A;
+	const int kK = 0x4B;
+	const int kL = 0x4C;
+	const int kM = 0x4D;
+	const int kN = 0x4E;
+	const int kO = 0x4F;
+	const int kP = 0x50;
+	const int kQ = 0x51;
+	const int kR = 0x52;
+	const int kS = 0x53;
+	const int kT = 0x54;
+	const int kU = 0x55;
+	const int kV = 0x56;
+	const int kW = 0x57;
+	const int kX = 0x58;
+	const int kY = 0x59;
+	const int kZ = 0x5A;
+}
+
+/// <summary>
 /// 마우스 클릭의 종류를 핸들하는 열거형입니다.
 /// <para>None: 클릭이 없음</para>
 /// <para>Left: 왼쪽 클릭</para>
@@ -57,7 +106,7 @@ struct MouseClick
 /// <para>스레드에 넣기 위한 함수입니다.</para>
 /// </summary>
 /// <param name="msPointer">입력을 집어넣을 MouseClick 포인터</param>
-static void getClickTH(MouseClick* msPointer);
+static void getInputTH(MouseClick* msPointer, int* keyPointer);
 
 /// <summary>
 /// <para>마우스 입력을 받는 스레드를 생성합니다.</para>
@@ -65,7 +114,7 @@ static void getClickTH(MouseClick* msPointer);
 /// <para>한 프로그램에서 두번 이상 이 함수가 실행되면 에러가 발생할 수 있습니다.</para>
 /// </summary>
 /// <returns>정상적으로 수행되었다면 0이 반환됩니다.</returns>
-extern int startGetClick();
+extern int startGetInput();
 
 /// <summary>
 /// 마우스 입력 값을 받아옵니다.
@@ -73,3 +122,15 @@ extern int startGetClick();
 /// </summary>
 /// <returns>마우스 입력 값</returns>
 extern MouseClick getClick();
+
+
+extern int getKey();
+
+/// <summary>
+/// 클릭한 좌표의 클릭 버퍼 id를 받아옵니다.
+/// 이를 통해서 클릭한 오브젝트를 얻어낼 수 있습니다.
+/// </summary>
+/// <param name="buf">참조할 클릭버퍼를 담은 버퍼</param>
+/// <returns>정상적으로 실행되었다면 버퍼의 클릭 버퍼 id가 반환됩니다.
+/// <para>입력 좌표가 버퍼범위를 넘어선다면 -1이 반환됩니다.</para></returns>
+extern int getClickObject(Buffer buf);

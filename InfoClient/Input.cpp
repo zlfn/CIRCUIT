@@ -17,6 +17,7 @@
  */
 
 #include "Input.h"
+#include "Graphic.h"
 #include <thread>
 using namespace std;
 
@@ -25,7 +26,12 @@ using namespace std;
 /// </summary>
 MouseClick* c;
 
-void getClickTH(MouseClick* c)
+/// <summary>
+/// 키 입력을 받는 전역포인터입니다.
+/// </summary>
+int* k;
+
+void getInputTH(MouseClick* c, int* k)
 {
 	MouseClick result;
 
@@ -56,21 +62,41 @@ void getClickTH(MouseClick* c)
 				result.pos.Y = rec.Event.MouseEvent.dwMousePosition.Y;
 				result.type = None;
 			}
+			*c = result;
 		}
-		*c = result;
+		if (rec.EventType == KEY_EVENT)
+		{
+			*k = rec.Event.KeyEvent.wVirtualKeyCode;
+		}
 	}
 }
 
-int startGetClick()
+
+int startGetInput()
 {
 	c = new MouseClick;
-	thread input(getClickTH, c);
+	k = new int;
+	thread input(getInputTH, c, k);
 	input.detach();
 	return 0;
 }
 
 MouseClick getClick()
 {
-	MouseClick temp = *c;
-	return temp;
+	return *c;
+}
+
+int getKey()
+{
+	return *k;
+}
+
+int getClickObject(Buffer buf)
+{
+	MouseClick c = getClick();
+
+	//여백없는 출력을 끌 시 충돌이 발생하였으므로 처리합니다.
+	if (c.pos.X < buf.size.x && c.pos.Y < buf.size.y)
+		return buf.clickBuf[c.pos.X][c.pos.Y];
+	else return -1;
 }

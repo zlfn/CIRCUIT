@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\Scenes">
       <UniqueIdentifier>{36a5764c-28c2-4503-be54-ea8ff664e3f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="리소스 파일\MainScreen">
+      <UniqueIdentifier>{d3b2dcca-7a43-4ab5-b86f-3946489d0cb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -62,21 +65,30 @@
     <ClInclude Include="Input.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardH1.gres">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="CardS1.gres">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="SettingButton.gres">
+      <Filter>리소스 파일\MainScreen</Filter>
+    </None>
+    <None Include="CardC1.gres">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GBSLAND_LOGO.gres">
-      <Filter>리소스 파일</Filter>
+      <Filter>리소스 파일\MainScreen</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TEST.gres">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="CardA1.gres">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="CardB1.gres">
-      <Filter>리소스 파일</Filter>
-    </None>
   </ItemGroup>
 </Project>
