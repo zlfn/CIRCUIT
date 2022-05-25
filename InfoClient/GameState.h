@@ -32,6 +32,7 @@
 enum Scenes
 {
 	Main,
+	Setting,
 };
 
 /// <summary>
@@ -113,8 +114,6 @@ struct GameState
 {
 	Scenes scene;
 	Settings setting;
-
-	const wchar* debug;
 };
 
 /// <summary>

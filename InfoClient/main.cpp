@@ -33,7 +33,6 @@
 //이 파일은 메인 함수가 있는 메인 파일입니다. 멋지네요.
 #include <windows.h>
 #include <ctime>
-#include <random>
 #include <thread>
 #include <iostream>
 #include "Window.h"
@@ -56,11 +55,6 @@ int main()
 	SetConsoleMode(std, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
 	SetConsoleMode(std, ENABLE_EXTENDED_FLAGS | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
 
-	//랜덤 디바이스로 시드 초기화
-	random_device rd;
-	mt19937 gen(rd());
-	uniform_int_distribution<int> dis(0, 200);
-
 	//버퍼 두개 할당받음
 	Buffer buf[2];
 	bool bufCount = false;
@@ -77,30 +71,26 @@ int main()
 	initWchar();
 	startGetInput();
 	resetGameState();
-
-	int Card1X = 39;
-	int Card1Y = 23;
-	int Card2X = 39;
-	int Card2Y = 23;
-	bool stack = false;
 	
 	setWindow(buf[0], false);
 	setWindow(buf[1], false);
 
 	//랜더링 사이클
-	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 클릭 체크 -> 렌더링 -> 스왑 -> 리셋
+	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 입력 체크, 진행 -> 렌더링 -> 스왑 -> 리셋
 	for (;;) {
+		//프레임 측정 시작
+		clock_t start = clock();
+
+		//설정 불러오기
+		Settings set = getGameState()->setting;
+
+		//화면 초기화
 		resetBuffer(buf[bufCount]);
 		resetClickBuffer(buf[bufCount]);
 
-		clock_t start = clock();
-		Settings set = getGameState()->setting;
-
-		
 		//화면 크기 조정
 		setWindow(buf[0], set.noSpaceWindow);
 		setWindow(buf[1], set.noSpaceWindow);
-
 
 		//병렬 리프레시
 		if (set.refresh)
@@ -108,38 +98,26 @@ int main()
 			if (refreshCheck >= set.refreshInterval)
 			{
 				thread refresh(refreshBuffer,buf[bufCount],set.refreshThreadsCount);
-				if (set.parallelRefresh)
-				{
-					refresh.detach();
-				}
-				else
-				{
-					refresh.join();
-				}
+				if (set.parallelRefresh) { refresh.detach(); }
+				else { refresh.join(); }
 				refreshCheck = 0;
 			}
 		}
 
 		//프론트 버퍼 디더링
 		if (set.frontBufferDithering)
-		{
-			for (int i = 0; i < set.ditheringSize; i++)
-			{
-				buf[!bufCount].colorBuf[dis(gen) % buf->size.x][dis(gen) % buf->size.y] = 16;
-			}
-		}
+			ditherBuffer(buf[!bufCount], set.ditheringSize);
 
-
+		//게임 렌더링
 		drawGame(buf[bufCount], *getGameState());
 		playGame(buf[bufCount], getGameState());
-
 
 		//FPS 표시
 		if (set.showFPS)
 		{
 			wchar frametext[50];
-			swprintf_s(frametext, sizeof(frametext), L"%.2lf", frame);
-			drawText(buf[bufCount], frametext, 0, 39, 5, Color::White);
+			swprintf_s(frametext, sizeof(frametext), L"%.1lf", frame);
+			drawText(buf[bufCount], frametext, 0, 39, 20, Color::White);
 		}
 
 		//버퍼 렌더링, 표시
@@ -154,7 +132,6 @@ int main()
 		clock_t end = clock();
 		frame =	1 / ((double)(end - start) / CLOCKS_PER_SEC);
 		refreshCheck += (double)(end - start) / CLOCKS_PER_SEC;
-
 
 		//안정화
 		Sleep(0);

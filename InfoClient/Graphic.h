@@ -167,6 +167,13 @@ extern int drawText(Buffer buf, const wchar* text, int x, int y, int width, int 
 extern int resetBuffer(Buffer bbuf);
 
 /// <summary>
+/// 버퍼의 스크린버퍼를 리셋합니다.
+/// </summary>
+/// <param name="buf">리셋할 버퍼</param>
+/// <returns>정상적으로 리셋되면 0이 반환됩니다. </returns>
+extern int resetScreen(Buffer buf);
+
+/// <summary>
 /// 두 버퍼를 동기화합니다. 더블 버퍼링 과정에 필수적입니다.
 /// </summary>
 /// <param name="client">복사될 버퍼</param>
@@ -211,3 +218,11 @@ extern int drawImage(Buffer buf, const wchar* path, int x, int y, int click);
 /// <param name="buf">리셋할 버퍼</param>
 /// <returns>정상적으로 리셋되었다면 0이 반환됩니다.</returns>
 extern int resetClickBuffer(Buffer buf);
+
+/// <summary>
+/// 버퍼를 디더링합니다.
+/// </summary>
+/// <param name="buf">디더링할 버퍼 (프론트 버퍼)</param>
+/// <param name="ditherFactor">디더링할 양</param>
+/// <returns>정상적으로 디더링되면 0이 반환됩니다.</returns>
+extern int ditherBuffer(Buffer buf, int ditherFactor);

@@ -21,6 +21,7 @@
 #include <iostream>
 #include <windows.h>
 #include <thread>
+#include <random>
 #include "Chars.h"
 #include "Graphic.h"
 #include "Window.h"
@@ -414,7 +415,14 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 			{
 				//검은색 (투명)은 렌더링하지 않습니다.
 				if (!alphaChecker[i][j]) buf.textBuf[j+x][i+y] = c;
-				if (isWide(c)) j++;
+				if (isWide(c)) {
+					j++;
+					if (j + x < buf.size.x && i + y < buf.size.y && 0 <= j + x && 0 <= i + y)
+					{
+						buf.textBuf[j + x][i + y] = L' ';
+						buf.colorBuf[j + x][i + y] = Color::Black;
+					}
+				}
 			}
 		}
 		fgetwc(fs);
@@ -552,7 +560,15 @@ int drawImage(Buffer buf, const wchar* path, int x, int y, int click)
 				//검은색 (투명)은 렌더링하지 않습니다.
 				if (!alphaChecker[i][j]) buf.textBuf[j+x][i+y] = c;
 			}
-			if (isWide(c)) j++;
+			if (isWide(c)) 
+			{
+				j++;
+				if (j + x < buf.size.x && i + y < buf.size.y && 0 <= j + x && 0 <= i + y)
+				{
+					buf.textBuf[j + x][i + y] = L' ';
+					buf.colorBuf[j + x][i + y] = Color::Black;
+				}
+			}
 		}
 		fgetwc(fs);
 	}
@@ -569,4 +585,16 @@ int resetClickBuffer(Buffer buf)
 		for (int j = 0; j < buf.size.y; j++)
 			buf.clickBuf[i][j] = 0;
 	return 0;
+}
+
+int ditherBuffer(Buffer buf, int ditherFactor)
+{
+		for (int i = 0; i < ditherFactor; i++)
+		{
+			random_device rd;
+			mt19937 gen(rd());
+			uniform_int_distribution<int> dis(0, 200);
+			buf.textBuf[dis(gen) % buf.size.x][dis(gen) % buf.size.y] = '\0';
+		}
+		return 0;
 }

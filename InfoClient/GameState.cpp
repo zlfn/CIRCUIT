@@ -42,12 +42,10 @@ int resetGameState()
 	g.setting.refreshThreadsCount = 1;
 
 	g.setting.frontBufferDithering = true;
-	g.setting.ditheringSize = 10;
+	g.setting.ditheringSize = 100;
 
 	g.setting.renderThreadsCount = 1;
-	g.setting.showFPS = true;
-
-	g.debug = L"Test";
+	g.setting.showFPS = false;
 
 	globalGameState = g;
 	return 0;
