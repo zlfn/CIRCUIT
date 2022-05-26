@@ -156,10 +156,13 @@
     <Text Include="GBSLAND_LOGO.gres" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CardH1.gres" />
-    <None Include="CardS1.gres" />
-    <None Include="CardC1.gres" />
+    <None Include="BackButton.gres" />
+    <None Include="Card1.gres" />
+    <None Include="Card2.gres" />
+    <None Include="Off.gres" />
+    <None Include="On.gres" />
     <None Include="SettingButton.gres" />
+    <None Include="Setting_LOGO.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

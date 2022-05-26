@@ -21,26 +21,59 @@
 #include "Input.h"
 
 const int SETTING_BUTTON = 1;
+const int Card1 = 2;
+const int Card2 = 3;
+
+int Card1X = 65;
+int Card1Y = 7;
+int Card2X = 7;
+int Card2Y = 2;
+
+//1번이 위에 있는 여부
+bool stack = false;
 
 int drawMainScreen(Buffer buf, GameState state)
 {
+	drawImage(buf, L"SettingButton.gres", 68, 37, SETTING_BUTTON);
+
+	if (stack)
+	{
+		drawImage(buf, L"Card2.gres", Card2X, Card2Y, Card2);
+		drawImage(buf, L"Card1.gres", Card1X, Card1Y, Card1);
+	}
+	else
+	{
+		drawImage(buf, L"Card1.gres", Card1X, Card1Y, Card1);
+		drawImage(buf, L"Card2.gres", Card2X, Card2Y, Card2);
+	}
+
 	drawImage(buf, L"GBSLAND_LOGO.gres", 11, 4);
 	drawText(buf, L"경기북과학고등학교 정보 수행평가", 37, 10, 100, Color::LightYellow);
 	drawText(buf, L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Yellow);
 	drawText(buf, L"This software distribute under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Yellow);
-	drawImage(buf, L"SettingButton.gres", 68, 37, SETTING_BUTTON);
+
 
 	return 0;
 }
 
 int playMainScreen(Buffer buf, GameState* state)
 {
-	if (getClick().type == Left)
+	if (getClickOnce().type == Left)
 	{
 		switch (getClickObject(buf))
 		{
 		case SETTING_BUTTON:
 			state->scene = Setting;
+			break;
+		case Card1:
+			Card1X = getClick().pos.X - 3;
+			Card1Y = getClick().pos.Y - 3;
+			stack = true;
+			break;
+		case Card2:
+			Card2X = getClick().pos.X - 3;
+			Card2Y = getClick().pos.Y - 3;
+			stack = false;
 			break;
 		}
 	}

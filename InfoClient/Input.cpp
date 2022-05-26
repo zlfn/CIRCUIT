@@ -1,33 +1,34 @@
 //GNU GPL 3.0 lisence
 /*
- * Á¤º¸ ¼öÇàÆò°¡ °ÔÀÓ
- * Copyright (C) 2022 ¹ÚÂù¿õ, ±èÁø¼­, ¹ÚÁöÈ¯
+ * ì •ë³´ ìˆ˜í–‰í‰ê°€ ê²Œìž„
+ * Copyright (C) 2022 ë°•ì°¬ì›…, ê¹€ì§„ì„œ, ë°•ì§€í™˜
  *
- * ÀÌ ÇÁ·Î±×·¥Àº ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾îÀÔ´Ï´Ù. ¼ÒÇÁÆ®¿þ¾îÀÇ ÇÇ¾çµµÀÚ´Â ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾î
- * Àç´ÜÀÌ °øÇ¥ÇÑ GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­ 3ÆÇ È¤Àº ±× ÀÌÈÄ ÆÇÀ» ÀÓÀÇ·Î ¼±ÅÃÇÏ¿©
- * ±× ±ÔÁ¤¿¡ µû¶ó ÇÁ·Î±×·¥À» °³ÀÛÇÏ°Å³ª Àç¹èÆ÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´ìž…ë‹ˆë‹¤. ì†Œí”„íŠ¸ì›¨ì–´ì˜ í”¼ì–‘ë„ìžëŠ” ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´
+ * ìž¬ë‹¨ì´ ê³µí‘œí•œ GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œ 3íŒ í˜¹ì€ ê·¸ ì´í›„ íŒì„ ìž„ì˜ë¡œ ì„ íƒí•˜ì—¬
+ * ê·¸ ê·œì •ì— ë”°ë¼ í”„ë¡œê·¸ëž¨ì„ ê°œìž‘í•˜ê±°ë‚˜ ìž¬ë°°í¬í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
  *
- * ÀÌ ÇÁ·Î±×·¥Àº À¯¿ëÇÏ°Ô »ç¿ëµÉ ¼ö ÀÖÀ¸¸®¶ó´Â Èñ¸Á¿¡¼­ ¹èÆ÷µÇ°í ÀÖÁö¸¸, Æ¯Á¤ÇÑ
- * ¸ñÀû¿¡ ¸Â´Â ÀûÇÕ¼º ¿©ºÎ³ª ÆÇ¸Å¿ëÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖÀ¸¸®¶ó´Â ¹¬½ÃÀûÀÎ º¸ÁõÀ» Æ÷ÇÔÇÑ
- * ¾î¶°ÇÑ ÇüÅÂÀÇ º¸Áõµµ Á¦°øÇÏÁö ¾Ê½À´Ï´Ù. º¸´Ù ÀÚ¼¼ÇÑ »çÇ×¿¡ ´ëÇØ¼­´Â
- * GNU ÀÏ¹Ý °øÁß Çã°¡¼­¸¦ Âü°íÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìœ ìš©í•˜ê²Œ ì‚¬ìš©ë  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” í¬ë§ì—ì„œ ë°°í¬ë˜ê³  ìžˆì§€ë§Œ, íŠ¹ì •í•œ
+ * ëª©ì ì— ë§žëŠ” ì í•©ì„± ì—¬ë¶€ë‚˜ íŒë§¤ìš©ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” ë¬µì‹œì ì¸ ë³´ì¦ì„ í¬í•¨í•œ
+ * ì–´ë– í•œ í˜•íƒœì˜ ë³´ì¦ë„ ì œê³µí•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë³´ë‹¤ ìžì„¸í•œ ì‚¬í•­ì— ëŒ€í•´ì„œëŠ”
+ * GNU ì¼ë°˜ ê³µì¤‘ í—ˆê°€ì„œë¥¼ ì°¸ê³ í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  *
- * GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­´Â ÀÌ ÇÁ·Î±×·¥°ú ÇÔ²² Á¦°øµË´Ï´Ù. ¸¸¾à ¹®¼­°¡ ´©¶ôµÇ¾îÀÖ´Ù¸é
- * <http://www.gnu.org/licenses/>À» ÂüÁ¶ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œëŠ” ì´ í”„ë¡œê·¸ëž¨ê³¼ í•¨ê»˜ ì œê³µë©ë‹ˆë‹¤. ë§Œì•½ ë¬¸ì„œê°€ ëˆ„ë½ë˜ì–´ìžˆë‹¤ë©´
+ * <http://www.gnu.org/licenses/>ì„ ì°¸ì¡°í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  */
 
 #include "Input.h"
 #include "Graphic.h"
+#include <conio.h>
 #include <thread>
 using namespace std;
 
 /// <summary>
-/// ¸¶¿ì½º Å¬¸¯À» ¹Þ´Â Àü¿ªÆ÷ÀÎÅÍÀÔ´Ï´Ù.
+/// ë§ˆìš°ìŠ¤ í´ë¦­ì„ ë°›ëŠ” ì „ì—­í¬ì¸í„°ìž…ë‹ˆë‹¤.
 /// </summary>
 MouseClick* c;
 
 /// <summary>
-/// Å° ÀÔ·ÂÀ» ¹Þ´Â Àü¿ªÆ÷ÀÎÅÍÀÔ´Ï´Ù.
+/// í‚¤ ìž…ë ¥ì„ ë°›ëŠ” ì „ì—­í¬ì¸í„°ìž…ë‹ˆë‹¤.
 /// </summary>
 int* k;
 
@@ -64,13 +65,14 @@ void getInputTH(MouseClick* c, int* k)
 			}
 			*c = result;
 		}
-		if (rec.EventType == KEY_EVENT)
+		else if (rec.EventType == KEY_EVENT)
 		{
 			*k = rec.Event.KeyEvent.wVirtualKeyCode;
 		}
+		if (!rec.Event.KeyEvent.bKeyDown)
+			*k = 0;
 	}
 }
-
 
 int startGetInput()
 {
@@ -86,6 +88,14 @@ MouseClick getClick()
 	return *c;
 }
 
+MouseClick getClickOnce()
+{
+	MouseClick temp = getClick();
+	c->type = None;
+
+	return temp;
+}
+
 int getKey()
 {
 	return *k;
@@ -95,7 +105,7 @@ int getClickObject(Buffer buf)
 {
 	MouseClick c = getClick();
 
-	//¿©¹é¾ø´Â Ãâ·ÂÀ» ²ø ½Ã Ãæµ¹ÀÌ ¹ß»ýÇÏ¿´À¸¹Ç·Î Ã³¸®ÇÕ´Ï´Ù.
+	//ì—¬ë°±ì—†ëŠ” ì¶œë ¥ì„ ëŒ ì‹œ ì¶©ëŒì´ ë°œìƒí•˜ì˜€ìœ¼ë¯€ë¡œ ì²˜ë¦¬í•©ë‹ˆë‹¤.
 	if (c.pos.X < buf.size.x && c.pos.Y < buf.size.y)
 		return buf.clickBuf[c.pos.X][c.pos.Y];
 	else return -1;

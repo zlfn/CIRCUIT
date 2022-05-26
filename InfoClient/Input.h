@@ -1,27 +1,27 @@
 //GNU GPL 3.0 lisence
 /*
- * Á¤º¸ ¼öÇàÆò°¡ °ÔÀÓ
- * Copyright (C) 2022 ¹ÚÂù¿õ, ±èÁø¼­, ¹ÚÁöÈ¯
+ * ì •ë³´ ìˆ˜í–‰í‰ê°€ ê²Œìž„
+ * Copyright (C) 2022 ë°•ì°¬ì›…, ê¹€ì§„ì„œ, ë°•ì§€í™˜
  *
- * ÀÌ ÇÁ·Î±×·¥Àº ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾îÀÔ´Ï´Ù. ¼ÒÇÁÆ®¿þ¾îÀÇ ÇÇ¾çµµÀÚ´Â ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾î
- * Àç´ÜÀÌ °øÇ¥ÇÑ GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­ 3ÆÇ È¤Àº ±× ÀÌÈÄ ÆÇÀ» ÀÓÀÇ·Î ¼±ÅÃÇÏ¿©
- * ±× ±ÔÁ¤¿¡ µû¶ó ÇÁ·Î±×·¥À» °³ÀÛÇÏ°Å³ª Àç¹èÆ÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´ìž…ë‹ˆë‹¤. ì†Œí”„íŠ¸ì›¨ì–´ì˜ í”¼ì–‘ë„ìžëŠ” ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´
+ * ìž¬ë‹¨ì´ ê³µí‘œí•œ GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œ 3íŒ í˜¹ì€ ê·¸ ì´í›„ íŒì„ ìž„ì˜ë¡œ ì„ íƒí•˜ì—¬
+ * ê·¸ ê·œì •ì— ë”°ë¼ í”„ë¡œê·¸ëž¨ì„ ê°œìž‘í•˜ê±°ë‚˜ ìž¬ë°°í¬í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
  *
- * ÀÌ ÇÁ·Î±×·¥Àº À¯¿ëÇÏ°Ô »ç¿ëµÉ ¼ö ÀÖÀ¸¸®¶ó´Â Èñ¸Á¿¡¼­ ¹èÆ÷µÇ°í ÀÖÁö¸¸, Æ¯Á¤ÇÑ
- * ¸ñÀû¿¡ ¸Â´Â ÀûÇÕ¼º ¿©ºÎ³ª ÆÇ¸Å¿ëÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖÀ¸¸®¶ó´Â ¹¬½ÃÀûÀÎ º¸ÁõÀ» Æ÷ÇÔÇÑ
- * ¾î¶°ÇÑ ÇüÅÂÀÇ º¸Áõµµ Á¦°øÇÏÁö ¾Ê½À´Ï´Ù. º¸´Ù ÀÚ¼¼ÇÑ »çÇ×¿¡ ´ëÇØ¼­´Â
- * GNU ÀÏ¹Ý °øÁß Çã°¡¼­¸¦ Âü°íÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìœ ìš©í•˜ê²Œ ì‚¬ìš©ë  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” í¬ë§ì—ì„œ ë°°í¬ë˜ê³  ìžˆì§€ë§Œ, íŠ¹ì •í•œ
+ * ëª©ì ì— ë§žëŠ” ì í•©ì„± ì—¬ë¶€ë‚˜ íŒë§¤ìš©ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” ë¬µì‹œì ì¸ ë³´ì¦ì„ í¬í•¨í•œ
+ * ì–´ë– í•œ í˜•íƒœì˜ ë³´ì¦ë„ ì œê³µí•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë³´ë‹¤ ìžì„¸í•œ ì‚¬í•­ì— ëŒ€í•´ì„œëŠ”
+ * GNU ì¼ë°˜ ê³µì¤‘ í—ˆê°€ì„œë¥¼ ì°¸ê³ í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  *
- * GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­´Â ÀÌ ÇÁ·Î±×·¥°ú ÇÔ²² Á¦°øµË´Ï´Ù. ¸¸¾à ¹®¼­°¡ ´©¶ôµÇ¾îÀÖ´Ù¸é
- * <http://www.gnu.org/licenses/>À» ÂüÁ¶ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œëŠ” ì´ í”„ë¡œê·¸ëž¨ê³¼ í•¨ê»˜ ì œê³µë©ë‹ˆë‹¤. ë§Œì•½ ë¬¸ì„œê°€ ëˆ„ë½ë˜ì–´ìžˆë‹¤ë©´
+ * <http://www.gnu.org/licenses/>ì„ ì°¸ì¡°í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  */
 
-//»ç¿ëÀÚ ÀÔ·Â°ú °ü·ÃµÈ ³»¿ëÀ» ´ãÀº Çì´õÆÄÀÏÀÔ´Ï´Ù.
-/* ´Ùµé ÄÜ¼Ö¿¡¼­ ¸Þ´º¼±ÅÃÀ» ¹æÇâÅ°³ª ¹¹ ±×·±°É °¡Áö°í ÀÔ·ÂÇÏ´Âµ¥, 
-* Á¦ Å°º¸µå (ÇØÇÇÇØÅ·)¿¡´Â ¹æÇâÅ°°¡ ¾ø½À´Ï´Ù. ±×·¡¼­ ½È¾î¿ä.
-* ±×·¡¼­ WindowsAPI¸¦ ÀÌ¿ëÇØ¼­ ¸¶¿ì½º Å¬¸¯À» ¹Þ±â·Î Çß½À´Ï´Ù.
-* ±Ùµ¥ ºÐ¸í ÀÔ·Â¹öÆÛ ¹æ½ÄÀ¸·Î ¹Þ´Â °Å¸é ´ëÃæ ¸ÞÀÎ ·çÇÁ ¾È¿¡ ³Ö¾îµµ ¿¬¼ÓÀûÀÎ ¸¶¿ì½º ÀÔ·ÂÀÌ °¡´ÉÇØ¾ß ÇÒ°Å °°Àºµ¥,
-* ¿ä»óÇÏ°Ôµµ ±×·¯Áö ¾Ê´õ¶ó°í¿ä. ±×·¡¼­ ¸¶¿ì½º ÀÔ·Â¸¸ ¹«ÇÑÁ¤ ¹Þ´Â ½º·¹µå¸¦ ¸¸µé¾î¼­ detach() ÇÏ´Â ¹æ½ÄÀ¸·Î ¸¶¿ì½º Å¬¸¯À» ¹Þ½À´Ï´Ù.
+//ì‚¬ìš©ìž ìž…ë ¥ê³¼ ê´€ë ¨ëœ ë‚´ìš©ì„ ë‹´ì€ í—¤ë”íŒŒì¼ìž…ë‹ˆë‹¤.
+/* ë‹¤ë“¤ ì½˜ì†”ì—ì„œ ë©”ë‰´ì„ íƒì„ ë°©í–¥í‚¤ë‚˜ ë­ ê·¸ëŸ°ê±¸ ê°€ì§€ê³  ìž…ë ¥í•˜ëŠ”ë°, 
+* ì œ í‚¤ë³´ë“œ (í•´í”¼í•´í‚¹)ì—ëŠ” ë°©í–¥í‚¤ê°€ ì—†ìŠµë‹ˆë‹¤. ê·¸ëž˜ì„œ ì‹«ì–´ìš”.
+* ê·¸ëž˜ì„œ WindowsAPIë¥¼ ì´ìš©í•´ì„œ ë§ˆìš°ìŠ¤ í´ë¦­ì„ ë°›ê¸°ë¡œ í–ˆìŠµë‹ˆë‹¤.
+* ê·¼ë° ë¶„ëª… ìž…ë ¥ë²„í¼ ë°©ì‹ìœ¼ë¡œ ë°›ëŠ” ê±°ë©´ ëŒ€ì¶© ë©”ì¸ ë£¨í”„ ì•ˆì— ë„£ì–´ë„ ì—°ì†ì ì¸ ë§ˆìš°ìŠ¤ ìž…ë ¥ì´ ê°€ëŠ¥í•´ì•¼ í• ê±° ê°™ì€ë°,
+* ìš”ìƒí•˜ê²Œë„ ê·¸ëŸ¬ì§€ ì•Šë”ë¼ê³ ìš”. ê·¸ëž˜ì„œ ë§ˆìš°ìŠ¤ ìž…ë ¥ë§Œ ë¬´í•œì • ë°›ëŠ” ìŠ¤ë ˆë“œë¥¼ ë§Œë“¤ì–´ì„œ detach() í•˜ëŠ” ë°©ì‹ìœ¼ë¡œ ë§ˆìš°ìŠ¤ í´ë¦­ì„ ë°›ìŠµë‹ˆë‹¤.
 */
 
 #pragma once
@@ -29,14 +29,27 @@
 #include "Graphic.h"
 
 /// <summary>
-/// À©µµ¿ì °¡»ó Å°ÄÚµå »ó¼öÀÔ´Ï´Ù.
+/// ìœˆë„ìš° ê°€ìƒ í‚¤ì½”ë“œ ìƒìˆ˜ìž…ë‹ˆë‹¤.
 /// </summary>
 namespace Key
 {
+	const int kBACKSPACE = 0x08;
+	const int kTAB = 0x09;
 	const int kEnter = 0x0D;
 	const int kShift = 0x10;
 	const int kCTRL = 0x11;
 	const int kALT = 0x12;
+	const int kCAPSLOCK = 0x14;
+	const int kESC = 0x1B;
+	const int kSPACE = 0x20;
+
+	const int kLEFT = 0x25;
+	const int kUP = 0x26;
+	const int kRIGHT = 0x27;
+	const int kDOWN = 0x27;
+
+	const int kINSERT = 0x2D;
+	const int kDELETE = 0x2E;
 
 	const int k0 = 0x30;
 	const int k1 = 0x31;
@@ -78,10 +91,10 @@ namespace Key
 }
 
 /// <summary>
-/// ¸¶¿ì½º Å¬¸¯ÀÇ Á¾·ù¸¦ ÇÚµéÇÏ´Â ¿­°ÅÇüÀÔ´Ï´Ù.
-/// <para>None: Å¬¸¯ÀÌ ¾øÀ½</para>
-/// <para>Left: ¿ÞÂÊ Å¬¸¯</para>
-/// <para>Right: ¿À¸¥ÂÊ Å¬¸¯</para>
+/// ë§ˆìš°ìŠ¤ í´ë¦­ì˜ ì¢…ë¥˜ë¥¼ í•¸ë“¤í•˜ëŠ” ì—´ê±°í˜•ìž…ë‹ˆë‹¤.
+/// <para>None: í´ë¦­ì´ ì—†ìŒ</para>
+/// <para>Left: ì™¼ìª½ í´ë¦­</para>
+/// <para>Right: ì˜¤ë¥¸ìª½ í´ë¦­</para>
 /// </summary>
 enum MouseClickType
 {
@@ -91,9 +104,9 @@ enum MouseClickType
 };
 
 /// <summary>
-/// ¸¶¿ì½º Å¬¸¯ÀÔ·ÂÀ» º¸°üÇÏ´Â ±¸Á¶Ã¼ÀÔ´Ï´Ù.
-/// <para>pos: ¸¶¿ì½º Å¬¸¯ ÁÂÇ¥</para>
-/// <para>MouseClickType: ¸¶¿ì½º Å¬¸¯ÀÇ Á¾·ù</para>
+/// ë§ˆìš°ìŠ¤ í´ë¦­ìž…ë ¥ì„ ë³´ê´€í•˜ëŠ” êµ¬ì¡°ì²´ìž…ë‹ˆë‹¤.
+/// <para>pos: ë§ˆìš°ìŠ¤ í´ë¦­ ì¢Œí‘œ</para>
+/// <para>MouseClickType: ë§ˆìš°ìŠ¤ í´ë¦­ì˜ ì¢…ë¥˜</para>
 /// </summary>
 struct MouseClick
 {
@@ -102,35 +115,45 @@ struct MouseClick
 };
 
 /// <summary>
-/// <para>ÀÔ·ÂÁ¤º¸¸¦ °¡Á®¿Í¼­ Æ÷ÀÎÅÍ¿¡ µî·ÏÇÏ´Â °ÍÀ» ¹«ÇÑ ¹Ýº¹ÇÕ´Ï´Ù.</para>
-/// <para>½º·¹µå¿¡ ³Ö±â À§ÇÑ ÇÔ¼öÀÔ´Ï´Ù.</para>
+/// <para>ìž…ë ¥ì •ë³´ë¥¼ ê°€ì ¸ì™€ì„œ í¬ì¸í„°ì— ë“±ë¡í•˜ëŠ” ê²ƒì„ ë¬´í•œ ë°˜ë³µí•©ë‹ˆë‹¤.</para>
+/// <para>ìŠ¤ë ˆë“œì— ë„£ê¸° ìœ„í•œ í•¨ìˆ˜ìž…ë‹ˆë‹¤.</para>
 /// </summary>
-/// <param name="msPointer">ÀÔ·ÂÀ» Áý¾î³ÖÀ» MouseClick Æ÷ÀÎÅÍ</param>
+/// <param name="msPointer">ìž…ë ¥ì„ ì§‘ì–´ë„£ì„ MouseClick í¬ì¸í„°</param>
 static void getInputTH(MouseClick* msPointer, int* keyPointer);
 
 /// <summary>
-/// <para>¸¶¿ì½º ÀÔ·ÂÀ» ¹Þ´Â ½º·¹µå¸¦ »ý¼ºÇÕ´Ï´Ù.</para>
-/// <para>½º·¹µå´Â detachµÇ¾î ÇÁ·Î±×·¥ Á¾·á½Ã±îÁö À¯ÁöµË´Ï´Ù.</para>
-/// <para>ÇÑ ÇÁ·Î±×·¥¿¡¼­ µÎ¹ø ÀÌ»ó ÀÌ ÇÔ¼ö°¡ ½ÇÇàµÇ¸é ¿¡·¯°¡ ¹ß»ýÇÒ ¼ö ÀÖ½À´Ï´Ù.</para>
+/// <para>ë§ˆìš°ìŠ¤ ìž…ë ¥ì„ ë°›ëŠ” ìŠ¤ë ˆë“œë¥¼ ìƒì„±í•©ë‹ˆë‹¤.</para>
+/// <para>ìŠ¤ë ˆë“œëŠ” detachë˜ì–´ í”„ë¡œê·¸ëž¨ ì¢…ë£Œì‹œê¹Œì§€ ìœ ì§€ë©ë‹ˆë‹¤.</para>
+/// <para>í•œ í”„ë¡œê·¸ëž¨ì—ì„œ ë‘ë²ˆ ì´ìƒ ì´ í•¨ìˆ˜ê°€ ì‹¤í–‰ë˜ë©´ ì—ëŸ¬ê°€ ë°œìƒí•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.</para>
 /// </summary>
-/// <returns>Á¤»óÀûÀ¸·Î ¼öÇàµÇ¾ú´Ù¸é 0ÀÌ ¹ÝÈ¯µË´Ï´Ù.</returns>
+/// <returns>ì •ìƒì ìœ¼ë¡œ ìˆ˜í–‰ë˜ì—ˆë‹¤ë©´ 0ì´ ë°˜í™˜ë©ë‹ˆë‹¤.</returns>
 extern int startGetInput();
 
 /// <summary>
-/// ¸¶¿ì½º ÀÔ·Â °ªÀ» ¹Þ¾Æ¿É´Ï´Ù.
-/// <para>startGetClick()ÀÌ ¹Ýµå½Ã ¼±ÇàµÇ¾î¾ßÇÕ´Ï´Ù.</para>
+/// ë§ˆìš°ìŠ¤ ìž…ë ¥ ê°’ì„ ë°›ì•„ì˜µë‹ˆë‹¤.
+/// <para>startGetClick()ì´ ë°˜ë“œì‹œ ì„ í–‰ë˜ì–´ì•¼í•©ë‹ˆë‹¤.</para>
 /// </summary>
-/// <returns>¸¶¿ì½º ÀÔ·Â °ª</returns>
+/// <returns>ë§ˆìš°ìŠ¤ ìž…ë ¥ ê°’</returns>
 extern MouseClick getClick();
 
+/// <summary>
+/// ë§ˆìš°ìŠ¤ ìž…ë ¥ ê°’ì„ ë°›ì•„ì˜¤ê³ , ìž…ë ¥ê°’ì„ ì‚­ì œí•©ë‹ˆë‹¤.
+/// <para>í•œ ì‚¬ì´í´ì— í•œë²ˆ ì”©ë§Œ ìœ íš¨í•œ ê°’ì´ ë°˜í™˜ë©ë‹ˆë‹¤.</para>
+/// </summary>
+/// <returns>ë§ˆìš°ìŠ¤ ìž…ë ¥ ê°’</returns>
+extern MouseClick getClickOnce();
 
+/// <summary>
+/// ëˆŒë¦° í‚¤ì˜ í‚¤ ì½”ë“œë¥¼ ë°›ì•„ì˜µë‹ˆë‹¤.
+/// </summary>
+/// <returns>í‚¤ ì½”ë“œ</returns>
 extern int getKey();
 
 /// <summary>
-/// Å¬¸¯ÇÑ ÁÂÇ¥ÀÇ Å¬¸¯ ¹öÆÛ id¸¦ ¹Þ¾Æ¿É´Ï´Ù.
-/// ÀÌ¸¦ ÅëÇØ¼­ Å¬¸¯ÇÑ ¿ÀºêÁ§Æ®¸¦ ¾ò¾î³¾ ¼ö ÀÖ½À´Ï´Ù.
+/// í´ë¦­í•œ ì¢Œí‘œì˜ í´ë¦­ ë²„í¼ idë¥¼ ë°›ì•„ì˜µë‹ˆë‹¤.
+/// ì´ë¥¼ í†µí•´ì„œ í´ë¦­í•œ ì˜¤ë¸Œì íŠ¸ë¥¼ ì–»ì–´ë‚¼ ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
 /// </summary>
-/// <param name="buf">ÂüÁ¶ÇÒ Å¬¸¯¹öÆÛ¸¦ ´ãÀº ¹öÆÛ</param>
-/// <returns>Á¤»óÀûÀ¸·Î ½ÇÇàµÇ¾ú´Ù¸é ¹öÆÛÀÇ Å¬¸¯ ¹öÆÛ id°¡ ¹ÝÈ¯µË´Ï´Ù.
-/// <para>ÀÔ·Â ÁÂÇ¥°¡ ¹öÆÛ¹üÀ§¸¦ ³Ñ¾î¼±´Ù¸é -1ÀÌ ¹ÝÈ¯µË´Ï´Ù.</para></returns>
+/// <param name="buf">ì°¸ì¡°í•  í´ë¦­ë²„í¼ë¥¼ ë‹´ì€ ë²„í¼</param>
+/// <returns>ì •ìƒì ìœ¼ë¡œ ì‹¤í–‰ë˜ì—ˆë‹¤ë©´ ë²„í¼ì˜ í´ë¦­ ë²„í¼ idê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
+/// <para>ìž…ë ¥ ì¢Œí‘œê°€ ë²„í¼ë²”ìœ„ë¥¼ ë„˜ì–´ì„ ë‹¤ë©´ -1ì´ ë°˜í™˜ë©ë‹ˆë‹¤.</para></returns>
 extern int getClickObject(Buffer buf);

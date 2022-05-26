@@ -1,22 +1,22 @@
-ï»¿//GNU GPL 3.0 lisence
+//GNU GPL 3.0 lisence
 /*
- * ì •ë³´ ìˆ˜í–‰í‰ê°€ ê²Œìž„
- * Copyright (C) 2022 ë°•ì°¬ì›…, ê¹€ì§„ì„œ, ë°•ì§€í™˜
+ * Á¤º¸ ¼öÇàÆò°¡ °ÔÀÓ
+ * Copyright (C) 2022 ¹ÚÂù¿õ, ±èÁø¼­, ¹ÚÁöÈ¯
  *
- * ì´ í”„ë¡œê·¸ëž¨ì€ ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´ìž…ë‹ˆë‹¤. ì†Œí”„íŠ¸ì›¨ì–´ì˜ í”¼ì–‘ë„ìžëŠ” ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´
- * ìž¬ë‹¨ì´ ê³µí‘œí•œ GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œ 3íŒ í˜¹ì€ ê·¸ ì´í›„ íŒì„ ìž„ì˜ë¡œ ì„ íƒí•˜ì—¬
- * ê·¸ ê·œì •ì— ë”°ë¼ í”„ë¡œê·¸ëž¨ì„ ê°œìž‘í•˜ê±°ë‚˜ ìž¬ë°°í¬í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
+ * ÀÌ ÇÁ·Î±×·¥Àº ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾îÀÔ´Ï´Ù. ¼ÒÇÁÆ®¿þ¾îÀÇ ÇÇ¾çµµÀÚ´Â ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾î
+ * Àç´ÜÀÌ °øÇ¥ÇÑ GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­ 3ÆÇ È¤Àº ±× ÀÌÈÄ ÆÇÀ» ÀÓÀÇ·Î ¼±ÅÃÇÏ¿©
+ * ±× ±ÔÁ¤¿¡ µû¶ó ÇÁ·Î±×·¥À» °³ÀÛÇÏ°Å³ª Àç¹èÆ÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.
  *
- * ì´ í”„ë¡œê·¸ëž¨ì€ ìœ ìš©í•˜ê²Œ ì‚¬ìš©ë  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” í¬ë§ì—ì„œ ë°°í¬ë˜ê³  ìžˆì§€ë§Œ, íŠ¹ì •í•œ
- * ëª©ì ì— ë§žëŠ” ì í•©ì„± ì—¬ë¶€ë‚˜ íŒë§¤ìš©ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” ë¬µì‹œì ì¸ ë³´ì¦ì„ í¬í•¨í•œ
- * ì–´ë– í•œ í˜•íƒœì˜ ë³´ì¦ë„ ì œê³µí•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë³´ë‹¤ ìžì„¸í•œ ì‚¬í•­ì— ëŒ€í•´ì„œëŠ”
- * GNU ì¼ë°˜ ê³µì¤‘ í—ˆê°€ì„œë¥¼ ì°¸ê³ í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
+ * ÀÌ ÇÁ·Î±×·¥Àº À¯¿ëÇÏ°Ô »ç¿ëµÉ ¼ö ÀÖÀ¸¸®¶ó´Â Èñ¸Á¿¡¼­ ¹èÆ÷µÇ°í ÀÖÁö¸¸, Æ¯Á¤ÇÑ
+ * ¸ñÀû¿¡ ¸Â´Â ÀûÇÕ¼º ¿©ºÎ³ª ÆÇ¸Å¿ëÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖÀ¸¸®¶ó´Â ¹¬½ÃÀûÀÎ º¸ÁõÀ» Æ÷ÇÔÇÑ
+ * ¾î¶°ÇÑ ÇüÅÂÀÇ º¸Áõµµ Á¦°øÇÏÁö ¾Ê½À´Ï´Ù. º¸´Ù ÀÚ¼¼ÇÑ »çÇ×¿¡ ´ëÇØ¼­´Â
+ * GNU ÀÏ¹Ý °øÁß Çã°¡¼­¸¦ Âü°íÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
  *
- * GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œëŠ” ì´ í”„ë¡œê·¸ëž¨ê³¼ í•¨ê»˜ ì œê³µë©ë‹ˆë‹¤. ë§Œì•½ ë¬¸ì„œê°€ ëˆ„ë½ë˜ì–´ìžˆë‹¤ë©´
- * <http://www.gnu.org/licenses/>ì„ ì°¸ì¡°í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
+ * GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­´Â ÀÌ ÇÁ·Î±×·¥°ú ÇÔ²² Á¦°øµË´Ï´Ù. ¸¸¾à ¹®¼­°¡ ´©¶ôµÇ¾îÀÖ´Ù¸é
+ * <http://www.gnu.org/licenses/>À» ÂüÁ¶ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
  */
 
-//ì½˜ì†”ì—ì„œ í•œê¸€ì„ í¬í•¨í•œ ìœ ë‹ˆì½”ë“œë¥¼ ì´ìš©í•˜ê¸° ìœ„í•œ í•¨ìˆ˜ë¥¼ ëª¨ì•„ë†“ì€ íŒŒì¼ìž…ë‹ˆë‹¤.
+//ÄÜ¼Ö¿¡¼­ ÇÑ±ÛÀ» Æ÷ÇÔÇÑ À¯´ÏÄÚµå¸¦ ÀÌ¿ëÇÏ±â À§ÇÑ ÇÔ¼ö¸¦ ¸ð¾Æ³õÀº ÆÄÀÏÀÔ´Ï´Ù.
 #include <iostream>
 #include <Windows.h>
 #include "Chars.h"
@@ -29,11 +29,9 @@ int initWchar(void)
 
 bool isWide(wchar s)
 {
-	//(ì˜›í•œê¸€ì„ ì œì™¸í•˜ë©´) í•œê¸€ ìœ ë‹ˆì½”ë“œì˜ ì²«ê¸€ìžëŠ” ê°€, ë ê¸€ìžëŠ” íž£ìž…ë‹ˆë‹¤.
-	const wchar start = L'ê°€';
-	const wchar end = L'íž£';
+	//(¿¾ÇÑ±ÛÀ» Á¦¿ÜÇÏ¸é) ÇÑ±Û À¯´ÏÄÚµåÀÇ Ã¹±ÛÀÚ´Â °¡, ³¡ ±ÛÀÚ´Â ÆRÀÔ´Ï´Ù.
+	const wchar start = L'°¡';
+	const wchar end = L'ÆR';
 	if(s >= start && s <= end) return true;
-	if (s == 'â– ') return true;
-	if (s == 'â–¡') return true;
 	return false;
 }
