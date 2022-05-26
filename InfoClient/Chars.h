@@ -1,37 +1,37 @@
 //GNU GPL 3.0 lisence
 /*
- * Á¤º¸ ¼öÇàÆò°¡ °ÔÀÓ
- * Copyright (C) 2022 ¹ÚÂù¿õ, ±èÁø¼­, ¹ÚÁöÈ¯
+ * ì •ë³´ ìˆ˜í–‰í‰ê°€ ê²Œìž„
+ * Copyright (C) 2022 ë°•ì°¬ì›…, ê¹€ì§„ì„œ, ë°•ì§€í™˜
  *
- * ÀÌ ÇÁ·Î±×·¥Àº ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾îÀÔ´Ï´Ù. ¼ÒÇÁÆ®¿þ¾îÀÇ ÇÇ¾çµµÀÚ´Â ÀÚÀ¯ ¼ÒÇÁÆ®¿þ¾î
- * Àç´ÜÀÌ °øÇ¥ÇÑ GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­ 3ÆÇ È¤Àº ±× ÀÌÈÄ ÆÇÀ» ÀÓÀÇ·Î ¼±ÅÃÇÏ¿©
- * ±× ±ÔÁ¤¿¡ µû¶ó ÇÁ·Î±×·¥À» °³ÀÛÇÏ°Å³ª Àç¹èÆ÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´ìž…ë‹ˆë‹¤. ì†Œí”„íŠ¸ì›¨ì–´ì˜ í”¼ì–‘ë„ìžëŠ” ìžìœ  ì†Œí”„íŠ¸ì›¨ì–´
+ * ìž¬ë‹¨ì´ ê³µí‘œí•œ GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œ 3íŒ í˜¹ì€ ê·¸ ì´í›„ íŒì„ ìž„ì˜ë¡œ ì„ íƒí•˜ì—¬
+ * ê·¸ ê·œì •ì— ë”°ë¼ í”„ë¡œê·¸ëž¨ì„ ê°œìž‘í•˜ê±°ë‚˜ ìž¬ë°°í¬í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
  *
- * ÀÌ ÇÁ·Î±×·¥Àº À¯¿ëÇÏ°Ô »ç¿ëµÉ ¼ö ÀÖÀ¸¸®¶ó´Â Èñ¸Á¿¡¼­ ¹èÆ÷µÇ°í ÀÖÁö¸¸, Æ¯Á¤ÇÑ
- * ¸ñÀû¿¡ ¸Â´Â ÀûÇÕ¼º ¿©ºÎ³ª ÆÇ¸Å¿ëÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖÀ¸¸®¶ó´Â ¹¬½ÃÀûÀÎ º¸ÁõÀ» Æ÷ÇÔÇÑ
- * ¾î¶°ÇÑ ÇüÅÂÀÇ º¸Áõµµ Á¦°øÇÏÁö ¾Ê½À´Ï´Ù. º¸´Ù ÀÚ¼¼ÇÑ »çÇ×¿¡ ´ëÇØ¼­´Â
- * GNU ÀÏ¹Ý °øÁß Çã°¡¼­¸¦ Âü°íÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * ì´ í”„ë¡œê·¸ëž¨ì€ ìœ ìš©í•˜ê²Œ ì‚¬ìš©ë  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” í¬ë§ì—ì„œ ë°°í¬ë˜ê³  ìžˆì§€ë§Œ, íŠ¹ì •í•œ
+ * ëª©ì ì— ë§žëŠ” ì í•©ì„± ì—¬ë¶€ë‚˜ íŒë§¤ìš©ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆìœ¼ë¦¬ë¼ëŠ” ë¬µì‹œì ì¸ ë³´ì¦ì„ í¬í•¨í•œ
+ * ì–´ë– í•œ í˜•íƒœì˜ ë³´ì¦ë„ ì œê³µí•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ë³´ë‹¤ ìžì„¸í•œ ì‚¬í•­ì— ëŒ€í•´ì„œëŠ”
+ * GNU ì¼ë°˜ ê³µì¤‘ í—ˆê°€ì„œë¥¼ ì°¸ê³ í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  *
- * GNU ÀÏ¹Ý °øÁß »ç¿ë Çã°¡¼­´Â ÀÌ ÇÁ·Î±×·¥°ú ÇÔ²² Á¦°øµË´Ï´Ù. ¸¸¾à ¹®¼­°¡ ´©¶ôµÇ¾îÀÖ´Ù¸é
- * <http://www.gnu.org/licenses/>À» ÂüÁ¶ÇÏ½Ã±â ¹Ù¶ø´Ï´Ù.
+ * GNU ì¼ë°˜ ê³µì¤‘ ì‚¬ìš© í—ˆê°€ì„œëŠ” ì´ í”„ë¡œê·¸ëž¨ê³¼ í•¨ê»˜ ì œê³µë©ë‹ˆë‹¤. ë§Œì•½ ë¬¸ì„œê°€ ëˆ„ë½ë˜ì–´ìžˆë‹¤ë©´
+ * <http://www.gnu.org/licenses/>ì„ ì°¸ì¡°í•˜ì‹œê¸° ë°”ëžë‹ˆë‹¤.
  */
 
-//wchar¸¦ ºñ·ÔÇÑ ¹®ÀÚ¿Í °ü·ÃµÈ ³»¿ëÀ» ¸ð¾ÆµÐ Çì´õÆÄÀÏÀÔ´Ï´Ù.
-/* ÅÍ¹Ì³Î¿¡¼­ ÇÑ±Û Ãâ·ÂÀº °¡´ÉÇÏÁö¸¸, char º¯¼ö´Â Á¼µð Á¼±â ¶§¹®¿¡ ÇÑ±ÛÀº Ä¿³ç ÅØ½ºÆ® ÀÌ¸ðÆ¼ÄÜµµ Ç¥½ÃÇÏ±â ¾î·Æ½À´Ï´Ù.
-* ÇÏÁö¸¸ ÀÌ °ÔÀÓÀÇ ·»´õ¸µ ¹æ½Ä Æ¯¼º»ó (Graphics.h Âü°í) ¹Ýµå½Ã ÇÑ±ÛÀ» º¯¼ö·Î½á ÀúÀåÇØ¾ßÇÏÁÒ.
-* µû¶ó¼­ wcharÀ» ÀÌ¿ëÇÕ´Ï´Ù. À¯´ÏÄÚµå, wide character¸¦ ÀúÀåÇÒ ¼ö ÀÖÁÒ.
+//wcharë¥¼ ë¹„ë¡¯í•œ ë¬¸ìžì™€ ê´€ë ¨ëœ ë‚´ìš©ì„ ëª¨ì•„ë‘” í—¤ë”íŒŒì¼ìž…ë‹ˆë‹¤.
+/* í„°ë¯¸ë„ì—ì„œ í•œê¸€ ì¶œë ¥ì€ ê°€ëŠ¥í•˜ì§€ë§Œ, char ë³€ìˆ˜ëŠ” ì¢ë”” ì¢ê¸° ë•Œë¬¸ì— í•œê¸€ì€ ì»¤ë…• í…ìŠ¤íŠ¸ ì´ëª¨í‹°ì½˜ë„ í‘œì‹œí•˜ê¸° ì–´ë µìŠµë‹ˆë‹¤.
+* í•˜ì§€ë§Œ ì´ ê²Œìž„ì˜ ë Œë”ë§ ë°©ì‹ íŠ¹ì„±ìƒ (Graphics.h ì°¸ê³ ) ë°˜ë“œì‹œ í•œê¸€ì„ ë³€ìˆ˜ë¡œì¨ ì €ìž¥í•´ì•¼í•©ë‹ˆë‹¤.
+* ë”°ë¼ì„œ wcharì„ ì´ìš©í•©ë‹ˆë‹¤. ìœ ë‹ˆì½”ë“œ, wide characterë¥¼ ì €ìž¥í•  ìˆ˜ ìžˆì£ .
 * 
-* ±× ¿Ü¿¡ ÅÍ¹Ì³Î »ö±ò »ó¼ö µî ´Ù¾çÇÑ ¹®ÀÚ ÆíÀÇ ±â´ÉÀÌ ÀÌ Çì´õÆÄÀÏ¿¡ Á¤ÀÇµÇ¾îÀÖ½À´Ï´Ù.*/
+* ê·¸ ì™¸ì— í„°ë¯¸ë„ ìƒ‰ê¹” ìƒìˆ˜ ë“± ë‹¤ì–‘í•œ ë¬¸ìž íŽ¸ì˜ ê¸°ëŠ¥ì´ ì´ í—¤ë”íŒŒì¼ì— ì •ì˜ë˜ì–´ìžˆìŠµë‹ˆë‹¤.*/
 
 #pragma once
 #include <wchar.h>
 
-//¼ÖÁ÷È÷ wchar_t´Â ³Ê¹« Ä¡±â ÈûµéÁö ¾Ê³ª¿ä?
+//ì†”ì§ížˆ wchar_tëŠ” ë„ˆë¬´ ì¹˜ê¸° íž˜ë“¤ì§€ ì•Šë‚˜ìš”?
 typedef wchar_t wchar;
 
 /// <summary>
-/// »ö±òÄÚµå¸¦ ¸ð¾ÆµÐ namespaceÀÔ´Ï´Ù.
-/// <para>ÀÌ °ÔÀÓ¿¡¼­ BlackÀº Åõ¸íÀÇ ¿ªÇÒÀ» ÇÏ¸ç, ·»´õ¸µ µÇÁö ¾Ê½À´Ï´Ù.</para>
+/// ìƒ‰ê¹”ì½”ë“œë¥¼ ëª¨ì•„ë‘” namespaceìž…ë‹ˆë‹¤.
+/// <para>ì´ ê²Œìž„ì—ì„œ Blackì€ íˆ¬ëª…ì˜ ì—­í• ì„ í•˜ë©°, ë Œë”ë§ ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.</para>
 /// </summary>
 namespace Color
 {
@@ -54,14 +54,14 @@ namespace Color
 }
 
 /// <summary>
-/// ÄÜ¼Ö¿¡¼­ ÇÑ±ÛÀ» »ç¿ëÇÏ±â À§ÇÑ ±âº» ¼³Á¤À» ¼öÇàÇÕ´Ï´Ù.
+/// ì½˜ì†”ì—ì„œ í•œê¸€ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•œ ê¸°ë³¸ ì„¤ì •ì„ ìˆ˜í–‰í•©ë‹ˆë‹¤.
 /// </summary>
-/// <returns>Á¤»óÀûÀ¸·Î ¼öÇàµÇ¾ú´Ù¸é 0À» ¹ÝÈ¯ÇÕ´Ï´Ù.</returns>
+/// <returns>ì •ìƒì ìœ¼ë¡œ ìˆ˜í–‰ë˜ì—ˆë‹¤ë©´ 0ì„ ë°˜í™˜í•©ë‹ˆë‹¤.</returns>
 extern int initWchar(void);
 
 /// <summary>
-/// ÀÔ·ÂµÈ wchar°¡ ÄÜ¼Ö¿¡¼­ µÎÄ­À» Â÷ÁöÇÏ´ÂÁö È®ÀÎÇÕ´Ï´Ù.
+/// ìž…ë ¥ëœ wcharê°€ ì½˜ì†”ì—ì„œ ë‘ì¹¸ì„ ì°¨ì§€í•˜ëŠ”ì§€ í™•ì¸í•©ë‹ˆë‹¤.
 /// </summary>
-/// <param name="letter">ÆÇº°ÇÒ wchar</param>
-/// <returns>wchar°¡ µÎÄ­À» Â÷ÁöÇÏ¸é TRUE, ¾Æ´Ï¸é FALSE°¡ ¹ÝÈ¯µË´Ï´Ù.</returns>
+/// <param name="letter">íŒë³„í•  wchar</param>
+/// <returns>wcharê°€ ë‘ì¹¸ì„ ì°¨ì§€í•˜ë©´ TRUE, ì•„ë‹ˆë©´ FALSEê°€ ë°˜í™˜ë©ë‹ˆë‹¤.</returns>
 extern bool isWide(wchar letter);

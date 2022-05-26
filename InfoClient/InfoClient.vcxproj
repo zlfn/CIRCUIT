@@ -140,6 +140,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScreen.cpp" />
+    <ClCompile Include="Network.cpp" />
     <ClCompile Include="SettingScreen.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

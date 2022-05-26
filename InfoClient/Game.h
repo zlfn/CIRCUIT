@@ -16,6 +16,9 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
+//게임을 진행시키는 함수입니다.
+//일단 아래 두개가 전부입니다.
+
 #pragma once
 #include "Graphic.h"
 #include "GameState.h"

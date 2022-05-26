@@ -117,6 +117,7 @@ int playSettingScreen(Buffer buf, GameState* state)
 			break;
 		case NO_SPACE_WINDOW:
 			state->setting.noSpaceWindow = !state->setting.noSpaceWindow;
+			Sleep(100);
 			break;
 		case REFRESH:
 			state->setting.refresh = !state->setting.refresh;

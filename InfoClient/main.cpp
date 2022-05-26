@@ -1,4 +1,4 @@
-﻿//GNU GPL 3.0 lisence
+//GNU GPL 3.0 lisence
 /* 
  * 정보 수행평가 게임
  * Copyright (C) 2022 박찬웅, 김진서, 박지환
@@ -41,6 +41,7 @@
 #include "Game.h"
 #include "Graphic.h"
 #include "GameState.h"
+#include "Network.h"
 
 using namespace std;
 
@@ -71,9 +72,22 @@ int main()
 	initWchar();
 	startGetInput();
 	resetGameState();
-	
+
+	char buffer[256];
+	IPV4 ip;
+	if (receiveUDPBroadcast(buffer, &ip, 50000000, 1102) == 0)
+	{
+		cout << buffer << endl;
+		cout << ip.b1 << " " << ip.b2 << " " << ip.b3 << " " << ip.b4 << endl;
+		throw;
+	}
+
+
+	//sendUDPBroadcast("Hello, UDP!");
+
 	setWindow(buf[0], false);
 	setWindow(buf[1], false);
+
 
 	//랜더링 사이클
 	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 입력 체크, 진행 -> 렌더링 -> 스왑 -> 리셋

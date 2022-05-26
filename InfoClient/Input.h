@@ -122,7 +122,7 @@ struct MouseClick
 static void getInputTH(MouseClick* msPointer, int* keyPointer);
 
 /// <summary>
-/// <para>마우스 입력을 받는 스레드를 생성합니다.</para>
+/// <para>입력을 받는 스레드를 생성합니다.</para>
 /// <para>스레드는 detach되어 프로그램 종료시까지 유지됩니다.</para>
 /// <para>한 프로그램에서 두번 이상 이 함수가 실행되면 에러가 발생할 수 있습니다.</para>
 /// </summary>
