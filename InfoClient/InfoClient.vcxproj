@@ -134,9 +134,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Chars.cpp" />
+    <ClCompile Include="FindScreen.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Graphic.cpp" />
+    <ClCompile Include="HostScreen.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScreen.cpp" />
@@ -159,12 +161,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BackButton.gres" />
+    <None Include="bigTileLR.gres" />
+    <None Include="bigTileLD.gres" />
     <None Include="Card1.gres" />
     <None Include="Card2.gres" />
+    <None Include="CIRCUIT_LOGO.gres" />
+    <None Include="FindButton.gres" />
+    <None Include="GiftButton.gres" />
+    <None Include="HostButton.gres" />
     <None Include="Off.gres" />
     <None Include="On.gres" />
     <None Include="SettingButton.gres" />
     <None Include="Setting_LOGO.gres" />
+    <None Include="tileBig.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

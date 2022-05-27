@@ -35,6 +35,8 @@ enum Scenes
 {
 	Main,
 	Setting,
+	Host,
+	Find,
 };
 
 /// <summary>

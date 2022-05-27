@@ -34,10 +34,18 @@ struct IPV4
 	int b2;
 	int b3;
 	int b4;
+
+	IPV4(int b1, int b2, int b3, int b4)
+	{
+		this->b1 = b1;
+		this->b2 = b2;
+		this->b3 = b3;
+		this->b4 = b4;
+	}
 };
 
 /// <summary>
-/// 주어진 포트로 로컬 네트워크상의 모든 컴퓨터를 대상으로 하는 UDP 브로드캐스트를 수행합니다.
+/// 주어진 포트로 로컬 네트워크상의 모든 컴퓨터를 대상으로 하는 UDP 브로드캐스트를 송신합니다.
 /// </summary>
 /// <param name="message">보낼 메시지</param>
 /// <returns>정상적으로 수행되었다면 0이 반환됩니다.</returns>
@@ -52,3 +60,25 @@ extern int sendUDPBroadcast(const char* message, int port);
 /// <returns>수신값이 존재한다면 0, 없다면 -1을 반환합니다.</returns>
 extern int receiveUDPBroadcast(char* buffer, IPV4* ip, int timeout, int port);
 
+
+/// <summary>
+/// 서버로써 TCP요청을 받아 데이터를 교환합니다.
+/// </summary>
+/// <param name="message">보낼 메시지</param>
+/// <param name="buffer">답장을 받을 버퍼</param>
+/// <param name="bufferSize">그 버퍼의 사이즈</param>
+/// <param name="clientIP">클라이언트의 아이피를 저장할 IPV4 포인터</param>
+/// <param name="port">통신할 포트</param>
+/// <returns>정상적으로 실행되었다면 0이 반환됩니다.</returns>
+int serveTCP(const char* message, char* buffer, int bufferSize, IPV4* clientIP, int port);
+
+/// <summary>
+/// 클라이언트로써 서버에 TCP요청을 보냅니다.
+/// </summary>
+/// <param name="message">보낼 메시지</param>
+/// <param name="buffer">답장을 받을 버퍼</param>
+/// <param name="bufferSize">그 버퍼의 사이즈</param>
+/// <param name="serverIP">보낼 서버의 아이피</param>
+/// <param name="port">통신할 포트</param>
+/// <returns>정상적으로 실행되었다면 0이 반환됩니다.</returns>
+int requestTCP(const char* message, char* buffer, int bufferSize, IPV4 serverIP, int port);

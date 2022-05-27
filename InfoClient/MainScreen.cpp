@@ -23,10 +23,14 @@
 const int SETTING_BUTTON = 1;
 const int Card1 = 2;
 const int Card2 = 3;
+const int LINK_BUTTON = 4;
+const int HOST_BUTTON = 5;
+const int FIND_BUTTON = 6;
 
-int Card1X = 65;
+
+int Card1X = 60;
 int Card1Y = 7;
-int Card2X = 7;
+int Card2X = 12;
 int Card2Y = 2;
 
 //1번이 위에 있는 여부
@@ -35,6 +39,11 @@ bool stack = false;
 int drawMainScreen(Buffer buf, GameState state)
 {
 	drawImage(buf, L"SettingButton.gres", 68, 37, SETTING_BUTTON);
+	drawImage(buf, L"GiftButton.gres", 56, 37, LINK_BUTTON);
+	drawImage(buf, L"HostButton.gres", 28, 16, HOST_BUTTON);
+	drawText(buf, L"게임 호스트", 40, 21, 100, Color::Gray);
+	drawImage(buf, L"FindButton.gres", 28, 23, FIND_BUTTON);
+	drawText(buf, L"호스트 찾기", 40, 28, 100, Color::Gray);
 
 	if (stack)
 	{
@@ -47,10 +56,10 @@ int drawMainScreen(Buffer buf, GameState state)
 		drawImage(buf, L"Card2.gres", Card2X, Card2Y, Card2);
 	}
 
-	drawImage(buf, L"GBSLAND_LOGO.gres", 11, 4);
-	drawText(buf, L"경기북과학고등학교 정보 수행평가", 37, 10, 100, Color::LightYellow);
-	drawText(buf, L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Yellow);
-	drawText(buf, L"This software distribute under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Yellow);
+	drawImage(buf, L"CIRCUIT_LOGO.gres", 16, 4);
+	drawText(buf, L"경기북과학고등학교 정보 수행평가", 32, 10, 100, Color::LightGreen);
+	drawText(buf, L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Green);
+	drawText(buf, L"This software distribute under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Green);
 
 
 	return 0;
@@ -65,6 +74,11 @@ int playMainScreen(Buffer buf, GameState* state)
 		case SETTING_BUTTON:
 			state->scene = Setting;
 			break;
+		case HOST_BUTTON:
+			state->scene = Host;
+			break;
+		case FIND_BUTTON:
+			state->scene = Find;
 		case Card1:
 			Card1X = getClick().pos.X - 3;
 			Card1Y = getClick().pos.Y - 3;

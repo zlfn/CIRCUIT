@@ -22,6 +22,9 @@
     <Filter Include="리소스 파일\SettingScreen">
       <UniqueIdentifier>{60bffff2-cca7-4484-bbbf-e28bc7c79ace}</UniqueIdentifier>
     </Filter>
+    <Filter Include="리소스 파일\GameScreen">
+      <UniqueIdentifier>{ec8c75f8-4a1c-435e-a521-0f55bc8176b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="Network.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HostScreen.cpp">
+      <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="FindScreen.cpp">
+      <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +110,27 @@
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
     <None Include="Card2.gres">
+      <Filter>리소스 파일\MainScreen</Filter>
+    </None>
+    <None Include="tileBig.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="bigTileLR.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="bigTileLD.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="CIRCUIT_LOGO.gres">
+      <Filter>리소스 파일\MainScreen</Filter>
+    </None>
+    <None Include="GiftButton.gres">
+      <Filter>리소스 파일\MainScreen</Filter>
+    </None>
+    <None Include="HostButton.gres">
+      <Filter>리소스 파일\MainScreen</Filter>
+    </None>
+    <None Include="FindButton.gres">
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
   </ItemGroup>

@@ -18,6 +18,7 @@
 
 //윈도우 창과 관련된 함수를 모아놓은 파일입니다.
 #include <Windows.h>
+#include <cwchar>
 #include "Graphic.h"
 
 int setWindow(Buffer buf, bool noSpace)
@@ -59,6 +60,18 @@ int setWindow(Buffer buf, bool noSpace)
 
 		SetConsoleWindowInfo(buf.screen, TRUE, &windowSize);
 	}
+	
+	//폰트를 고정할 수 있다는 사실을 일주일 만에 깨달았습니다! 짜잔
+	CONSOLE_FONT_INFOEX cfi;
+	cfi.cbSize = sizeof(cfi);
+	cfi.nFont = 0;
+	cfi.dwFontSize.X = 0;
+	cfi.dwFontSize.Y = 16;
+	cfi.FontFamily = FF_DONTCARE;
+	cfi.FontWeight = FW_NORMAL;
+
+	wcscpy_s(cfi.FaceName, sizeof(cfi.FaceName), L"NSimsun");
+	SetCurrentConsoleFontEx(buf.screen, FALSE, &cfi);
 	SetConsoleCursorInfo(buf.screen, &cci);
 	return 0;
 }

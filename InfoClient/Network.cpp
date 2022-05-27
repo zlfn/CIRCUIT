@@ -1,16 +1,15 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define BUFFER_SIZE 256
 #include <WinSock2.h>
 #include <ws2tcpip.h>
+#include <iostream>
 #include "Network.h"
 
 #pragma comment(lib, "ws2_32")
 
-#define PACKET_SIZE 100
-#define BUFFER_SIZE 256
-
 using namespace std;
 
-void sendDataTCP()
+int serveTCP(const char* message, char* buffer, int bufferSize, IPV4* clientIP, int port)
 {
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -18,27 +17,58 @@ void sendDataTCP()
 	SOCKET hListen;
 	hListen = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	SOCKADDR_IN tListenAddr = {};
+	sockaddr_in tListenAddr;
 	tListenAddr.sin_family = AF_INET;
-	tListenAddr.sin_port = htons(1102);
+	tListenAddr.sin_port = htons(port);
 	tListenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	bind(hListen, (SOCKADDR*)&tListenAddr, sizeof(tListenAddr));
 	listen(hListen, SOMAXCONN);
 
-	SOCKADDR_IN tClntAddr = {};
+	SOCKADDR_IN tClntAddr;
 	int iClntSize = sizeof(tClntAddr);
 	SOCKET hClient = accept(hListen, (SOCKADDR*)&tClntAddr, &iClntSize);
 
-	char cBuffer[PACKET_SIZE] = {};
-	//recv(hClient, cBuffer, PACKET_SIZE, 0);
-	char cMsg[] = "Server Send";
-	send(hClient, cMsg, strlen(cMsg), 0);
+	recv(hClient, buffer, bufferSize, 0);
+	send(hClient, message, strlen(message), 0);
+
+	clientIP->b1 = tClntAddr.sin_addr.S_un.S_un_b.s_b1;
+	clientIP->b2 = tClntAddr.sin_addr.S_un.S_un_b.s_b2;
+	clientIP->b3 = tClntAddr.sin_addr.S_un.S_un_b.s_b3;
+	clientIP->b4 = tClntAddr.sin_addr.S_un.S_un_b.s_b4;
 
 	closesocket(hClient);
 	closesocket(hListen);
 
 	WSACleanup();
+	return 0;
+}
+
+int requestTCP(const char* message, char* buffer, int bufferSize, IPV4 serverIP, int port)
+{
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	SOCKET hSocket;
+	hSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	SOCKADDR_IN tAddr;
+	tAddr.sin_family = AF_INET;
+	tAddr.sin_port = htons(port);
+
+	char cServerIP[100];
+	sprintf_s(cServerIP, sizeof(cServerIP), "%d.%d.%d.%d", serverIP.b1, serverIP.b2, serverIP.b3, serverIP.b4);
+	tAddr.sin_addr.s_addr = inet_addr(cServerIP);
+
+	connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
+
+	send(hSocket, message, strlen(message), 0);
+	recv(hSocket, buffer, bufferSize, 0);
+
+	closesocket(hSocket);
+
+	WSACleanup();
+	return 0;
 }
 
 int sendUDPBroadcast(const char* message ,int port)

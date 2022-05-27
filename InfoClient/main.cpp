@@ -74,16 +74,6 @@ int main()
 	resetGameState();
 
 	char buffer[256];
-	IPV4 ip;
-	if (receiveUDPBroadcast(buffer, &ip, 50000000, 1102) == 0)
-	{
-		cout << buffer << endl;
-		cout << ip.b1 << " " << ip.b2 << " " << ip.b3 << " " << ip.b4 << endl;
-		throw;
-	}
-
-
-	//sendUDPBroadcast("Hello, UDP!");
 
 	setWindow(buf[0], false);
 	setWindow(buf[1], false);
