@@ -36,6 +36,15 @@ int Card2Y = 2;
 //1번이 위에 있는 여부
 bool stack = false;
 
+int resetCard()
+{
+	Card1X = 60;
+	Card1Y = 7;
+	Card2X = 12;
+	Card2Y = 2;
+	return 0;
+}
+
 int drawMainScreen(Buffer buf, GameState state)
 {
 	drawImage(buf, L"SettingButton.gres", 68, 37, SETTING_BUTTON);

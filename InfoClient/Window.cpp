@@ -70,7 +70,7 @@ int setWindow(Buffer buf, bool noSpace)
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
 
-	wcscpy_s(cfi.FaceName, sizeof(cfi.FaceName), L"NSimsun");
+	wcscpy_s(cfi.FaceName, LF_FACESIZE, L"NSimsun");
 	SetCurrentConsoleFontEx(buf.screen, FALSE, &cfi);
 	SetConsoleCursorInfo(buf.screen, &cci);
 	return 0;

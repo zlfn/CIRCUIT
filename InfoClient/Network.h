@@ -48,17 +48,28 @@ struct IPV4
 /// 주어진 포트로 로컬 네트워크상의 모든 컴퓨터를 대상으로 하는 UDP 브로드캐스트를 송신합니다.
 /// </summary>
 /// <param name="message">보낼 메시지</param>
+/// <param name="port">사용할 포트</param>
 /// <returns>정상적으로 수행되었다면 0이 반환됩니다.</returns>
 extern int sendUDPBroadcast(const char* message, int port);
 
+
 /// <summary>
-/// 주어진 포트로 들어오는 UDP 브로드캐스트를 수신합니다.
+/// 주어진 포트로 특정 주소에 UDP 패킷을 송신합니다.
+/// </summary>
+/// <param name="message">보낼 메시지</param>
+/// <param name="destination">보낼 IP주소</param>
+/// <param name="port">사용할 포트</param>
+/// <returns>정상적으로 수행되었다면 0이 반환됩니다.</returns>
+int sendUDPMessage(const char* message, IPV4 destination, int port);
+
+/// <summary>
+/// 주어진 포트로 들어오는 UDP 메시지를 수신합니다.
 /// </summary>
 /// <param name="buffer">메세지를 저장할 버퍼</param>
 /// <param name="ip">송신 아이피를 저장할 포인터</param>
 /// <param name="timeout">수신 타임아웃 (ms)</param>
 /// <returns>수신값이 존재한다면 0, 없다면 -1을 반환합니다.</returns>
-extern int receiveUDPBroadcast(char* buffer, IPV4* ip, int timeout, int port);
+int receiveUDPMessage(char* buffer, IPV4* ip, int limitTime, int port);
 
 
 /// <summary>

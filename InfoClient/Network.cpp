@@ -93,7 +93,32 @@ int sendUDPBroadcast(const char* message ,int port)
 	return 0;
 }
 
-int receiveUDPBroadcast(char* buffer, IPV4* ip, int limitTime, int port)
+int sendUDPMessage(const char* message, IPV4 destination, int port)
+{
+	WSADATA wsaData;
+	int fBroadcast = 1;
+	sockaddr_in sockaddr1;
+	sockaddr_in sockaddr2;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+	
+	SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (const char*)&fBroadcast, sizeof(fBroadcast));
+	memset(&sockaddr1, 0, sizeof(sockaddr_in));
+	sockaddr1.sin_family = AF_INET;
+	char cDestination[100];
+	sprintf_s(cDestination, sizeof(cDestination), "%d.%d.%d.%d", destination.b1, destination.b2, destination.b3, destination.b4);
+	sockaddr1.sin_addr.S_un.S_addr = inet_addr(cDestination);
+	sockaddr1.sin_port = htons(port);
+	
+	sendto(sock, message, strlen(message), 0, (const sockaddr*)&sockaddr1, sizeof(sockaddr_in));
+	closesocket(sock);
+	WSACleanup();
+
+	return 0;
+
+}
+
+int receiveUDPMessage(char* buffer, IPV4* ip, int limitTime, int port)
 {
 	SSIZE_T bufferSize;
 

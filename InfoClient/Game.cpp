@@ -31,6 +31,12 @@ int drawGame(Buffer buf, GameState state)
 	case Setting:
 		drawSettingScreen(buf, state);
 		break;
+	case Host:
+		drawHostScreen(buf, state);
+		break;
+	case Find:
+		drawFindScreen(buf, state);
+		break;
 	}
 	return 0;
 }
@@ -44,6 +50,12 @@ int playGame(Buffer buf, GameState* state)
 		break;
 	case Setting:
 		playSettingScreen(buf, state);
+		break;
+	case Host:
+		playHostScreen(buf, state);
+		break;
+	case Find:
+		playFindScreen(buf, state);
 		break;
 	}
 	return 0;

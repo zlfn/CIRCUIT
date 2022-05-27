@@ -74,10 +74,10 @@ int main()
 	resetGameState();
 
 	char buffer[256];
+	IPV4 ip(0, 0, 0, 0);
 
 	setWindow(buf[0], false);
 	setWindow(buf[1], false);
-
 
 	//랜더링 사이클
 	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 입력 체크, 진행 -> 렌더링 -> 스왑 -> 리셋

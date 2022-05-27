@@ -23,7 +23,12 @@
 #include "Graphic.h"
 #include "GameState.h"
 
+extern int resetCard();
 extern int drawMainScreen(Buffer buf, GameState state);
 extern int playMainScreen(Buffer buf, GameState *state);
 extern int drawSettingScreen(Buffer buf, GameState state);
 extern int playSettingScreen(Buffer buf, GameState *state);
+extern int drawHostScreen(Buffer buf, GameState state);
+extern int playHostScreen(Buffer buf, GameState *state);
+extern int drawFindScreen(Buffer buf, GameState state);
+extern int playFindScreen(Buffer buf, GameState *state);

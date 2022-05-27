@@ -169,6 +169,7 @@
     <None Include="FindButton.gres" />
     <None Include="GiftButton.gres" />
     <None Include="HostButton.gres" />
+    <None Include="HostCancelButton.gres" />
     <None Include="Off.gres" />
     <None Include="On.gres" />
     <None Include="SettingButton.gres" />
