@@ -149,6 +149,8 @@ extern MouseClick getClickOnce();
 /// <returns>키 코드</returns>
 extern int getKey();
 
+extern int getKeyOnce();
+
 /// <summary>
 /// 클릭한 좌표의 클릭 버퍼 id를 받아옵니다.
 /// 이를 통해서 클릭한 오브젝트를 얻어낼 수 있습니다.

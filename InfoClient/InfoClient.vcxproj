@@ -136,6 +136,7 @@
     <ClCompile Include="Chars.cpp" />
     <ClCompile Include="FindScreen.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="HostScreen.cpp" />
@@ -161,8 +162,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BackButton.gres" />
-    <None Include="bigTileLR.gres" />
-    <None Include="bigTileLD.gres" />
+    <None Include="TileFrameOff.gres" />
+    <None Include="TileFrameOn.gres" />
+    <None Include="TileLDD.gres" />
+    <None Include="TileLDL.gres" />
+    <None Include="TileLDLD.gres" />
+    <None Include="TileLR.gres" />
+    <None Include="TileLD.gres" />
     <None Include="Card1.gres" />
     <None Include="Card2.gres" />
     <None Include="CIRCUIT_LOGO.gres" />
@@ -174,7 +180,25 @@
     <None Include="On.gres" />
     <None Include="SettingButton.gres" />
     <None Include="Setting_LOGO.gres" />
-    <None Include="tileBig.gres" />
+    <None Include="TileLRL.gres" />
+    <None Include="TileLRLR.gres" />
+    <None Include="TileLRR.gres" />
+    <None Include="TileRD.gres" />
+    <None Include="TileRDD.gres" />
+    <None Include="TileRDR.gres" />
+    <None Include="TileRDRD.gres" />
+    <None Include="TileUD.gres" />
+    <None Include="TileUDD.gres" />
+    <None Include="TileUDU.gres" />
+    <None Include="TileUDUD.gres" />
+    <None Include="TileUL.gres" />
+    <None Include="TileULL.gres" />
+    <None Include="TileULU.gres" />
+    <None Include="TileULUL.gres" />
+    <None Include="TileUR.gres" />
+    <None Include="TileURR.gres" />
+    <None Include="TileURU.gres" />
+    <None Include="TileURUR.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -28,6 +28,24 @@
     <Filter Include="리소스 파일\HostScreen">
       <UniqueIdentifier>{dc9b0768-3b6f-4281-9655-e422924c6e08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileLD">
+      <UniqueIdentifier>{00dab7bb-b34a-4e2a-a6ba-5b6dcb7833c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileLR">
+      <UniqueIdentifier>{574c48a3-03d1-4021-b79f-78f106d890ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileUL">
+      <UniqueIdentifier>{b5238522-12f1-4b0d-adce-d9a5c9af6d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileRD">
+      <UniqueIdentifier>{475ea09e-b4e6-4352-9b0e-f148a14a8984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileUD">
+      <UniqueIdentifier>{57c3997b-0e91-41d8-89d3-2532b5305dd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileUR">
+      <UniqueIdentifier>{d3a1435e-c6c2-4d6b-9aba-fea916d7a50c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -64,6 +82,9 @@
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="FindScreen.cpp">
+      <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScreen.cpp">
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -115,15 +136,6 @@
     <None Include="Card2.gres">
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
-    <None Include="tileBig.gres">
-      <Filter>리소스 파일\GameScreen</Filter>
-    </None>
-    <None Include="bigTileLR.gres">
-      <Filter>리소스 파일\GameScreen</Filter>
-    </None>
-    <None Include="bigTileLD.gres">
-      <Filter>리소스 파일\GameScreen</Filter>
-    </None>
     <None Include="CIRCUIT_LOGO.gres">
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
@@ -138,6 +150,84 @@
     </None>
     <None Include="HostCancelButton.gres">
       <Filter>리소스 파일\HostScreen</Filter>
+    </None>
+    <None Include="TileLD.gres">
+      <Filter>리소스 파일\GameScreen\TileLD</Filter>
+    </None>
+    <None Include="TileLDD.gres">
+      <Filter>리소스 파일\GameScreen\TileLD</Filter>
+    </None>
+    <None Include="TileLDL.gres">
+      <Filter>리소스 파일\GameScreen\TileLD</Filter>
+    </None>
+    <None Include="TileLDLD.gres">
+      <Filter>리소스 파일\GameScreen\TileLD</Filter>
+    </None>
+    <None Include="TileLR.gres">
+      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+    </None>
+    <None Include="TileLRL.gres">
+      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+    </None>
+    <None Include="TileLRR.gres">
+      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+    </None>
+    <None Include="TileLRLR.gres">
+      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+    </None>
+    <None Include="TileUL.gres">
+      <Filter>리소스 파일\GameScreen\TileUL</Filter>
+    </None>
+    <None Include="TileULU.gres">
+      <Filter>리소스 파일\GameScreen\TileUL</Filter>
+    </None>
+    <None Include="TileULL.gres">
+      <Filter>리소스 파일\GameScreen\TileUL</Filter>
+    </None>
+    <None Include="TileULUL.gres">
+      <Filter>리소스 파일\GameScreen\TileUL</Filter>
+    </None>
+    <None Include="TileRD.gres">
+      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+    </None>
+    <None Include="TileRDR.gres">
+      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+    </None>
+    <None Include="TileRDRD.gres">
+      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+    </None>
+    <None Include="TileRDD.gres">
+      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+    </None>
+    <None Include="TileUD.gres">
+      <Filter>리소스 파일\GameScreen\TileUD</Filter>
+    </None>
+    <None Include="TileUDU.gres">
+      <Filter>리소스 파일\GameScreen\TileUD</Filter>
+    </None>
+    <None Include="TileUDD.gres">
+      <Filter>리소스 파일\GameScreen\TileUD</Filter>
+    </None>
+    <None Include="TileUDUD.gres">
+      <Filter>리소스 파일\GameScreen\TileUD</Filter>
+    </None>
+    <None Include="TileUR.gres">
+      <Filter>리소스 파일\GameScreen\TileUR</Filter>
+    </None>
+    <None Include="TileURU.gres">
+      <Filter>리소스 파일\GameScreen\TileUR</Filter>
+    </None>
+    <None Include="TileURR.gres">
+      <Filter>리소스 파일\GameScreen\TileUR</Filter>
+    </None>
+    <None Include="TileURUR.gres">
+      <Filter>리소스 파일\GameScreen\TileUR</Filter>
+    </None>
+    <None Include="TileFrameOff.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="TileFrameOn.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

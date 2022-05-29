@@ -32,3 +32,5 @@ extern int drawHostScreen(Buffer buf, GameState state);
 extern int playHostScreen(Buffer buf, GameState *state);
 extern int drawFindScreen(Buffer buf, GameState state);
 extern int playFindScreen(Buffer buf, GameState *state);
+extern int drawGameScreen(Buffer buf, GameState state);
+extern int playGameScreen(Buffer buf, GameState* state);

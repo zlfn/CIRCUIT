@@ -37,6 +37,9 @@ int drawGame(Buffer buf, GameState state)
 	case Find:
 		drawFindScreen(buf, state);
 		break;
+	case Game:
+		drawGameScreen(buf, state);
+		break;
 	}
 	return 0;
 }
@@ -56,6 +59,9 @@ int playGame(Buffer buf, GameState* state)
 		break;
 	case Find:
 		playFindScreen(buf, state);
+		break;
+	case Game:
+		playGameScreen(buf, state);
 		break;
 	}
 	return 0;

@@ -66,7 +66,7 @@ int setWindow(Buffer buf, bool noSpace)
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
 	cfi.dwFontSize.X = 0;
-	cfi.dwFontSize.Y = 15;
+	cfi.dwFontSize.Y = 18;
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
 

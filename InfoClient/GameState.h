@@ -27,6 +27,7 @@
 
 #pragma once
 #include "Chars.h"
+#include "Network.h"
 
 /// <summary>
 /// 게임의 장면 목록입니다.
@@ -37,6 +38,7 @@ enum Scenes
 	Setting,
 	Host,
 	Find,
+	Game,
 };
 
 /// <summary>
@@ -118,6 +120,9 @@ struct GameState
 {
 	Scenes scene;
 	Settings setting;
+
+	IPV4 commIP;
+	bool turn;
 };
 
 /// <summary>

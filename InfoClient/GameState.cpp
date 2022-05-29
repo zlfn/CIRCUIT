@@ -31,9 +31,11 @@ GameState* getGameState()
 int resetGameState()
 {
 	GameState g;
+	IPV4 temp(0, 0, 0, 0);
+	g.commIP = temp;
 
 	//설정 초기화
-	g.scene = Main;
+	g.scene = Game;
 	g.setting.noSpaceWindow = false;
 
 	g.setting.refresh = false;

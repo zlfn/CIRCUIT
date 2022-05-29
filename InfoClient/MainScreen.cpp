@@ -70,7 +70,6 @@ int drawMainScreen(Buffer buf, GameState state)
 	drawText(buf, L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Green);
 	drawText(buf, L"This software distributed under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Green);
 
-
 	return 0;
 }
 
