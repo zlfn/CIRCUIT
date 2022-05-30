@@ -72,12 +72,11 @@ void getInputTH(MouseClick* c, int* k)
 			*k = rec.Event.KeyEvent.wVirtualKeyCode;
 		}
 
-		if (!canKey) *k = 0;
 		if (!rec.Event.KeyEvent.bKeyDown)
 		{
 			*k = 0;
-			canKey = true;
 		}
+
 	}
 }
 
@@ -110,8 +109,10 @@ int getKey()
 
 int getKeyOnce()
 {
-	if(*k!=0) canKey = false;
-	return *k;
+	int temp = *k;
+	*k = 0;
+
+	return temp;
 }
 
 int getClickObject(Buffer buf)

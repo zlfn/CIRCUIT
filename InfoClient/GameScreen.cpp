@@ -30,19 +30,10 @@
 #include "GameState.h"
 #include "Input.h"
 #include "Network.h"
+#include "Tiles.h"
 
 using namespace std;
 
-enum Tile
-{
-	LR,
-	UD,
-	UR,
-	RD,
-	LD,
-	UL,
-	BLANK,
-};
 
 bool start = false;
 bool startTurn = false;
@@ -54,8 +45,8 @@ int curY;
 bool displayCur = false;
 Tile curT = LR;
 
-//하나라도 뒀는지 여부
-bool placed = false;
+//둔 타일 개수
+int placed = 0;
 
 //남은 자기 시간
 int leftTime = 250;
@@ -70,13 +61,8 @@ Tile tiles[10][7];
 bool getUDPKillSwitch = false;
 bool sendUDPKillSwitch = false;
 
-//자기 턴에 설치한 타일 3개
-struct RecentTile
-{
-	int x;
-	int y;
-	Tile type;
-} recentTile[3];
+
+RecentTile recentTile[3];
 
 //타일 1-70
 const int PLACE_TILE = 71;
@@ -92,6 +78,14 @@ int resetVals()
 	leftTime = 250;
 	placed = false;
 	killSwitch = false;
+
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 7; j++)
+			tiles[i][j] = BLANK;
+
+	tiles[4][3] = RD;
+	tiles[5][3] = UL;
+
 	recentTile[0].x = 0;
 	recentTile[0].y = 0;
 	recentTile[0].type = BLANK;
@@ -104,21 +98,37 @@ int resetVals()
 	return 0;
 }
 
-void sendUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, IPV4 ip, bool* killSwitch)
+int resetRecentTiles()
+{
+	placed = 0;
+	recentTile[0].x = 0;
+	recentTile[0].y = 0;
+	recentTile[0].type = BLANK;
+	recentTile[1].x = 0;
+	recentTile[1].y = 0;
+	recentTile[1].type = BLANK;
+	recentTile[2].x = 0;
+	recentTile[2].y = 0;
+	recentTile[2].type = BLANK;
+	return 0;
+
+}
+
+void sendUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, int *placed, IPV4 ip, bool* killSwitch)
 {
 	for (;;)
 	{
 		if (*killSwitch) break;
 		char buffer[256];
-		sprintf_s(buffer, 256, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+		sprintf_s(buffer, 256, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
 			*curX, *curY, *displayCur, *leftTime, *curT, recentTile[0].x, recentTile[0].y, recentTile[0].type,
-			recentTile[1].x, recentTile[1].y, recentTile[1].type, recentTile[2].x, recentTile[2].y, recentTile[2].type);
+			recentTile[1].x, recentTile[1].y, recentTile[1].type, recentTile[2].x, recentTile[2].y, recentTile[2].type, *placed);
 		sendUDPMessage(buffer, ip, 6282);
 		Sleep(10);
 	}
 }
 
-void getUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, bool* killSwitch)
+void getUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, int* placed, bool* killSwitch)
 {
 	for (;;)
 	{
@@ -129,7 +139,7 @@ void getUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile
 		{
 			int a = 0;
 			cout << buffer << endl;
-			sscanf_s(buffer, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d", &a, curY, displayCur, leftTime, curT, &recentTile[0].x, &recentTile[0].y, &recentTile[0].type,&recentTile[1].x, &recentTile[1].y, &recentTile[1].type, &recentTile[2].x, &recentTile[2].y, &recentTile[2].type);
+			sscanf_s(buffer, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", &a, curY, displayCur, leftTime, curT, &recentTile[0].x, &recentTile[0].y, &recentTile[0].type,&recentTile[1].x, &recentTile[1].y, &recentTile[1].type, &recentTile[2].x, &recentTile[2].y, &recentTile[2].type, placed);
 			*curX = a; //<curX를 그대로 sscanf_s로 넣으니까 안되더군요, 1시간 동안의 깊은 고민 끝에 그냥 이따구로 처리하기로 결정했습니다.
 			//원인은 모르겠는데 작동하면 됐죠 몰라몰라
 		}
@@ -164,25 +174,6 @@ void getHeartbeat(bool* kSwit, bool* connected)
 	}
 }
 
-const wchar* getTileName(Tile t)
-{
-	switch (t)
-	{
-	case LR:
-		return L"TileLR.gres"; break;
-	case UD:
-		return L"TileUD.gres"; break;
-	case UR:
-		return L"TileUR.gres"; break;
-	case RD:
-		return L"TileRD.gres"; break;
-	case LD:
-		return L"TileLD.gres"; break;
-	case UL:
-		return L"TileUL.gres"; break;
-	}
-	return L"";
-}
 
 int drawGameScreen(Buffer buf, GameState state)
 {
@@ -201,19 +192,109 @@ int drawGameScreen(Buffer buf, GameState state)
 	
 	//타일들은 1~70의 오브젝트 아이디를 부여받게 됩니다.
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 2, i+1);
+		drawImage(buf, L"TileFrameOff.gres", 5 + 7 * i, 2);
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 6, i+11);
+		drawImage(buf, L"TileFrameOff.gres", 5 + 7 * i, 6);
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 10, i+21);
+		drawImage(buf, L"TileFrameOff.gres", 5 + 7 * i, 10);
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 14, i+31);
+		drawImage(buf, L"TileFrameOff.gres", 5 + 7 * i, 14);
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 18, i+41);
+		drawImage(buf, L"TileFrameOff.gres", 5 + 7 * i, 18);
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 22, i+51);
+		drawImage(buf, L"TileFrameOff.gres", 5 + 7 * i, 22);
 	for (int i = 0; i < 10; i++)
-		drawImage(buf, L"TileFrameOn.gres",  5 + 7 * i, 26, i+61);
+		drawImage(buf, L"TileFrameOff.gres",  5 + 7 * i, 26);
+
+	//4 꼭짓점 
+	drawTile(tiles[0][0], buf, 0, 0, BLANK, BLANK, tiles[1][0], tiles[0][1], placed);
+	drawTile(tiles[9][0], buf, 9, 0, BLANK, tiles[8][0], BLANK, tiles[9][1], placed);
+	drawTile(tiles[0][6], buf, 0, 6, tiles[0][5], BLANK, tiles[1][6], BLANK, placed);
+	drawTile(tiles[9][6], buf, 9, 6, tiles[9][5], tiles[8][6], BLANK, BLANK, placed);
+
+	//4 모서리
+	for (int i = 1; i < 9; i++)
+		drawTile(tiles[i][0], buf, i, 0, BLANK, tiles[i - 1][0], tiles[i + 1][0], tiles[i][1], placed);
+	for (int i = 1; i < 9; i++)
+		drawTile(tiles[i][6], buf, i, 6, tiles[i][5], tiles[i-1][6], tiles[i+1][6], BLANK, placed);
+	for (int j = 1; j < 6; j++)
+		drawTile(tiles[0][j], buf, 0, j, tiles[0][j - 1], BLANK, tiles[1][j], tiles[0][j + 1], placed);
+	for (int j = 1; j < 6; j++)
+		drawTile(tiles[9][j], buf, 9, j, tiles[9][j - 1], tiles[8][j], BLANK, tiles[9][j + 1], placed);
+
+	for (int i = 1; i < 9; i++)
+		for (int j = 1; j < 6; j++)
+			drawTile(tiles[i][j], buf, i, j, tiles[i][j - 1], tiles[i - 1][j], tiles[i + 1][j], tiles[i][j + 1], placed);
+
+	if (placed == 1)
+	{
+		int cx = recentTile[0].x;
+		int cy = recentTile[0].y;
+
+		if(cx>=1)
+			if(tiles[cx-1][cy] == BLANK)
+			drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx-1), 2 + 4 * (cy), 1 + (cx-1) + 10 * (cy));
+		if(cx<=8)
+			if(tiles[cx+1][cy] == BLANK)
+			drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx+1), 2 + 4 * (cy), 1 + (cx+1) + 10 * (cy));
+		if(cy>=1)
+			if(tiles[cx][cy-1] == BLANK)
+			drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx), 2 + 4 * (cy-1), 1 + (cx) + 10 * (cy-1));
+		if(cy<=5)
+			if(tiles[cx][cy+1] == BLANK)
+			drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx), 2 + 4 * (cy+1), 1 + (cx) + 10 * (cy+1));
+	}
+
+	if (placed == 2)
+	{
+		int cx1 = recentTile[0].x;
+		int cy1 = recentTile[0].y;
+		int cx2 = recentTile[1].x;
+		int cy2 = recentTile[1].y;
+
+		if (cx1 == cx2)
+		{
+			if (cy1 > cy2)
+			{
+				if(cy1<=5)
+					if(tiles[cx1][cy1+1] == BLANK)
+					drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1), 2 + 4 * (cy1+1), 1 + (cx1) + 10 * (cy1+1));
+				if(cy2>=1)
+					if(tiles[cx1][cy2-1] == BLANK)
+					drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1), 2 + 4 * (cy2-1), 1 + (cx1) + 10 * (cy2-1));
+			}
+			else
+			{
+				if(cy2<=5)
+					if(tiles[cx2][cy2+1] == BLANK)
+						drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2), 2 + 4 * (cy2+1), 1 + (cx2) + 10 * (cy2+1));
+				if(cy1>=1)
+					if(tiles[cx2][cy1-1] == BLANK)
+						drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2), 2 + 4 * (cy1-1), 1 + (cx2) + 10 * (cy1-1));
+			}
+		}
+		if (cy1 == cy2)
+		{
+			if (cx1 > cx2)
+			{
+				if(cx1<=9)
+				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1+1), 2 + 4 * (cy1), 1 + (cx1+1) + 10 * (cy1));
+				if(cx2>=1)
+				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2-1), 2 + 4 * (cy2), 1 + (cx2-1) + 10 * (cy2));
+			}
+			else
+			{
+				if(cx2<=9)
+				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2+1), 2 + 4 * (cy2), 1 + (cx2+1) + 10 * (cy2));
+				if(cx1>=1)
+				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1-1), 2 + 4 * (cy1), 1 + (cx1-1) + 10 * (cy1));
+			}
+		}
+	}
+
+	//이번 턴에 놓은 타일
+	for (int i = 0; i < placed; i++)
+		drawTileYellow(recentTile[i].type, buf, recentTile[i].x, recentTile[i].y);
 
 	wchar cServerIP[100];
 	swprintf_s(cServerIP, 100, L"%d.%d.%d.%d", state.commIP.b1, state.commIP.b2, state.commIP.b3, state.commIP.b4);
@@ -221,20 +302,20 @@ int drawGameScreen(Buffer buf, GameState state)
 
 	drawText(buf, L"════════════════════════════════════════════════════════════════════════════════", 0, 31, 80, Color::White);
 	drawImage(buf, getTileName(curT), 3, 33, PLACE_TILE);
-	if (placed)
-		drawImage(buf, L"EndTurnButtonOn.gres", 32, 33);
+	if (placed!=0)
+		drawImage(buf, L"EndTurnButtonOn.gres", 32, 33, END_TURN);
 	else
-		drawImage(buf, L"EndTurnButtonOff.gres", 32, 33, END_TURN);
-	drawImage(buf, L"ResetButton.gres", 37, 36);
+		drawImage(buf, L"EndTurnButtonOff.gres", 32, 33);
+	drawImage(buf, L"ResetButton.gres", 37, 36, RESET);
 	drawImage(buf, L"ImpossibleButton.gres",68, 37);
 	drawText(buf, L"회로 배치", 3, 37, 100, Color::White);
 	drawText(buf, L"Z,X로 회전", 70, 32, 100, Color::Gray);
 	drawText(buf, L"C로 뒤집기", 70, 33, 100, Color::Gray);
 	drawText(buf, L"ESC로 취소", 70, 34, 100, Color::Gray);
 
-
+	//손에 있는 타일
 	if(displayCur)
-		drawImage(buf, getTileName(curT), curX - 3, curY - 2);
+		drawImage(buf, getTileNameYellow(curT), curX - 3, curY - 2);
 
 	return 0;
 }
@@ -257,24 +338,78 @@ int playGameScreen(Buffer buf, GameState* state)
 		{
 			sendUDPKillSwitch = false;
 			getUDPKillSwitch = true;
-			thread send(sendUDPGameState, &curX, &curY, &displayCur, &leftTime, &curT, recentTile, state->commIP, &sendUDPKillSwitch);
+			thread send(sendUDPGameState, &curX, &curY, &displayCur, &leftTime, &curT, recentTile, &placed, state->commIP, &sendUDPKillSwitch);
 			send.detach();
 			startTurn = true;
 		}
 
 		curX = getClick().pos.X;
 		curY = getClick().pos.Y;
-		MouseClick k = getClickOnce();
-		if (getClickObject(buf) == PLACE_TILE && k.type == Left)
-			displayCur = true;
+		//MouseClick k = getClickOnce();
+		int co = getClickObject(buf);
+		
+		//클릭
+		if (getClickOnce().type == Left)
+		{
+			if (1 <= co && co <= 70 && placed <= 3)
+			{
+				recentTile[placed].type = curT;
+				recentTile[placed].x = (co - 1) % 10;
+				recentTile[placed].y = (co - 1) / 10;
+				placed++;
+			}
 
+			if(co==PLACE_TILE)
+				displayCur = !displayCur;
+			if (co == RESET)
+				placed = 0;
+
+			//턴 끝내기
+			if (co == END_TURN)
+			{
+				state->turn = false;
+				for (int i = 0; i < placed; i++)
+					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
+				placed = 0;
+			}
+		}
+
+
+		//타일 돌리기
 		int key = getKeyOnce();
 		switch (key)
 		{
 		case Key::kX:
-			curT = UD; break;
+			switch (curT)
+			{
+			case UD: curT = LR; break;
+			case LR: curT = UD; break;
+			case UR: curT = RD; break;
+			case RD: curT = LD; break;
+			case LD: curT = UL; break;
+			case UL: curT = UR; break;
+			}
+			break;
 		case Key::kZ:
-			curT = LR; break;
+			switch (curT)
+			{
+			case UD: curT = LR; break;
+			case LR: curT = UD; break;
+			case UR: curT = UL; break;
+			case UL: curT = LD; break;
+			case LD: curT = RD; break;
+			case RD: curT = UR; break;
+			}
+			break;
+		case Key::kC:
+			if (curT == LR || curT == UD)
+			{
+				curT = UR; break;
+			}
+			if (curT == UR || curT == RD || curT == LD || curT == UL)
+			{
+				curT = LR; break;
+			}
 		case Key::kESC:
 			displayCur = false; break;
 		}
@@ -285,7 +420,7 @@ int playGameScreen(Buffer buf, GameState* state)
 		{
 			sendUDPKillSwitch = true;
 			getUDPKillSwitch = false;
-			thread get(getUDPGameState, &curX, &curY, &displayCur, &leftTime, &curT, recentTile, &getUDPKillSwitch);
+			thread get(getUDPGameState, &curX, &curY, &displayCur, &leftTime, &curT, recentTile, &placed, &getUDPKillSwitch);
 			get.detach();
 			startTurn = true;
 		}

@@ -146,6 +146,7 @@
     <ClCompile Include="MainScreen.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="SettingScreen.cpp" />
+    <ClCompile Include="Tiles.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Scenes.h" />
+    <ClInclude Include="Tiles.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +175,7 @@
     <None Include="TileLDD.gres" />
     <None Include="TileLDL.gres" />
     <None Include="TileLDLD.gres" />
+    <None Include="TileLDY.gres" />
     <None Include="TileLR.gres" />
     <None Include="TileLD.gres" />
     <None Include="Card1.gres" />
@@ -189,22 +192,27 @@
     <None Include="TileLRL.gres" />
     <None Include="TileLRLR.gres" />
     <None Include="TileLRR.gres" />
+    <None Include="TileLRY.gres" />
     <None Include="TileRD.gres" />
     <None Include="TileRDD.gres" />
     <None Include="TileRDR.gres" />
     <None Include="TileRDRD.gres" />
+    <None Include="TileRDY.gres" />
     <None Include="TileUD.gres" />
     <None Include="TileUDD.gres" />
     <None Include="TileUDU.gres" />
     <None Include="TileUDUD.gres" />
+    <None Include="TileUDY.gres" />
     <None Include="TileUL.gres" />
     <None Include="TileULL.gres" />
     <None Include="TileULU.gres" />
     <None Include="TileULUL.gres" />
+    <None Include="TileULY.gres" />
     <None Include="TileUR.gres" />
     <None Include="TileURR.gres" />
     <None Include="TileURU.gres" />
     <None Include="TileURUR.gres" />
+    <None Include="TileURY.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

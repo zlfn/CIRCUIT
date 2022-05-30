@@ -85,7 +85,7 @@ void serveUDPHandshake(bool turn, bool* swit, IPV4* clientIP, bool* OK)
 		if (*swit == false) return;
 		if (strcmp(temp, "OK FOUND")==0)
 		{
-			Sleep(10); //< Find가 메시지를 보내고 UDP 신호 받기를 대기하기까지 걸리는 시간을 대기
+			Sleep(100); //< Find가 메시지를 보내고 UDP 신호 받기를 대기하기까지 걸리는 시간을 대기
 
 			if (turn)
 				sendUDPMessage("OK MYTURN", ip, 1102);

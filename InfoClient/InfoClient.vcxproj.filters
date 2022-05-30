@@ -46,6 +46,9 @@
     <Filter Include="리소스 파일\Host/FindScreen">
       <UniqueIdentifier>{dc9b0768-3b6f-4281-9655-e422924c6e08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scenes\GameScreen">
+      <UniqueIdentifier>{0919caf3-c5ad-4336-8762-b8aab8f12157}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,11 +87,14 @@
     <ClCompile Include="FindScreen.cpp">
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="GameScreen.cpp">
-      <Filter>소스 파일\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="ErrorScreen.cpp">
       <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScreen.cpp">
+      <Filter>소스 파일\Scenes\GameScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles.cpp">
+      <Filter>소스 파일\Scenes\GameScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +120,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Network.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -246,6 +255,24 @@
     </None>
     <None Include="ManualButton.gres">
       <Filter>리소스 파일\MainScreen</Filter>
+    </None>
+    <None Include="TileLRY.gres">
+      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+    </None>
+    <None Include="TileRDY.gres">
+      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+    </None>
+    <None Include="TileUDY.gres">
+      <Filter>리소스 파일\GameScreen\TileUD</Filter>
+    </None>
+    <None Include="TileULY.gres">
+      <Filter>리소스 파일\GameScreen\TileUL</Filter>
+    </None>
+    <None Include="TileURY.gres">
+      <Filter>리소스 파일\GameScreen\TileUR</Filter>
+    </None>
+    <None Include="TileLDY.gres">
+      <Filter>리소스 파일\GameScreen\TileLD</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
