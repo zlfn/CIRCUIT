@@ -18,6 +18,7 @@
 
 #include "GameState.h"
 
+
 /// <summary>
 /// 게임 상태를 저장하는 전역변수입니다.
 /// </summary>
@@ -31,11 +32,11 @@ GameState* getGameState()
 int resetGameState()
 {
 	GameState g;
-	IPV4 temp(0, 0, 0, 0);
+	IPV4 temp(1, 1, 1, 1);
 	g.commIP = temp;
 
 	//설정 초기화
-	g.scene = Game;
+	g.scene = Main;
 	g.setting.noSpaceWindow = false;
 
 	g.setting.refresh = false;

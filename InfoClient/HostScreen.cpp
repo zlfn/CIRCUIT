@@ -31,12 +31,18 @@ using namespace std;
 //Host에서 핸드셰이크요청을 수신하고 Find에 "OK MYTURN" 혹은 "OK YOURTURN" 답장을 하여 통신이 수락되었음을 알립니다.
 //이런 과정으로 서로의 ip를 공유하며, ip가 서로 교환되면 바로 게임이 시작되고, TCP 통로를 엽니다.
 
+//예상되는 주요 네트워크 이슈
+//* 동시에 두 Find가 한 Host 브로드캐스트를 잡음
+//Host는 둘 중에 먼저 들어오는 핸드셰이크 요청만 수신, 통신 수락 요청은 한 Find 밖에 받을 수 없음
+//* Find, Host 둘 중 하나가 도중 연결이 끊겨서 둘 중 한 사람만 게임화면에 진입하는 경우 
+//게임화면으로 넘어가서 하트비트 보낼 때 통신이 끊기므로 한 사람만 게임화면에 영원히 남는 일은 발생하지 않습니다 :)
+
 namespace HostVal
 {
 	bool start = false;
 	bool kSwit = false;
 	bool isConnected = false;
-	IPV4 ip(0, 0, 0, 0);
+	IPV4 ip(1, 1, 1, 1);
 }
 
 using namespace HostVal;
@@ -71,15 +77,16 @@ void sendIPBroadcast(bool* swit)
 /// <param name="OK">완료 여부를 받을 포인터</param>
 void serveUDPHandshake(bool turn, bool* swit, IPV4* clientIP, bool* OK)
 {
-	IPV4 ip(0, 0, 0, 0);
+	IPV4 ip(1, 1, 1, 1);
 	for (;;)
 	{
 		char temp[256];
-		if (*swit == false) return;
 		receiveUDPMessage(temp, &ip, 3000, 1102);
+		if (*swit == false) return;
 		if (strcmp(temp, "OK FOUND")==0)
 		{
-			Sleep(10);
+			Sleep(10); //< Find가 메시지를 보내고 UDP 신호 받기를 대기하기까지 걸리는 시간을 대기
+
 			if (turn)
 				sendUDPMessage("OK MYTURN", ip, 1102);
 			else
@@ -110,7 +117,7 @@ int drawHostScreen(Buffer buf, GameState state)
 			drawText(buf, L"YOUR TURN", 0, 4, 100, Color::Gray);
 	}
 
-	drawImage(buf, L"HostCancelButton.gres", 68, 37, HOST_CANCEL);
+	drawImage(buf, L"CancelButton.gres", 68, 37, HOST_CANCEL);
 
 	return 0;
 }
@@ -142,7 +149,7 @@ int playHostScreen(Buffer buf, GameState *state)
 		isConnected = false;
 
 
-		IPV4 temp(0, 0, 0, 0);
+		IPV4 temp(1, 1, 1, 1);
 		ip = temp;
 
 		state->scene = Main;
@@ -161,4 +168,3 @@ int playHostScreen(Buffer buf, GameState *state)
 
 	return 0;
 }
-

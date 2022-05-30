@@ -21,14 +21,17 @@
 #include "GameState.h"
 #include "Network.h"
 #include "Scenes.h"
+#include "Input.h"
+
+const int FIND_CANCEL = 1;
 
 namespace FindVal
 {
 	bool start = false;
 	IPV4 ip(0, 0, 0, 0);
 	bool isConnected = false;
-	bool failed = false;
-	bool failCount = false;
+	bool killSwitch = false;
+	bool canCancel = true;
 }
 
 using namespace FindVal;
@@ -42,58 +45,70 @@ using namespace std;
 /// UDP 브로드캐스트를 받아서 핸드셰이크를 시행합니다.
 /// </summary>
 /// <param name="serverIP">아이피를 저장할 IPV4 포인터</param>
+/// <param name="kSwit">작동을 중간에 정지할 킬 스위치 포인터</param>
+/// <param name="turn">Host로부터 받은 턴 정보를 저장할 포인터</param>
 /// <param name="finished">정상적으로 시행이 끝나면 true가 되는 포인터</param>
-/// <param name="failed">호스트를 감지하지 못하였으면 true가 되는 포인터</param>
-void UDPHandShake(IPV4* serverIP, bool* turn, bool* finished, bool* failed)
+void UDPHandShake(IPV4* serverIP, bool* kSwit, bool* canCancel, bool* turn, bool* finished)
 {
-	char temp[256];
-	receiveUDPMessage(temp, serverIP, 5000, 3141);
-	if (strcmp(temp, "GAMEHOST") != 0)
+	for(;;)
 	{
-		*failed = true;
-	}
-	else
-	{
-		sendUDPMessage("OK FOUND", *serverIP, 1102);
-		IPV4 t(0, 0, 0, 0);
-		receiveUDPMessage(temp, &t, 3000, 1102);
-		if (strcmp(temp, "OK MYTURN") == 0)
+		IPV4 t(1, 1, 1, 1);
+		*serverIP = t;
+		*canCancel = true;
+		char temp[256];
+
+		//브로드캐스트를 받음
+		if (*kSwit == true) break;
+		receiveUDPMessage(temp, serverIP, 5000, 3141);
+		if (strcmp(temp, "GAMEHOST") == 0)
 		{
-			*turn = false;
-			*finished = true;
-		}
-		else if (strcmp(temp, "OK YOURTURN") == 0)
-		{
-			*turn = true;
-			*finished = true;
-		}
-		else 
-		{
-			*failed = true;
+			*canCancel = false;
+
+			//브로드캐스트를 받았다는 메시지를 보냄
+			sendUDPMessage("OK FOUND", *serverIP, 1102);
+			IPV4 t(1, 1, 1, 1);
+
+			//턴 순서를 받음
+			receiveUDPMessage(temp, &t, 1000, 1102);
+			if (strcmp(temp, "OK MYTURN") == 0)
+			{
+				*turn = false;
+				*finished = true;
+				break;
+			}
+			else if (strcmp(temp, "OK YOURTURN") == 0)
+			{
+				*turn = true;
+				*finished = true;
+				break;
+			}
+			//답을 받지 못했다면 연결 실패로 간주하고 처음으로 돌아감
+			else 
+			{
+				continue;
+			}
 		}
 	}
 }
 
+/// DEPRECATED
 /// <summary>
 /// 메인화면으로 돌아가는 것을 굳이 멀티스레딩을 이용해서 2초 늦춥니다.
 /// <para>스파게티 코드의 세계에 오신것을 환영합니다!</para>
 /// </summary>
 /// <param name="state">변경할 상태변수 포인터</param>
 /// <param name="start">돌아갈땐 start 변수도 꺼줘야 해요</param>
-void delayMoveScreen(GameState* state, bool *start)
+/*void delayMoveScreen(GameState* state, bool* start)
 {
 	Sleep(2000);
 	*start = false;
 	resetCard();
 	state->scene = Main;
-}
+}*/
 
 int drawFindScreen(Buffer buf, GameState state)
 {
-	if(!failCount)
-		drawText(buf, L"호스트 찾는중...", 0, 0, 100, Color::White);
-	else
-		drawText(buf, L"호스트를 찾지 못했습니다.", 0, 0, 100, Color::White);
+	drawText(buf, L"호스트 찾는중...", 0, 0, 100, Color::White);
 	wchar cServerIP[100];
 	swprintf_s(cServerIP, 100, L"연결중 : %d.%d.%d.%d", ip.b1, ip.b2, ip.b3, ip.b4);
 	drawText(buf, cServerIP, 0, 2, 100, Color::Gray);
@@ -106,6 +121,9 @@ int drawFindScreen(Buffer buf, GameState state)
 		else
 			drawText(buf, L"YOUR TURN", 0, 4, 100, Color::Gray);
 	}
+
+	if(canCancel)
+		drawImage(buf, L"CancelButton.gres", 68, 37, FIND_CANCEL);
 	return 0;
 }
 
@@ -115,19 +133,28 @@ int playFindScreen(Buffer buf, GameState *state)
 	if (!start)
 	{
 		isConnected = false;
-		failed = false;
-		failCount = false;
-		thread handshake(UDPHandShake,  &ip, &state->turn, &isConnected, &failed);
+		canCancel = true;
+		killSwitch = false;
+		thread handshake(UDPHandShake, &ip, &killSwitch, &canCancel, &state->turn, &isConnected);
 		handshake.detach();
 		start = true;
 	}
 
-	if (failed == true)
+	//어쩌다보니 Host의 킬 스위치는 false일때 작동하는데 Find의 킬 스위치는 true일때 작동하게 만들어졌네요
+	//디버깅은 미래의 내가 잘 하겠지~
+	bool clickCheck = (getClickOnce().type == Left && getClickObject(buf) == FIND_CANCEL);
+	if ((getKey() == Key::kESC || clickCheck)&&canCancel)
 	{
-		failed = false;
-		failCount = true;
-		thread delay(delayMoveScreen, state, &start);
-		delay.detach();
+		resetCard();
+		start = false;
+		killSwitch = true;
+		isConnected = false;
+
+
+		IPV4 temp(1, 1, 1, 1);
+		ip = temp;
+
+		state->scene = Main;
 	}
 
 	if (isConnected)

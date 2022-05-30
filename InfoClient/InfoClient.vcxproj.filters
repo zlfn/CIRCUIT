@@ -25,9 +25,6 @@
     <Filter Include="리소스 파일\GameScreen">
       <UniqueIdentifier>{ec8c75f8-4a1c-435e-a521-0f55bc8176b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="리소스 파일\HostScreen">
-      <UniqueIdentifier>{dc9b0768-3b6f-4281-9655-e422924c6e08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="리소스 파일\GameScreen\TileLD">
       <UniqueIdentifier>{00dab7bb-b34a-4e2a-a6ba-5b6dcb7833c1}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,9 @@
     </Filter>
     <Filter Include="리소스 파일\GameScreen\TileUR">
       <UniqueIdentifier>{d3a1435e-c6c2-4d6b-9aba-fea916d7a50c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\Host/FindScreen">
+      <UniqueIdentifier>{dc9b0768-3b6f-4281-9655-e422924c6e08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +85,9 @@
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="GameScreen.cpp">
+      <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorScreen.cpp">
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -148,8 +151,8 @@
     <None Include="FindButton.gres">
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
-    <None Include="HostCancelButton.gres">
-      <Filter>리소스 파일\HostScreen</Filter>
+    <None Include="CancelButton.gres">
+      <Filter>리소스 파일\Host/FindScreen</Filter>
     </None>
     <None Include="TileLD.gres">
       <Filter>리소스 파일\GameScreen\TileLD</Filter>
@@ -228,6 +231,21 @@
     </None>
     <None Include="TileFrameOn.gres">
       <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="EndTurnButtonOff.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="ResetButton.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="ImpossibleButton.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="EndTurnButtonOn.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="ManualButton.gres">
+      <Filter>리소스 파일\MainScreen</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Chars.cpp" />
+    <ClCompile Include="ErrorScreen.cpp" />
     <ClCompile Include="FindScreen.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameScreen.cpp" />
@@ -162,6 +163,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BackButton.gres" />
+    <None Include="EndTurnButtonOff.gres" />
+    <None Include="EndTurnButtonOn.gres" />
+    <None Include="ImpossibleButton.gres" />
+    <None Include="ManualButton.gres" />
+    <None Include="ResetButton.gres" />
     <None Include="TileFrameOff.gres" />
     <None Include="TileFrameOn.gres" />
     <None Include="TileLDD.gres" />
@@ -175,7 +181,7 @@
     <None Include="FindButton.gres" />
     <None Include="GiftButton.gres" />
     <None Include="HostButton.gres" />
-    <None Include="HostCancelButton.gres" />
+    <None Include="CancelButton.gres" />
     <None Include="Off.gres" />
     <None Include="On.gres" />
     <None Include="SettingButton.gres" />

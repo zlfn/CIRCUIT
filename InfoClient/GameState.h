@@ -39,6 +39,7 @@ enum Scenes
 	Host,
 	Find,
 	Game,
+	Error,
 };
 
 /// <summary>

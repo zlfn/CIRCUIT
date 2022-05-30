@@ -119,7 +119,7 @@ int getClickObject(Buffer buf)
 	MouseClick c = getClick();
 
 	//여백없는 출력을 끌 시 충돌이 발생하였으므로 처리합니다.
-	if (c.pos.X < buf.size.x && c.pos.Y < buf.size.y)
+	if (c.pos.X < buf.size.x && c.pos.Y < buf.size.y && c.pos.X >= 0 && c.pos.Y >= 0)
 		return buf.clickBuf[c.pos.X][c.pos.Y];
 	else return -1;
 }

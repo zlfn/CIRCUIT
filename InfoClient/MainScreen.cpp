@@ -26,6 +26,7 @@ const int Card2 = 3;
 const int LINK_BUTTON = 4;
 const int HOST_BUTTON = 5;
 const int FIND_BUTTON = 6;
+const int MANUAL_BUTTON = 7;
 
 
 int Card1X = 60;
@@ -53,6 +54,7 @@ int drawMainScreen(Buffer buf, GameState state)
 	drawText(buf, L"게임 호스트", 40, 21, 100, Color::Gray);
 	drawImage(buf, L"FindButton.gres", 28, 23, FIND_BUTTON);
 	drawText(buf, L"호스트 찾기", 40, 28, 100, Color::Gray);
+	drawImage(buf, L"ManualButton.gres", 28, 30, MANUAL_BUTTON);
 
 	if (stack)
 	{
