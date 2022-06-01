@@ -477,6 +477,9 @@ int playGameScreen(Buffer buf, GameState* state)
 				getUDPKillSwitch = false;
 				for (int i = 0; i < placed; i++)
 					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
+
+				if (isCompleted(tiles, 16 - leftTile)) throw;
+
 				sendTurn(PASS, recentTile, placed, state->commIP);
 				resetRecentTiles();
 				resetInputs();

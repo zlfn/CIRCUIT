@@ -18,6 +18,7 @@
 
 #include "Tiles.h"
 #include "Chars.h"
+#include <iostream>
 
 const wchar* getTileName(Tile t)
 {
@@ -155,4 +156,49 @@ int drawTile(Tile t, Buffer buf, int x, int y, Tile up, Tile left, Tile right, T
 		
 	return 0;
 }
+
+bool isCompleted(Tile (* tiles)[7], int placed)
+{
+	int x = 5, y = 3, cnt = 0;
+	Tile cur_tile = tiles[x][y];
+	Direction cur_direction = L;
+	Direction next_direction = U;
+	Direction tile_dir1, tile_dir2;
+
+	while (x!=4 || y!=3)
+	{
+		switch (next_direction)
+		{
+		case L: x = x - 1; break;
+		case R: x = x + 1; break;
+		case U: y = y - 1; break;
+		case D: y = y + 1; break;
+		}
+		if (x < 0 || x > 9 || y < 0 || y > 6) return false;
+
+		cur_tile = tiles[x][y];
+
+		cur_direction = (Direction)((-1) * next_direction);
+
+		if (cur_tile == LR) { tile_dir1 = L; tile_dir2 = R; }
+		else if (cur_tile == UD) { tile_dir1 = U; tile_dir2 = D; }
+		else if (cur_tile == UR) { tile_dir1 = U; tile_dir2 = R; }
+		else if (cur_tile == RD) { tile_dir1 = R; tile_dir2 = D; }
+		else if (cur_tile == LD) { tile_dir1 = L; tile_dir2 = D; }
+		else if (cur_tile == UL) { tile_dir1 = U; tile_dir2 = L; }
+		else if (cur_tile == BLANK) {
+			return false;
+		}
+
+		if (cur_direction == tile_dir1) next_direction = tile_dir2;
+		else if (cur_direction == tile_dir2) next_direction = tile_dir1;
+		else return false;
+
+		cnt++;
+	}
+
+	if (cnt >= placed+1) return true;
+	else return false;
+}
+
 

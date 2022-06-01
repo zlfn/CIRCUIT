@@ -39,6 +39,13 @@ struct RecentTile
 	Tile type;
 };
 
+enum Direction
+{
+	U = -2, L = -1, R = 1, D = 2
+};
+
+bool isCompleted(Tile (*tiles)[7], int placed);
+
 const wchar* getTileName(Tile t);
 const wchar* getTileNameYellow(Tile t);
 int drawTile(Tile t, Buffer buf, int x, int y);
