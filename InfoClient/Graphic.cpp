@@ -229,7 +229,7 @@ int drawText(Buffer buf, const wchar* text,int x, int y, int width, int color)
 				if (isWide(text[c]))
 				{
 					cx++; i++;
-					if (cx < buf.size.x || cy < buf.size.y || 0 <= cx || 0 <= cy)
+					if (cx < buf.size.x-1 && cy < buf.size.y-1 && 0 <= cx && 0 <= cy)
 					{
 						buf.textBuf[cx][cy] = ' ';
 						buf.colorBuf[cx][cy] = Color::Black;

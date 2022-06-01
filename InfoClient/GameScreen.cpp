@@ -16,13 +16,11 @@
  * <http://www.gnu.org/licenses/>을 참조하시기 바랍니다.
  */
 
-//게임 진행 중 3개의 포트를 이용하게 됩니다.
-//UDP HeartBeat 1102 : 1초에 한번씩 상대방에게 하트비트를 보내고, 받습니다. 
-//	연속으로 3초 이상 하트비트가 수신되지 않으면 통신 오류로 간주하고 뻗습니다.
-//UDP DataTransfer 6282 : 자신의 턴 일때 10ms에 한번씩 현재의 보드상태와 마우스 위치를 상대방에게 보냅니다.
+//게임 진행 중 2개의 포트를 이용하게 됩니다.
+//UDP DataTransfer 6282 (타우) : 자신의 턴 일때 10ms에 한번씩 현재의 보드상태와 마우스 위치를 상대방에게 보냅니다.
 //	몇개 유실되도 큰 문제가 없는 데이터이므로 검증이 없습니다.
 //TCP TurnExchange 2005 : 자신의 턴을 끝내면 상대방에게 TCPRequest를 송신합니다.
-//	자신의 턴이 끝난 직후부터 TCPServe를 엽니다. 하트비트에 의해 상호 연결이 보장되므로 타임아웃은 없습니다.
+//	자신의 턴이 끝난 직후부터 TCPServe를 엽니다. 타임아웃은 없습니다. 즉 상대방의 접속이 꺼지면 영원히 무한 루프..
 
 #include <thread>
 #include <iostream>
@@ -32,11 +30,24 @@
 #include "Network.h"
 #include "Tiles.h"
 
+enum Result
+{
+	PASS,
+	YOULOSE,
+	YOUWIN,
+	IMPOSSIBLE,
+} recvResult;
+
+bool exchanged;
+
+
 using namespace std;
 
 
 bool start = false;
 bool startTurn = false;
+
+bool impossible = false;
 
 bool killSwitch = false;
 
@@ -47,9 +58,14 @@ Tile curT = LR;
 
 //둔 타일 개수
 int placed = 0;
+int receivedPlace = 0;
+
+//남은 타일 개수
+int leftTile = 16;
 
 //남은 자기 시간
-int leftTime = 250;
+int leftTime = 150;
+int receivedLeftTime = 150;
 
 //하트비트 체크
 bool isConnected = true;
@@ -61,21 +77,24 @@ Tile tiles[10][7];
 bool getUDPKillSwitch = false;
 bool sendUDPKillSwitch = false;
 
-
-RecentTile recentTile[3];
+RecentTile recentTile[100];
+RecentTile receivedTile[100];
 
 //타일 1-70
 const int PLACE_TILE = 71;
 const int END_TURN = 72;
-const int RESET = 73;
-const int IMPOSSIBLE = 74;
+const int RESET_BUTTON = 73;
+const int IMPOSSIBLE_BUTTON = 74;
+const int GIVEUP_BUTTON = 75;
 
 int resetVals()
 {
 	start = false;
+	impossible = false;
 	displayCur = false;
 	isConnected = true;
-	leftTime = 250;
+	leftTime = 150;
+	receivedLeftTime = 150;
 	placed = false;
 	killSwitch = false;
 
@@ -86,32 +105,45 @@ int resetVals()
 	tiles[4][3] = RD;
 	tiles[5][3] = UL;
 
-	recentTile[0].x = 0;
-	recentTile[0].y = 0;
-	recentTile[0].type = BLANK;
-	recentTile[1].x = 0;
-	recentTile[1].y = 0;
-	recentTile[1].type = BLANK;
-	recentTile[2].x = 0;
-	recentTile[2].y = 0;
-	recentTile[2].type = BLANK;
+	for (int i = 0; i < 100; i++)
+	{
+		recentTile[i].x = 0;
+		recentTile[i].y = 0;
+		recentTile[i].type = BLANK;
+	}
 	return 0;
 }
 
 int resetRecentTiles()
 {
 	placed = 0;
-	recentTile[0].x = 0;
-	recentTile[0].y = 0;
-	recentTile[0].type = BLANK;
-	recentTile[1].x = 0;
-	recentTile[1].y = 0;
-	recentTile[1].type = BLANK;
-	recentTile[2].x = 0;
-	recentTile[2].y = 0;
-	recentTile[2].type = BLANK;
+	for (int i = 0; i < 100; i++)
+	{
+		recentTile[i].x = 0;
+		recentTile[i].y = 0;
+		recentTile[i].type = BLANK;
+	}
 	return 0;
 
+}
+
+int resetInputs()
+{
+	curX = 0;
+	curY = 0;
+	curT = LR;
+	displayCur = false;
+	return 0;
+}
+
+void decreaseTime(int* time, bool* turn)
+{
+	for (;;)
+	{
+		if (!*turn) break;
+		Sleep(1000);
+		*time -= 1;
+	}
 }
 
 void sendUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, int *placed, IPV4 ip, bool* killSwitch)
@@ -119,10 +151,16 @@ void sendUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Til
 	for (;;)
 	{
 		if (*killSwitch) break;
-		char buffer[256];
-		sprintf_s(buffer, 256, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
-			*curX, *curY, *displayCur, *leftTime, *curT, recentTile[0].x, recentTile[0].y, recentTile[0].type,
-			recentTile[1].x, recentTile[1].y, recentTile[1].type, recentTile[2].x, recentTile[2].y, recentTile[2].type, *placed);
+		char buffer[2048];
+		sprintf_s(buffer, 2048, "%d %d %d %d %d %d",
+			*curX, *curY, *displayCur, *leftTime, *curT, *placed);
+		char temp[1024];
+		for (int i = 0; i < *placed; i++)
+		{
+			sprintf_s(temp, 1024, " %d %d %d", recentTile[i].x, recentTile[i].y, recentTile[i].type);
+			strcat_s(buffer, 2048, temp);
+		}
+
 		sendUDPMessage(buffer, ip, 6282);
 		Sleep(10);
 	}
@@ -133,61 +171,94 @@ void getUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile
 	for (;;)
 	{
 		if (*killSwitch) break;
-		char buffer[256];
+		char buffer[2048];
 		IPV4 temp(0, 0, 0, 0);
 		if (receiveUDPMessage(buffer, &temp, 100, 6282) == 0)
 		{
 			int a = 0;
-			cout << buffer << endl;
-			sscanf_s(buffer, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", &a, curY, displayCur, leftTime, curT, &recentTile[0].x, &recentTile[0].y, &recentTile[0].type,&recentTile[1].x, &recentTile[1].y, &recentTile[1].type, &recentTile[2].x, &recentTile[2].y, &recentTile[2].type, placed);
+			int readText = 0;
+			int cur = 0;
+
+			sscanf_s(buffer, "%d %d %d %d %d %d %n", &a, curY, displayCur, leftTime, curT, placed, &readText);
 			*curX = a; //<curX를 그대로 sscanf_s로 넣으니까 안되더군요, 1시간 동안의 깊은 고민 끝에 그냥 이따구로 처리하기로 결정했습니다.
 			//원인은 모르겠는데 작동하면 됐죠 몰라몰라
+
+			cur += readText;
+
+			for (int i = 0; i < *placed; i++)
+			{
+				sscanf_s(buffer + cur, "%d %d %d %n", &recentTile[i].x, &recentTile[i].y, &recentTile[i].type ,&readText);
+				cur += readText;
+			}
 		}
 	}
 }
 
-void sendHeartbeat(bool* kSwit, IPV4 ip)
+void waitTurn(Result* result, RecentTile* recentTile, int* placed, bool* exchanged)
 {
-	for (;;)
+	char buffer[256];
+	IPV4 tip(0, 0, 0, 0);
+	serveTCP("OK", buffer, 256, &tip, 2005);
+	int cur = 0;
+	int readText;
+	sscanf_s(buffer, "%d %d %n", result, placed, &readText);
+	cur += readText;
+	for (int i = 0; i < *placed; i++)
 	{
-		if (*kSwit) break;
-		sendUDPMessage("HAY", ip, 1102);
-		Sleep(1000);
+		sscanf_s(buffer + cur, "%d %d %d %n", &recentTile[i].x, &recentTile[i].y, &recentTile[i].type, &readText);
+		cur += readText;
 	}
+	*exchanged = true;
 }
 
-void getHeartbeat(bool* kSwit, bool* connected)
+void sendTurn(Result result, RecentTile* recentTile, int placed, IPV4 ip)
 {
-	int check = 0;
-	for (;;)
+	char buffer[2048];
+	sprintf_s(buffer, 2048, "%d %d", result, placed);
+	char temp[1024];
+	for (int i = 0; i < placed; i++)
 	{
-		char buffer[256]; IPV4 ip(1, 1, 1, 1);
-		if (*kSwit) break;
-		receiveUDPMessage(buffer, &ip, 1000, 1102);
-
-		if (strcmp(buffer, "HAY") == 0)
-			check = 0;
-		else
-			check++;
-
-		if (check >= 3) { *connected = false; break; }
+		sprintf_s(temp, 1024, " %d %d %d", recentTile[i].x, recentTile[i].y, recentTile[i].type);
+		strcat_s(buffer, 2048, temp);
 	}
+	char recv[2048];
+	requestTCP(buffer, recv, 256, ip, 2005);
 }
-
 
 int drawGameScreen(Buffer buf, GameState state)
 {
 	wchar leftTimeS[100];
-	swprintf_s(leftTimeS, 100, L" %03d ", leftTime);
-	if (state.turn)
+	if(state.turn)
+		swprintf_s(leftTimeS, 100, L" %03d ", leftTime);
+	else
+		swprintf_s(leftTimeS, 100, L" %03d ", receivedLeftTime);
+
+	if (impossible)
 	{
-		drawText(buf, L"   내 차례   ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", 0, 0, 100, Color::Green);
-		drawText(buf, leftTimeS, 74, 0, 100, Color::Green);
+		if (state.turn)
+		{
+			drawText(buf, L"   불가능    ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", 0, 0, 100, Color::Yellow);
+			drawText(buf, leftTimeS, 74, 0, 100, Color::LightRed);
+		}
+		else
+		{
+			drawText(buf, L" 상대방 차례 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", 0, 0, 100, Color::Yellow);
+			drawText(buf, leftTimeS, 74, 0, 100, Color::Gray);
+		}
+
 	}
 	else
 	{
-		drawText(buf, L" 상대방 차례 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", 0, 0, 100, Color::Gray);
-		drawText(buf, leftTimeS, 74, 0, 100, Color::Gray);
+		if (state.turn)
+		{
+			drawText(buf, L"   내 차례   ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", 0, 0, 100, Color::Green);
+			drawText(buf, leftTimeS, 74, 0, 100, Color::Green);
+		}
+		else
+		{
+			drawText(buf, L" 상대방 차례 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", 0, 0, 100, Color::Gray);
+			drawText(buf, leftTimeS, 74, 0, 100, Color::Gray);
+		}
 	}
 	
 	//타일들은 1~70의 오브젝트 아이디를 부여받게 됩니다.
@@ -278,18 +349,30 @@ int drawGameScreen(Buffer buf, GameState state)
 			if (cx1 > cx2)
 			{
 				if(cx1<=9)
-				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1+1), 2 + 4 * (cy1), 1 + (cx1+1) + 10 * (cy1));
+					if(tiles[cx1+1][cy1] == BLANK)
+						drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1+1), 2 + 4 * (cy1), 1 + (cx1+1) + 10 * (cy1));
 				if(cx2>=1)
-				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2-1), 2 + 4 * (cy2), 1 + (cx2-1) + 10 * (cy2));
+					if(tiles[cx2-1][cy2] == BLANK)
+						drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2-1), 2 + 4 * (cy2), 1 + (cx2-1) + 10 * (cy2));
 			}
 			else
 			{
 				if(cx2<=9)
-				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2+1), 2 + 4 * (cy2), 1 + (cx2+1) + 10 * (cy2));
+					if(tiles[cx2+1][cy2] == BLANK)
+						drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx2+1), 2 + 4 * (cy2), 1 + (cx2+1) + 10 * (cy2));
 				if(cx1>=1)
-				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1-1), 2 + 4 * (cy1), 1 + (cx1-1) + 10 * (cy1));
+					if(tiles[cx1-1][cy1] == BLANK)
+						drawImage(buf, L"TileFrameOn.gres", 5 + 7 * (cx1-1), 2 + 4 * (cy1), 1 + (cx1-1) + 10 * (cy1));
 			}
 		}
+	}
+
+	if (impossible)
+	{
+		for (int i = 0; i < 10; i++)
+			for (int j = 0; j < 7; j++)
+				if(tiles[i][j] == BLANK)
+				drawImage(buf, L"TileFrameOn.gres", 5 + 7 * i, 2 + 4 * j, 1 + i + 10 * j);
 	}
 
 	//이번 턴에 놓은 타일
@@ -301,22 +384,38 @@ int drawGameScreen(Buffer buf, GameState state)
 	drawText(buf, cServerIP, 1, 30, 100, Color::Gray);
 
 	drawText(buf, L"════════════════════════════════════════════════════════════════════════════════", 0, 31, 80, Color::White);
-	drawImage(buf, getTileName(curT), 3, 33, PLACE_TILE);
+
+	drawText(buf, L"회로 배치", 3, 33, 100, Color::White);
+	drawImage(buf, getTileName(curT), 3, 34, PLACE_TILE);
+	wchar leftTileS[100];
+	swprintf_s(leftTileS, 100, L"%d", leftTile - placed);
+	if(leftTile-placed>=10)
+		drawText(buf, leftTileS, 8, 37, 100, Color::LightGray);
+	else
+		drawText(buf, leftTileS, 9, 37, 100, Color::LightGray);
+
 	if (placed!=0)
 		drawImage(buf, L"EndTurnButtonOn.gres", 32, 33, END_TURN);
 	else
 		drawImage(buf, L"EndTurnButtonOff.gres", 32, 33);
-	drawImage(buf, L"ResetButton.gres", 37, 36, RESET);
-	drawImage(buf, L"ImpossibleButton.gres",68, 37);
-	drawText(buf, L"회로 배치", 3, 37, 100, Color::White);
+
+	drawImage(buf, L"ResetButton.gres", 37, 36, RESET_BUTTON);
+	if(impossible)
+		drawImage(buf, L"GiveupButton.gres",68, 37, GIVEUP_BUTTON);
+	else
+		drawImage(buf, L"ImpossibleButton.gres",68, 37, IMPOSSIBLE_BUTTON);
+
 	drawText(buf, L"Z,X로 회전", 70, 32, 100, Color::Gray);
 	drawText(buf, L"C로 뒤집기", 70, 33, 100, Color::Gray);
 	drawText(buf, L"ESC로 취소", 70, 34, 100, Color::Gray);
 
 	//손에 있는 타일
-	if(displayCur)
+	if (displayCur)
 		drawImage(buf, getTileNameYellow(curT), curX - 3, curY - 2);
-
+	//커서
+	else if (!state.turn)
+		drawImage(buf, L"Cursor.gres", curX, curY);
+	
 	return 0;
 }
 
@@ -325,23 +424,27 @@ int playGameScreen(Buffer buf, GameState* state)
 	if (!start)
 	{
 		resetVals();
-		//thread s(sendHeartbeat, &killSwitch, state->commIP);
-		//thread g(getHeartbeat, &killSwitch, &isConnected);
-		//s.detach(); g.detach();
 		start = true;
 	}
 
-	//입력 (자기 턴일떄만)
-	if (state->turn)
+	//자기 턴일때
+	if (state->turn) 
 	{
 		if (!startTurn)
 		{
+			resetRecentTiles();
 			sendUDPKillSwitch = false;
 			getUDPKillSwitch = true;
 			thread send(sendUDPGameState, &curX, &curY, &displayCur, &leftTime, &curT, recentTile, &placed, state->commIP, &sendUDPKillSwitch);
+			thread time(decreaseTime, &leftTime, &state->turn);
 			send.detach();
+			time.detach();
 			startTurn = true;
 		}
+
+
+		if (leftTile - placed <= 0)
+			displayCur = false;
 
 		curX = getClick().pos.X;
 		curY = getClick().pos.Y;
@@ -351,7 +454,7 @@ int playGameScreen(Buffer buf, GameState* state)
 		//클릭
 		if (getClickOnce().type == Left)
 		{
-			if (1 <= co && co <= 70 && placed <= 3)
+			if (1 <= co && co <= 70 && (placed <= 2 || impossible) && displayCur)
 			{
 				recentTile[placed].type = curT;
 				recentTile[placed].x = (co - 1) % 10;
@@ -361,16 +464,35 @@ int playGameScreen(Buffer buf, GameState* state)
 
 			if(co==PLACE_TILE)
 				displayCur = !displayCur;
-			if (co == RESET)
+			if (co == RESET_BUTTON)
 				placed = 0;
 
 			//턴 끝내기
 			if (co == END_TURN)
 			{
 				state->turn = false;
+				startTurn = false;
+				leftTile -= placed;
+				sendUDPKillSwitch = true;
+				getUDPKillSwitch = false;
 				for (int i = 0; i < placed; i++)
 					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
-				placed = 0;
+				sendTurn(PASS, recentTile, placed, state->commIP);
+				resetRecentTiles();
+				resetInputs();
+			}
+			
+			if (co == IMPOSSIBLE_BUTTON)
+			{
+				state->turn = false;
+				startTurn = false;
+				sendUDPKillSwitch = true;
+				getUDPKillSwitch = false;
+				impossible = true;
+				sendTurn(IMPOSSIBLE, recentTile, placed, state->commIP);
+				resetRecentTiles();
+				resetInputs();
+
 			}
 		}
 
@@ -414,15 +536,60 @@ int playGameScreen(Buffer buf, GameState* state)
 			displayCur = false; break;
 		}
 	}
-	else
+	else //상대 턴일때
 	{
 		if (!startTurn)
 		{
+			resetRecentTiles();
 			sendUDPKillSwitch = true;
 			getUDPKillSwitch = false;
-			thread get(getUDPGameState, &curX, &curY, &displayCur, &leftTime, &curT, recentTile, &placed, &getUDPKillSwitch);
+			thread get(getUDPGameState, &curX, &curY, &displayCur, &receivedLeftTime, &curT, recentTile, &placed, &getUDPKillSwitch);
 			get.detach();
+			thread wait(waitTurn, &recvResult, receivedTile, &receivedPlace, &exchanged);
+			wait.detach();
 			startTurn = true;
+		}
+
+		if (exchanged)
+		{
+			if (recvResult == PASS)
+			{
+				sendUDPKillSwitch = false;
+				getUDPKillSwitch = true;
+				leftTile -= placed;
+				for (int i = 0; i < receivedPlace; i++)
+					tiles[receivedTile[i].x][receivedTile[i].y] = receivedTile[i].type;
+				resetRecentTiles();
+				resetInputs();
+				startTurn = false;
+				receivedPlace = 0;
+				exchanged = false;
+				state->turn = true;
+			}
+
+			if (recvResult == IMPOSSIBLE)
+			{
+				sendUDPKillSwitch = false;
+				getUDPKillSwitch = true;
+				resetRecentTiles();
+				resetInputs();
+				startTurn = false;
+				receivedPlace = 0;
+				leftTime = 150;
+				exchanged = false;
+				impossible = true;
+				state->turn = true;
+			}
+
+			if (recvResult == YOUWIN)
+			{
+				state->scene = Main;
+			}
+
+			if (recvResult == YOULOSE)
+			{
+				state->scene = Main;
+			}
 		}
 	}
 

@@ -52,14 +52,14 @@ void UDPHandShake(IPV4* serverIP, bool* kSwit, bool* canCancel, bool* turn, bool
 {
 	for(;;)
 	{
-		IPV4 t(1, 1, 1, 1);
+		IPV4 t(0, 0, 0, 0);
 		*serverIP = t;
 		*canCancel = true;
-		char temp[256];
+		char temp[2048];
 
 		//브로드캐스트를 받음
 		if (*kSwit == true) break;
-		receiveUDPMessage(temp, serverIP, 5000, 3141);
+		receiveUDPMessage(temp, serverIP, 100, 3141);
 		if (strcmp(temp, "GAMEHOST") == 0)
 		{
 			*canCancel = false;

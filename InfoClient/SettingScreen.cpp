@@ -139,6 +139,7 @@ int playSettingScreen(Buffer buf, GameState* state)
 			break;
 		case BACK_BUTTON:
 			state->scene = Main;
+			Sleep(10);
 			break;
 		}
 	}

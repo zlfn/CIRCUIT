@@ -42,7 +42,7 @@ namespace HostVal
 	bool start = false;
 	bool kSwit = false;
 	bool isConnected = false;
-	IPV4 ip(1, 1, 1, 1);
+	IPV4 ip(0, 0, 0, 0);
 }
 
 using namespace HostVal;
@@ -77,10 +77,10 @@ void sendIPBroadcast(bool* swit)
 /// <param name="OK">완료 여부를 받을 포인터</param>
 void serveUDPHandshake(bool turn, bool* swit, IPV4* clientIP, bool* OK)
 {
-	IPV4 ip(1, 1, 1, 1);
+	IPV4 ip(0, 0, 0, 0);
 	for (;;)
 	{
-		char temp[256];
+		char temp[2048];
 		receiveUDPMessage(temp, &ip, 3000, 1102);
 		if (*swit == false) return;
 		if (strcmp(temp, "OK FOUND")==0)
@@ -149,7 +149,7 @@ int playHostScreen(Buffer buf, GameState *state)
 		isConnected = false;
 
 
-		IPV4 temp(1, 1, 1, 1);
+		IPV4 temp(0, 0, 0, 0);
 		ip = temp;
 
 		state->scene = Main;

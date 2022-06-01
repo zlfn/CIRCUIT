@@ -274,6 +274,12 @@
     <None Include="TileLDY.gres">
       <Filter>리소스 파일\GameScreen\TileLD</Filter>
     </None>
+    <None Include="Cursor.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="GiveupButton.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GBSLAND_LOGO.gres">

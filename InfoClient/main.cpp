@@ -75,6 +75,7 @@ int main()
 
 	char buffer[256];
 	IPV4 ip(0, 0, 0, 0);
+	requestTCP("FUCKYOU", buffer, 256, IPV4(0, 0, 0, 0), 2005);
 	//sendUDPBroadcast("FUCKYOU", 3141);
 	//receiveUDPMessage(buffer, &ip, 1000000, 3141);
 	//cout << buffer; throw;
