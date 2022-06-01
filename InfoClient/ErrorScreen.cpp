@@ -40,8 +40,7 @@ int drawErrorScreen(Buffer buf, GameState state)
 }
 
 int playErrorScreen(Buffer buf, GameState* state)
-{
-	//메인 스레드에서 슬립을 사용할 수 있는 유일한 장소.
+{5
 	if (!start)
 	{
 		thread no(delay, state);

@@ -87,6 +87,10 @@ const int RESET_BUTTON = 73;
 const int IMPOSSIBLE_BUTTON = 74;
 const int GIVEUP_BUTTON = 75;
 
+/// <summary>
+/// 게임 변수들을 모두 초기상태로 돌립니다.
+/// </summary>
+/// <returns>정상적으로 실행되면 0이 반환됩니다.</returns>
 int resetVals()
 {
 	start = false;
@@ -114,6 +118,10 @@ int resetVals()
 	return 0;
 }
 
+/// <summary>
+/// 이번 턴에 설치한 타일 배열과 개수를 리셋합니다.
+/// </summary>
+/// <returns>정상적으로 리셋되면 0이 반환됩니다.</returns>
 int resetRecentTiles()
 {
 	placed = 0;
@@ -127,6 +135,10 @@ int resetRecentTiles()
 
 }
 
+/// <summary>
+/// 입력 변수들을 리셋합니다.
+/// </summary>
+/// <returns>정상적으로 종료되면 0이 반환됩니다.</returns>
 int resetInputs()
 {
 	curX = 0;
@@ -136,6 +148,11 @@ int resetInputs()
 	return 0;
 }
 
+/// <summary>
+/// 자기 턴인 동안 1초에 시간을 1씩 줄입니다.
+/// </summary>
+/// <param name="time">시간 포인터</param>
+/// <param name="turn">자기턴인지 여부</param>
 void decreaseTime(int* time, bool* turn)
 {
 	for (;;)
@@ -146,6 +163,18 @@ void decreaseTime(int* time, bool* turn)
 	}
 }
 
+/// <summary>
+/// UDP를 통해 상대에게 실시간 게임 상태를 송신합니다.
+/// </summary>
+/// <param name="curX">마우스 X</param>
+/// <param name="curY">마우스 Y</param>
+/// <param name="displayCur">타일 집었는지 여부</param>
+/// <param name="leftTime">남은 시간</param>
+/// <param name="curT">집은 타일 종류</param>
+/// <param name="recentTile">이번 턴에 설치한 타일 배열</param>
+/// <param name="placed">이번 턴에 설치한 타일 수</param>
+/// <param name="ip">보낼 ip주소</param>
+/// <param name="killSwitch">킬스위치 포인터</param>
 void sendUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, int *placed, IPV4 ip, bool* killSwitch)
 {
 	for (;;)
@@ -166,6 +195,17 @@ void sendUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Til
 	}
 }
 
+/// <summary>
+/// UDP를 통해 상대에게 실시간 게임 상태를 수신합니다.
+/// </summary>
+/// <param name="curX">마우스 X</param>
+/// <param name="curY">마우스 Y</param>
+/// <param name="displayCur">타일 집었는지 여부</param>
+/// <param name="leftTime">상대방 남은 시간</param>
+/// <param name="curT">상대방 집은 타일 종류</param>
+/// <param name="recentTile">상대방이 설치한 타일 배열</param>
+/// <param name="placed">상대방이 설치한 타일 개수</param>
+/// <param name="killSwitch">킬 스위치 포인터</param>
 void getUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile *curT, RecentTile* recentTile, int* placed, bool* killSwitch)
 {
 	for (;;)
@@ -194,6 +234,13 @@ void getUDPGameState(int *curX, int *curY, bool *displayCur, int* leftTime, Tile
 	}
 }
 
+/// <summary>
+/// 자기 턴이 아닐 때 상대방이 보내주는 턴을 대기합니다.
+/// </summary>
+/// <param name="result">승리여부등이 들어가는 Result 변수 포인터</param>
+/// <param name="recentTile">상대방이 설치한 타일 배열</param>
+/// <param name="placed">상대방이 설치한 타일 개수</param>
+/// <param name="exchanged">턴을 받았는지 여부 포인터</param>
 void waitTurn(Result* result, RecentTile* recentTile, int* placed, bool* exchanged)
 {
 	char buffer[256];
@@ -211,6 +258,13 @@ void waitTurn(Result* result, RecentTile* recentTile, int* placed, bool* exchang
 	*exchanged = true;
 }
 
+/// <summary>
+/// (자기 턴을 종료할 때) 상대방에게 턴을 보냅니다.
+/// </summary>
+/// <param name="result">턴 결과 (승리, 패배, 패스, 불가능 선언)</param>
+/// <param name="recentTile">자기 턴에 설치한 타일 배열</param>
+/// <param name="placed">자기 턴에 설치한 타일 개수</param>
+/// <param name="ip">보낼 ip 주소</param>
 void sendTurn(Result result, RecentTile* recentTile, int placed, IPV4 ip)
 {
 	char buffer[2048];
@@ -421,6 +475,7 @@ int drawGameScreen(Buffer buf, GameState state)
 
 int playGameScreen(Buffer buf, GameState* state)
 {
+	//장면 시작할 때
 	if (!start)
 	{
 		resetVals();
@@ -430,6 +485,7 @@ int playGameScreen(Buffer buf, GameState* state)
 	//자기 턴일때
 	if (state->turn) 
 	{
+		//턴 시작할 때
 		if (!startTurn)
 		{
 			resetRecentTiles();
@@ -485,6 +541,7 @@ int playGameScreen(Buffer buf, GameState* state)
 				resetInputs();
 			}
 			
+			//불가능 선언
 			if (co == IMPOSSIBLE_BUTTON)
 			{
 				state->turn = false;
@@ -541,6 +598,7 @@ int playGameScreen(Buffer buf, GameState* state)
 	}
 	else //상대 턴일때
 	{
+		//턴 시작할때
 		if (!startTurn)
 		{
 			resetRecentTiles();
@@ -553,8 +611,10 @@ int playGameScreen(Buffer buf, GameState* state)
 			startTurn = true;
 		}
 
+		//턴 교환되면
 		if (exchanged)
 		{
+			//별일 없을 때
 			if (recvResult == PASS)
 			{
 				sendUDPKillSwitch = false;
@@ -570,6 +630,7 @@ int playGameScreen(Buffer buf, GameState* state)
 				state->turn = true;
 			}
 
+			//불가능 선언 받았을 때
 			if (recvResult == IMPOSSIBLE)
 			{
 				sendUDPKillSwitch = false;
@@ -584,11 +645,13 @@ int playGameScreen(Buffer buf, GameState* state)
 				state->turn = true;
 			}
 
+			//이겼을 때
 			if (recvResult == YOUWIN)
 			{
 				state->scene = Main;
 			}
 
+			//졌을 때
 			if (recvResult == YOULOSE)
 			{
 				state->scene = Main;
@@ -596,6 +659,7 @@ int playGameScreen(Buffer buf, GameState* state)
 		}
 	}
 
+	//연결 끊겼을 때 (미사용)
 	if (isConnected == false)
 	{
 		killSwitch = true;
