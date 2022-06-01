@@ -96,6 +96,9 @@
     <ClCompile Include="Tiles.cpp">
       <Filter>소스 파일\Scenes\GameScreen</Filter>
     </ClCompile>
+    <ClCompile Include="InfoScreen.cpp">
+      <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chars.h">

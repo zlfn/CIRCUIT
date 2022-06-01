@@ -36,3 +36,5 @@ extern int drawGameScreen(Buffer buf, GameState state);
 extern int playGameScreen(Buffer buf, GameState* state);
 extern int drawErrorScreen(Buffer buf, GameState state);
 extern int playErrorScreen(Buffer buf, GameState* state);
+extern int drawInfoScreen(Buffer buf, GameState state);
+extern int playInfoScreen(Buffer buf, GameState* state);

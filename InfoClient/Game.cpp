@@ -43,6 +43,9 @@ int drawGame(Buffer buf, GameState state)
 	case Error:
 		drawErrorScreen(buf, state);
 		break;
+	case Info:
+		drawInfoScreen(buf, state);
+		break;
 	}
 	return 0;
 }
@@ -68,6 +71,9 @@ int playGame(Buffer buf, GameState* state)
 		break;
 	case Error:
 		playErrorScreen(buf, state);
+		break;
+	case Info:
+		playInfoScreen(buf, state);
 		break;
 	}
 	return 0;

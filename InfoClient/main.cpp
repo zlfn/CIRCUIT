@@ -62,6 +62,8 @@ int main()
 	buf[0] = getBuffer(80, 40);
 	buf[1] = getBuffer(80, 40);
 
+	Sleep(100);
+
 	//fps측정 변수
 	double frame = 0;
 	
@@ -82,6 +84,8 @@ int main()
 
 	setWindow(buf[0], false);
 	setWindow(buf[1], false);
+
+	Sleep(100);
 
 	//랜더링 사이클
 	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 입력 체크, 진행 -> 렌더링 -> 스왑 -> 리셋

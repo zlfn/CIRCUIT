@@ -34,9 +34,13 @@ int swapBuffer(Buffer bbuf)
 	if (SetConsoleActiveScreenBuffer(bbuf.screen) != 0) return 0;
 	else
 	{
-		cout << "ERR: 스크린 버퍼 표시에 실패하였습니다. 예상치 못한 지점에서 버퍼가 해제되었을 가능성이 있습니다.";
+		SetConsoleActiveScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE));
+		cout << "ERR: "<< GetLastError();
+
 		throw;
 	}
+
+	return 0;
 }
 
 void renderTH(Buffer buf, int y_start, int y_end)
@@ -430,6 +434,8 @@ int drawImage(Buffer buf, const wchar* path, int x, int y)
 
 	fclose(fs);
 
+	for (int i = 0; i < sizeY; i++)
+		delete alphaChecker[i];
 	delete alphaChecker;
 	return flag;
 }
@@ -575,6 +581,8 @@ int drawImage(Buffer buf, const wchar* path, int x, int y, int click)
 
 	fclose(fs);
 
+	for (int i = 0; i < sizeY; i++)
+		delete alphaChecker[i];
 	delete alphaChecker;
 	return flag;
 }

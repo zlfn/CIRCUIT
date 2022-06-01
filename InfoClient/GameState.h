@@ -40,6 +40,7 @@ enum Scenes
 	Find,
 	Game,
 	Error,
+	Info,
 };
 
 /// <summary>

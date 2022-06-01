@@ -23,12 +23,9 @@
 
 int setWindow(Buffer buf, bool noSpace)
 {
-	CONSOLE_CURSOR_INFO cci;
-	cci.dwSize = 1;
-	cci.bVisible = FALSE;
 
 	CONSOLE_SCREEN_BUFFER_INFO bufinfo;
-	GetConsoleScreenBufferInfo(buf.screen, & bufinfo);
+	GetConsoleScreenBufferInfo(buf.screen, &bufinfo);
 	SMALL_RECT windowSize;
 	COORD bufSize = {buf.size.x, buf.size.y};
 
@@ -53,12 +50,14 @@ int setWindow(Buffer buf, bool noSpace)
 
 	SetConsoleScreenBufferSize(buf.screen, bufSize);
 
-	if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize) == 0)
+	/*if (SetConsoleWindowInfo(buf.screen, TRUE, &windowSize) == 0)
 	{
+		HWND hwnd = GetConsoleWindow();
+		//MoveWindow(hwnd, 0, 0, 10000, 10000, TRUE);
 		//정적 dll사용시 버그 남, 제거 필요
-		SetWindowPos(GetConsoleWindow(), 0, 0, 0, 10000, 10000, SWP_NOMOVE | SWP_SHOWWINDOW);
+		SetWindowPos(GetConsoleWindow(), 0, 0, 0, 80, 40, SWP_NOMOVE | SWP_SHOWWINDOW);
 		SetConsoleWindowInfo(buf.screen, TRUE, &windowSize);
-	}
+	}*/
 
 	//폰트를 고정할 수 있다는 사실을 일주일 만에 깨달았습니다! 짜잔
 	CONSOLE_FONT_INFOEX cfi;
@@ -71,6 +70,5 @@ int setWindow(Buffer buf, bool noSpace)
 
 	wcscpy_s(cfi.FaceName, LF_FACESIZE, L"NSimsun");
 	SetCurrentConsoleFontEx(buf.screen, FALSE, &cfi);
-	SetConsoleCursorInfo(buf.screen, &cci);
 	return 0;
 }
