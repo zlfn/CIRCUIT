@@ -40,7 +40,7 @@ int drawErrorScreen(Buffer buf, GameState state)
 }
 
 int playErrorScreen(Buffer buf, GameState* state)
-{5
+{
 	if (!start)
 	{
 		thread no(delay, state);
