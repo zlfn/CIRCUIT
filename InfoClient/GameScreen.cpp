@@ -25,11 +25,15 @@
 #include <thread>
 #include <iostream>
 #include "Graphic.h"
+#include "Scenes.h"
 #include "GameState.h"
 #include "Input.h"
 #include "Network.h"
 #include "Tiles.h"
 
+using namespace std;
+
+//턴 종료 결과
 enum Result
 {
 	PASS,
@@ -38,19 +42,24 @@ enum Result
 	IMPOSSIBLE,
 } recvResult;
 
+//턴 교환 여부
 bool exchanged;
 
-
-using namespace std;
-
-
+//시동 변수
 bool start = false;
 bool startTurn = false;
 
+//승리 패배 여부
+bool lose = false;
+bool win = false;
+
+//불가능선언 여부
 bool impossible = false;
 
+//킬 스위치
 bool killSwitch = false;
 
+//커서 변수
 int curX;
 int curY;
 bool displayCur = false;
@@ -77,46 +86,17 @@ Tile tiles[10][7];
 bool getUDPKillSwitch = false;
 bool sendUDPKillSwitch = false;
 
+//자신이 이번턴에 둔 타일과 상대가 이번턴에 둔 타일.
 RecentTile recentTile[100];
 RecentTile receivedTile[100];
 
-//타일 1-70
+//오브젝트 클릭 테이블
+//타일은 1-70을 할당
 const int PLACE_TILE = 71;
 const int END_TURN = 72;
 const int RESET_BUTTON = 73;
 const int IMPOSSIBLE_BUTTON = 74;
 const int GIVEUP_BUTTON = 75;
-
-/// <summary>
-/// 게임 변수들을 모두 초기상태로 돌립니다.
-/// </summary>
-/// <returns>정상적으로 실행되면 0이 반환됩니다.</returns>
-int resetVals()
-{
-	start = false;
-	impossible = false;
-	displayCur = false;
-	isConnected = true;
-	leftTime = 150;
-	receivedLeftTime = 150;
-	placed = false;
-	killSwitch = false;
-
-	for (int i = 0; i < 10; i++)
-		for (int j = 0; j < 7; j++)
-			tiles[i][j] = BLANK;
-
-	tiles[4][3] = RD;
-	tiles[5][3] = UL;
-
-	for (int i = 0; i < 100; i++)
-	{
-		recentTile[i].x = 0;
-		recentTile[i].y = 0;
-		recentTile[i].type = BLANK;
-	}
-	return 0;
-}
 
 /// <summary>
 /// 이번 턴에 설치한 타일 배열과 개수를 리셋합니다.
@@ -134,6 +114,44 @@ int resetRecentTiles()
 	return 0;
 
 }
+
+/// <summary>
+/// 게임 변수들을 모두 초기상태로 돌립니다.
+/// </summary>
+/// <returns>정상적으로 실행되면 0이 반환됩니다.</returns>
+int resetVals()
+{
+	getUDPKillSwitch = true;
+	sendUDPKillSwitch = true;
+	killSwitch = true;
+	start = false;
+	impossible = false;
+	displayCur = false;
+	isConnected = true;
+	win = false;
+	lose = false;
+	leftTime = 150;
+	receivedLeftTime = 150;
+	recvResult = PASS;
+	placed = false;
+
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 7; j++)
+			tiles[i][j] = BLANK;
+
+	tiles[4][3] = RD;
+	tiles[5][3] = UL;
+
+	for (int i = 0; i < 100; i++)
+	{
+		recentTile[i].x = 0;
+		recentTile[i].y = 0;
+		recentTile[i].type = BLANK;
+	}
+
+	return 0;
+}
+
 
 /// <summary>
 /// 입력 변수들을 리셋합니다.
@@ -469,6 +487,11 @@ int drawGameScreen(Buffer buf, GameState state)
 	//커서
 	else if (!state.turn)
 		drawImage(buf, L"Cursor.gres", curX, curY);
+
+	if (win)
+		drawImage(buf, L"Win.gres", 0, 0);
+	if (lose)
+		drawImage(buf, L"Lose.gres", 0, 0);
 	
 	return 0;
 }
@@ -483,7 +506,7 @@ int playGameScreen(Buffer buf, GameState* state)
 	}
 
 	//자기 턴일때
-	if (state->turn) 
+	else if (state->turn) 
 	{
 		//턴 시작할 때
 		if (!startTurn)
@@ -498,6 +521,21 @@ int playGameScreen(Buffer buf, GameState* state)
 			startTurn = true;
 		}
 
+		//시간 오버
+		if (leftTime <= 0)
+		{
+				state->turn = false;
+				sendUDPKillSwitch = true;
+				getUDPKillSwitch = true;
+				for (int i = 0; i < placed; i++)
+					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
+
+				lose = true;
+				sendTurn(YOUWIN, recentTile, placed, state->commIP);
+				resetRecentTiles();
+				resetInputs();
+		}
+
 
 		if (leftTile - placed <= 0)
 			displayCur = false;
@@ -510,6 +548,7 @@ int playGameScreen(Buffer buf, GameState* state)
 		//클릭
 		if (getClickOnce().type == Left)
 		{
+			//타일 배치
 			if (1 <= co && co <= 70 && (placed <= 2 || impossible) && displayCur)
 			{
 				recentTile[placed].type = curT;
@@ -518,8 +557,11 @@ int playGameScreen(Buffer buf, GameState* state)
 				placed++;
 			}
 
+			//타일 버튼
 			if(co==PLACE_TILE)
 				displayCur = !displayCur;
+
+			//타일 리셋
 			if (co == RESET_BUTTON)
 				placed = 0;
 
@@ -534,11 +576,19 @@ int playGameScreen(Buffer buf, GameState* state)
 				for (int i = 0; i < placed; i++)
 					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
 
-				if (isCompleted(tiles, 16 - leftTile)) throw;
-
-				sendTurn(PASS, recentTile, placed, state->commIP);
-				resetRecentTiles();
-				resetInputs();
+				if (isCompleted(tiles, 16 - leftTile))
+				{
+					win = true;
+					sendTurn(YOULOSE, recentTile, placed, state->commIP);
+					resetRecentTiles();
+					resetInputs();
+				}
+				else
+				{
+					sendTurn(PASS, recentTile, placed, state->commIP);
+					resetRecentTiles();
+					resetInputs();
+				}
 			}
 			
 			//불가능 선언
@@ -552,7 +602,20 @@ int playGameScreen(Buffer buf, GameState* state)
 				sendTurn(IMPOSSIBLE, recentTile, placed, state->commIP);
 				resetRecentTiles();
 				resetInputs();
+			}
 
+			if (co == GIVEUP_BUTTON)
+			{
+				state->turn = false;
+				sendUDPKillSwitch = true;
+				getUDPKillSwitch = true;
+				for (int i = 0; i < placed; i++)
+					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
+
+				lose = true;
+				sendTurn(YOUWIN, recentTile, placed, state->commIP);
+				resetRecentTiles();
+				resetInputs();
 			}
 		}
 
@@ -648,13 +711,25 @@ int playGameScreen(Buffer buf, GameState* state)
 			//이겼을 때
 			if (recvResult == YOUWIN)
 			{
-				state->scene = Main;
+				for (int i = 0; i < receivedPlace; i++)
+					tiles[receivedTile[i].x][receivedTile[i].y] = receivedTile[i].type;
+				resetRecentTiles();
+				resetInputs();
+				sendUDPKillSwitch = true;
+				getUDPKillSwitch = true;
+				win = true;
 			}
 
 			//졌을 때
 			if (recvResult == YOULOSE)
 			{
-				state->scene = Main;
+				for (int i = 0; i < placed; i++)
+					tiles[recentTile[i].x][recentTile[i].y] = recentTile[i].type;
+				resetRecentTiles();
+				resetInputs();
+				sendUDPKillSwitch = true;
+				getUDPKillSwitch = true;
+				lose = true;
 			}
 		}
 	}

@@ -28,9 +28,6 @@
     <Filter Include="리소스 파일\GameScreen\TileLD">
       <UniqueIdentifier>{00dab7bb-b34a-4e2a-a6ba-5b6dcb7833c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="리소스 파일\GameScreen\TileLR">
-      <UniqueIdentifier>{574c48a3-03d1-4021-b79f-78f106d890ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="리소스 파일\GameScreen\TileUL">
       <UniqueIdentifier>{b5238522-12f1-4b0d-adce-d9a5c9af6d8e}</UniqueIdentifier>
     </Filter>
@@ -49,12 +46,12 @@
     <Filter Include="소스 파일\Scenes\GameScreen">
       <UniqueIdentifier>{0919caf3-c5ad-4336-8762-b8aab8f12157}</UniqueIdentifier>
     </Filter>
+    <Filter Include="리소스 파일\GameScreen\TileLD\TileLR">
+      <UniqueIdentifier>{574c48a3-03d1-4021-b79f-78f106d890ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
@@ -98,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="InfoScreen.cpp">
       <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphic.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +145,6 @@
     <None Include="BackButton.gres">
       <Filter>리소스 파일\SettingScreen</Filter>
     </None>
-    <None Include="Card1.gres">
-      <Filter>리소스 파일\MainScreen</Filter>
-    </None>
     <None Include="Card2.gres">
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
@@ -179,16 +176,16 @@
       <Filter>리소스 파일\GameScreen\TileLD</Filter>
     </None>
     <None Include="TileLR.gres">
-      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+      <Filter>리소스 파일\GameScreen\TileLD\TileLR</Filter>
     </None>
     <None Include="TileLRL.gres">
-      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+      <Filter>리소스 파일\GameScreen\TileLD\TileLR</Filter>
     </None>
     <None Include="TileLRR.gres">
-      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+      <Filter>리소스 파일\GameScreen\TileLD\TileLR</Filter>
     </None>
     <None Include="TileLRLR.gres">
-      <Filter>리소스 파일\GameScreen\TileLR</Filter>
+      <Filter>리소스 파일\GameScreen\TileLD\TileLR</Filter>
     </None>
     <None Include="TileUL.gres">
       <Filter>리소스 파일\GameScreen\TileUL</Filter>
@@ -260,10 +257,7 @@
       <Filter>리소스 파일\MainScreen</Filter>
     </None>
     <None Include="TileLRY.gres">
-      <Filter>리소스 파일\GameScreen\TileLR</Filter>
-    </None>
-    <None Include="TileRDY.gres">
-      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+      <Filter>리소스 파일\GameScreen\TileLD\TileLR</Filter>
     </None>
     <None Include="TileUDY.gres">
       <Filter>리소스 파일\GameScreen\TileUD</Filter>
@@ -281,6 +275,18 @@
       <Filter>리소스 파일\GameScreen</Filter>
     </None>
     <None Include="GiveupButton.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="TileRDY.gres">
+      <Filter>리소스 파일\GameScreen\TileRD</Filter>
+    </None>
+    <None Include="Win.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="Lose.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
+    <None Include="Card1.gres">
       <Filter>리소스 파일\GameScreen</Filter>
     </None>
   </ItemGroup>

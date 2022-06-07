@@ -172,6 +172,7 @@
     <None Include="EndTurnButtonOn.gres" />
     <None Include="GiveupButton.gres" />
     <None Include="ImpossibleButton.gres" />
+    <None Include="Lose.gres" />
     <None Include="ManualButton.gres" />
     <None Include="ResetButton.gres" />
     <None Include="TileFrameOff.gres" />
@@ -217,6 +218,7 @@
     <None Include="TileURU.gres" />
     <None Include="TileURUR.gres" />
     <None Include="TileURY.gres" />
+    <None Include="Win.gres" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

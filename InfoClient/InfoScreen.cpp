@@ -6,7 +6,7 @@ const int BACK_BUTTON = 1;;
 
 int drawInfoScreen(Buffer buf, GameState state)
 {
-	drawText(buf, L"설명", 40, 1, 100, Color::White);
+	drawText(buf, L"설명", 39, 1, 100, Color::White);
 	drawImage(buf, L"TileRD.gres", 0, 0);
 	drawImage(buf, L"TileLD.gres", 73, 0);
 	drawImage(buf, L"TileUR.gres", 0, 36);
@@ -18,9 +18,9 @@ int drawInfoScreen(Buffer buf, GameState state)
 	drawText(buf, L"3. 한 턴에          의 전선을 설치 가능하다.", 4, 14, 100, Color::White);
 	drawText(buf, L"최대 3개", 15, 14, 100, Color::Yellow);
 	drawText(buf, L"4. 전선은 일렬이 되게 설치해야 한다. ", 4, 17, 100, Color::White);
-	drawImage(buf, L"TileLR.gres", 41, 15);
-	drawImage(buf, L"TileLR.gres", 47, 15);
-	drawImage(buf, L"TileLR.gres", 53, 15);
+	drawImage(buf, L"TileLRR.gres", 41, 15);
+	drawImage(buf, L"TileLRLR.gres", 48, 15);
+	drawImage(buf, L"TileLRL.gres", 55, 15);
 	drawText(buf, L"5. 남은 전선으로 모든 전선을 연결할 수 없다고 판단된다면         을", 4, 20, 100, Color::White);
 	drawText(buf, L"   외칠 수 있다.", 4, 21, 100, Color::White);
 	drawText(buf, L"불가능!", 61, 20, 100, Color::LightRed);
@@ -29,6 +29,7 @@ int drawInfoScreen(Buffer buf, GameState state)
 	drawText(buf, L"- 자신의 턴에 회로를 완성한다. ", 4, 30, 100, Color::White);
 	drawText(buf, L"- 상대방의 제한시간이 모두 소진된다.", 4, 32, 100, Color::White);
 	drawText(buf, L"- 불가능을 외친후 상대방이 회로를 완성하지 못한다.  ", 4, 34, 100, Color::White);
+	drawText(buf, L"This game inspired by Venice Connection", 0, 39, 100, Color::Gray);
 	return 0;
 }
 

@@ -18,7 +18,6 @@
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define BUFFER_SIZE 2048 
-#include <WinSock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
 #include "Network.h"

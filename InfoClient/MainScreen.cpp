@@ -69,7 +69,7 @@ int drawMainScreen(Buffer buf, GameState state)
 
 	drawImage(buf, L"CIRCUIT_LOGO.gres", 16, 4);
 	drawText(buf, L"경기북과학고등학교 정보 수행평가", 32, 10, 100, Color::LightGreen);
-	drawText(buf, L"(C) 2022.박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Green);
+	drawText(buf, L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Green);
 	drawText(buf, L"This software distributed under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Green);
 
 	return 0;

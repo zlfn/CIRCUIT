@@ -20,6 +20,8 @@
 #include "Chars.h"
 #include <iostream>
 
+wchar name[100];
+
 const wchar* getTileName(Tile t)
 {
 	switch (t)
@@ -81,9 +83,8 @@ const wchar* getTileOriginName(Tile t)
 	return L"";
 }
 
-wchar* getTileName(Tile t, Buffer buf, Tile up, Tile left, Tile right, Tile down)
+const wchar* getTileName(Tile t, Buffer buf, Tile up, Tile left, Tile right, Tile down)
 {
-	wchar* name = new wchar[100];
 	name[0] = L'\0';
 	wcscat_s(name, 100, getTileOriginName(t));
 
@@ -157,7 +158,7 @@ int drawTile(Tile t, Buffer buf, int x, int y, Tile up, Tile left, Tile right, T
 	return 0;
 }
 
-bool isCompleted(Tile (* tiles)[7], int placed)
+bool isCompleted(Tile tiles[][7], int placed)
 {
 	int x = 5, y = 3, cnt = 0;
 	Tile cur_tile = tiles[x][y];

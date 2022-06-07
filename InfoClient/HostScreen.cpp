@@ -31,11 +31,8 @@ using namespace std;
 //Host에서 핸드셰이크요청을 수신하고 Find에 "OK MYTURN" 혹은 "OK YOURTURN" 답장을 하여 통신이 수락되었음을 알립니다.
 //이런 과정으로 서로의 ip를 공유하며, ip가 서로 교환되면 바로 게임이 시작되고, TCP 통로를 엽니다.
 
-//예상되는 주요 네트워크 이슈
-//* 동시에 두 Find가 한 Host 브로드캐스트를 잡음
+//* 동시에 두 Find가 한 Host 브로드캐스트를 잡을 경우
 //Host는 둘 중에 먼저 들어오는 핸드셰이크 요청만 수신, 통신 수락 요청은 한 Find 밖에 받을 수 없음
-//* Find, Host 둘 중 하나가 도중 연결이 끊겨서 둘 중 한 사람만 게임화면에 진입하는 경우 
-//게임화면으로 넘어가서 하트비트 보낼 때 통신이 끊기므로 한 사람만 게임화면에 영원히 남는 일은 발생하지 않습니다 :)
 
 namespace HostVal
 {
@@ -133,6 +130,7 @@ int playHostScreen(Buffer buf, GameState *state)
 		bool turn = dis(gen);
 		state->turn = turn;
 
+		//브로드 송신과 핸드셰이크 수신 동시 실행
 		thread broadcast(sendIPBroadcast, &kSwit);
 		thread handshake(serveUDPHandshake, state->turn, &kSwit, &ip, &isConnected);
 		broadcast.detach();
