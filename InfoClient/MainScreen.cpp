@@ -34,7 +34,7 @@ int Card1Y = 7;
 int Card2X = 12;
 int Card2Y = 2;
 
-//1번이 위에 있는 여부
+//1번 카드가 위에 있는 여부
 bool stack = false;
 
 int resetCard()

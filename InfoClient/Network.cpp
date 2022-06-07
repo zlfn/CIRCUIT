@@ -161,7 +161,6 @@ int receiveUDPMessage(char* buffer, IPV4* ip, int limitTime, int port)
 	sockaddr1.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
 	sockaddr1.sin_port = htons(port);
 
-	//정해진 시간만큼 수신을 기다립니다.
 	bind(sock, (sockaddr*)&sockaddr1, sizeof(sockaddr_in));
 	memset(buffer, 0, BUFFER_SIZE);
 	memset(&sockaddr2, 0, sizeof(struct sockaddr_in));

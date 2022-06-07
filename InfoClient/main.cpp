@@ -75,16 +75,16 @@ int main()
 	startGetInput();
 	resetGameState();
 
-
+	//화면 크기 고정
 	setWindow(buf[0], false);
 	setWindow(buf[1], false);
 
-
+	//화면 크기 고정후 대기를 조금 걸어 안정적으로 실행시킵니다.
 	Sleep(100);
 
 	//랜더링 사이클
 	//화면 크기 조정 -> 리프레시/디더링 -> 이미지, 텍스트 빌딩 -> 입력 체크, 진행 -> 렌더링 -> 스왑 -> 리셋
-	//메인 렌더링 사이클에는 어떠한 일이 있어도 Sleep이 들어가면 안됩니다!!! 스레드 분리해서 처리해야합니다.
+	//메인 렌더링 스레드에는 Sleep이 들어가면 안됩니다!!!
 	for (;;) {
 		//프레임 측정 시작
 		clock_t start = clock();
@@ -117,6 +117,7 @@ int main()
 			ditherBuffer(buf[!bufCount], set.ditheringSize);
 
 		//게임 렌더링
+		//GameState에 현재 장면이 저장되어 있습니다. 그 장면에 맞는 그리기/실행함수를 호출합니다.
 		drawGame(buf[bufCount], *getGameState());
 		playGame(buf[bufCount], getGameState());
 
@@ -141,7 +142,8 @@ int main()
 		frame =	1 / ((double)(end - start) / CLOCKS_PER_SEC);
 		refreshCheck += (double)(end - start) / CLOCKS_PER_SEC;
 
-		//안정화
+		//스레드 안정화
+		//메인 스레드와 우선 순위가 같은 스레드를 모두 활성화합니다.
 		Sleep(0);
 	}
 }

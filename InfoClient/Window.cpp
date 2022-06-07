@@ -54,7 +54,7 @@ int setWindow(Buffer buf, bool noSpace)
 	{
 		//HWND hwnd = GetConsoleWindow();
 		//MoveWindow(hwnd, 0, 0, 10000, 10000, TRUE);
-		//정적 dll사용시 버그 남, 제거 필요
+		//SetWindowPos MFC 정적 dll사용시 버그 남, 제거 필요
 		SetWindowPos(GetConsoleWindow(), 0, 0, 0, 80, 40, SWP_NOMOVE | SWP_SHOWWINDOW);
 		SetConsoleWindowInfo(buf.screen, TRUE, &windowSize);
 	}
