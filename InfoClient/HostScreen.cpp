@@ -42,6 +42,14 @@ namespace HostVal
 	IPV4 ip(0, 0, 0, 0);
 }
 
+void resetHostVal() {
+	HostVal::start = false;
+	HostVal::kSwit = false;
+	HostVal::isConnected = false;
+	IPV4 temp(0, 0, 0, 0);
+	HostVal::ip = temp;
+}
+
 using namespace HostVal;
 using namespace std;
 
@@ -150,6 +158,7 @@ int playHostScreen(Buffer buf, GameState *state)
 		IPV4 temp(0, 0, 0, 0);
 		ip = temp;
 
+		resetHostVal();
 		state->scene = Main;
 	}
 
@@ -160,6 +169,7 @@ int playHostScreen(Buffer buf, GameState *state)
 		isConnected = false;
 		state->commIP = ip;
 
+		resetHostVal();
 		state->scene = Game;
 	}
 

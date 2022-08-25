@@ -289,6 +289,9 @@
     <None Include="Card1.gres">
       <Filter>리소스 파일\GameScreen</Filter>
     </None>
+    <None Include="RestartButton.gres">
+      <Filter>리소스 파일\GameScreen</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GBSLAND_LOGO.gres">

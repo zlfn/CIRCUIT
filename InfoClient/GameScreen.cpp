@@ -98,6 +98,7 @@ const int END_TURN = 72;
 const int RESET_BUTTON = 73;
 const int IMPOSSIBLE_BUTTON = 74;
 const int GIVEUP_BUTTON = 75;
+const int RESTART_BUTTON = 76;
 
 /// <summary>
 /// 이번 턴에 설치한 타일 배열과 개수를 리셋합니다.
@@ -148,6 +149,13 @@ int resetVals()
 		recentTile[i].x = 0;
 		recentTile[i].y = 0;
 		recentTile[i].type = BLANK;
+	}
+
+	for (int i = 0; i < 100; i++)
+	{
+		receivedTile[i].x = 0;
+		receivedTile[i].y = 0;
+		receivedTile[i].type = BLANK;
 	}
 
 	return 0;
@@ -493,6 +501,10 @@ int drawGameScreen(Buffer buf, GameState state)
 		drawImage(buf, L"Win.gres", 0, 0);
 	if (lose)
 		drawImage(buf, L"Lose.gres", 0, 0);
+
+	//재시작은 없는걸로
+	/*if (win || lose)
+		drawImage(buf, L"RestartButton.gres", 35, 20, RESTART_BUTTON);*/
 	
 	return 0;
 }
@@ -507,7 +519,7 @@ int playGameScreen(Buffer buf, GameState* state)
 	}
 
 	//자기 턴일때
-	else if (state->turn) 
+	else if (state->turn && !win && !lose) 
 	{
 		//턴 시작할 때
 		if (!startTurn)
@@ -586,9 +598,17 @@ int playGameScreen(Buffer buf, GameState* state)
 				}
 				else
 				{
-					sendTurn(PASS, recentTile, placed, state->commIP);
-					resetRecentTiles();
-					resetInputs();
+					if (!impossible) {
+						sendTurn(PASS, recentTile, placed, state->commIP);
+						resetRecentTiles();
+						resetInputs();
+					}
+					else {
+						lose = true;
+						sendTurn(YOUWIN, recentTile, placed, state->commIP);
+						resetRecentTiles();
+						resetInputs();
+					}
 				}
 			}
 			
@@ -618,6 +638,7 @@ int playGameScreen(Buffer buf, GameState* state)
 				resetRecentTiles();
 				resetInputs();
 			}
+
 		}
 
 
@@ -660,7 +681,7 @@ int playGameScreen(Buffer buf, GameState* state)
 			displayCur = false; break;
 		}
 	}
-	else //상대 턴일때
+	else if (!win && !lose)//상대 턴일때
 	{
 		//턴 시작할때
 		if (!startTurn)
@@ -734,6 +755,19 @@ int playGameScreen(Buffer buf, GameState* state)
 			}
 		}
 	}
+	else
+	{
+		int co = getClickObject(buf);
+		
+		//클릭
+		if (getClickOnce().type == Left && co == RESTART_BUTTON) 
+		{
+			resetVals();
+			resetGameState();
+		}
+			
+	}
+
 
 	//연결 끊겼을 때 (미사용)
 	if (isConnected == false)

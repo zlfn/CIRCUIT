@@ -175,6 +175,7 @@
     <None Include="Lose.gres" />
     <None Include="ManualButton.gres" />
     <None Include="ResetButton.gres" />
+    <None Include="RestartButton.gres" />
     <None Include="TileFrameOff.gres" />
     <None Include="TileFrameOn.gres" />
     <None Include="TileLDD.gres" />

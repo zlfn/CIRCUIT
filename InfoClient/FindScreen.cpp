@@ -34,6 +34,16 @@ namespace FindVal
 	bool canCancel = true;
 }
 
+void resetFindVal() {
+	FindVal::start = false;
+	IPV4 temp(0, 0, 0, 0);
+	FindVal:: ip = temp;
+	FindVal::isConnected = false;
+	FindVal::killSwitch = false;
+	FindVal::canCancel = true;
+
+}
+
 using namespace FindVal;
 using namespace std;
 
@@ -154,6 +164,7 @@ int playFindScreen(Buffer buf, GameState *state)
 		IPV4 temp(1, 1, 1, 1);
 		ip = temp;
 
+		resetFindVal();
 		state->scene = Main;
 	}
 
@@ -163,6 +174,7 @@ int playFindScreen(Buffer buf, GameState *state)
 		isConnected = false;
 
 		state->commIP = ip;
+		resetFindVal();
 		state->scene = Game;
 	}
 

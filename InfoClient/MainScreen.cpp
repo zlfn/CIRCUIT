@@ -68,7 +68,14 @@ int drawMainScreen(Buffer buf, GameState state)
 	}
 
 	drawImage(buf, L"CIRCUIT_LOGO.gres", 16, 4);
-	drawText(buf, L"경기북과학고등학교 정보 수행평가", 32, 10, 100, Color::LightGreen);
+	drawText(buf, L"언리버를 뛰어넘는", 0, 0, 200, Color::Gray);
+	drawText(buf, L"최고의 수학동아리", 18, 0, 200, Color::LightGreen);
+	drawText(buf, L"\"라온제나\"", 36, 0, 200, Color::LightYellow);
+	drawText(buf, L"부스도 와주세요! - 박지환", 47, 0, 200, Color::LightGreen);
+	drawText(buf, L"그런 라온제나를 뛰어넘는 차원이 다른 수학동아리", 0, 1, 200, Color::LightGreen);
+	drawText(buf, L"\"LIMES\"", 48, 1, 200, Color::LightYellow);
+	drawText(buf, L"로 오세요! - 김진서", 56, 1, 200, Color::LightGreen);
+	drawText(buf, L"언리버 과학동아리 학술 발표회 2022", 32, 10, 100, Color::LightGreen);
 	drawText(buf, L"(C) 2022. 박찬웅, 김진서, 박지환", 0/*29*/, 38, 200, Color::Green);
 	drawText(buf, L"This software distributed under GNU GPL 3.0 license", 0/*30*/, 39, 200, Color::Green);
 

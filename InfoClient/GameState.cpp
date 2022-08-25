@@ -37,6 +37,7 @@ int resetGameState()
 
 	//설정 초기화
 	g.scene = Main;
+	g.turn = false;
 	g.setting.noSpaceWindow = false;
 
 	g.setting.refresh = false;

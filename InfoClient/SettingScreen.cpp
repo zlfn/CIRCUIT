@@ -34,7 +34,7 @@ const int BACK_BUTTON = 9;
 int drawSettingScreen(Buffer buf, GameState state)
 {
 	drawImage(buf, L"Setting_LOGO.gres",3,0);
-	drawText(buf, L"v1.1 - RELEASE", 1, 39, 100, Color::Yellow);
+	drawText(buf, L"v1.2 - RELEASE", 1, 39, 100, Color::Yellow);
 	drawText(buf, L"= FPS Ç¥½Ã: ", 5, 10, 100, Color::White);
 	if (state.setting.showFPS)
 		drawImage(buf, L"On.gres",30, 10, SHOW_FPS);
