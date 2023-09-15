@@ -1,5 +1,7 @@
 # CIRCUIT
-<img src="CIRCUIT.png" width="500" height="500">
+<img style="display:inline" src="https://github.com/zlfn/CIRCUIT/assets/33383685/ec472486-426f-4b1d-8b9a-efc83ba1da14" width="400" height="400">
+<img style="display:inline" src="https://github.com/zlfn/CIRCUIT/assets/33383685/276bd056-9c35-4ad1-acac-4f811245fddc" width="400" height="400">
+
 
 경기북과학고 정보 수행평가로 제작한 게임  
 더 지니어스의 **모노레일**로도 잘 알려진 보드게임, **베니치아 커넥션**을 ~~배껴~~ 모티브를 얻어 만들었습니다.  
